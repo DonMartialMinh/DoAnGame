@@ -71,7 +71,7 @@ LRESULT CALLBACK WinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 	return 0;
 }
-
+//No changes
 
 /*
 	Load game resources. In this example, we only load a brick image
