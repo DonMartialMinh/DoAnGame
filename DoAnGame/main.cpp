@@ -1,63 +1,74 @@
 /* =============================================================
-INTRODUCTION TO GAME PROGRAMMING SE102
+	INTRODUCTION TO GAME PROGRAMMING SE102
 
-SAMPLE 00 - INTRODUCTORY CODE
+	SAMPLE 03 - KEYBOARD AND OBJECT STATE
 
-This sample illustrates how to:
+	This sample illustrates how to:
 
-1/ Create a window
-2/ Initiate DirectX 9, Direct3D, DirectX Sprite
-3/ Draw a static brick sprite to the screen
-4/ Create frame rate independent movements
-
-5/ Some good C programming practices
-- Use constants whenever possible
-- 0 Warnings
-
-6/ Debug using __FILE__ __LINE__
-
-WARNING: This one file example has a hell LOT of *sinful* programming practices
+		1/ Process keyboard input
+		2/ Control object state with keyboard events
 ================================================================ */
 
 #include <windows.h>
 #include <d3d9.h>
 #include <d3dx9.h>
-#include <vector>
+
+
 #include "Game.h"
 #include "GameObject.h"
+#include "Textures.h"
 
+#include "Mario.h"
 
 #define WINDOW_CLASS_NAME L"SampleWindow"
-#define WINDOW_TITLE L"00 - Intro"
-#define WINDOW_ICON_PATH L"brick.ico" 
+#define MAIN_WINDOW_TITLE L"02 - Sprite animation"
 
-#define BRICK_TEXTURE_PATH L"brick.png"
-#define MARIO_TEXTURE_PATH L"mario.png"
+#define BACKGROUND_COLOR D3DCOLOR_XRGB(200, 200, 255)
+#define SCREEN_WIDTH 320
+#define SCREEN_HEIGHT 240
 
-#define BACKGROUND_COLOR D3DCOLOR_XRGB(0, 0, 0)
-#define SCREEN_WIDTH 640
-#define SCREEN_HEIGHT 480
+#define MAX_FRAME_RATE 90
 
+#define ID_TEX_MARIO 0
+#define ID_TEX_ENEMY 10
+#define ID_TEX_MISC 20
 
-using namespace std;
-
+CGame* game;
 CMario* mario;
-#define MARIO_START_X 10.0f
-#define MARIO_START_Y 130.0f
-#define MARIO_START_VX 0.1f
 
-CGameObject* brick;
-#define BRICK_WIDTH 15.0f
-#define BRICK_X 0.0f
-#define BRICK_Y 155.0f
+class CSampleKeyHander : public CKeyEventHandler
+{
+	virtual void KeyState(BYTE* states);
+	virtual void OnKeyDown(int KeyCode);
+	virtual void OnKeyUp(int KeyCode);
+};
 
-float START_BRICK = BRICK_X;
+CSampleKeyHander* keyHandler;
 
-LPDIRECT3DTEXTURE9 texMario = NULL;
-LPDIRECT3DTEXTURE9 texBrick = NULL;
+void CSampleKeyHander::OnKeyDown(int KeyCode)
+{
+	//DebugOut(L"[INFO] KeyDown: %d\n", KeyCode);
+	switch (KeyCode)
+	{
+	case DIK_SPACE:
+		mario->SetState(MARIO_STATE_JUMP);
+		break;
+	}
+}
 
-vector<LPGAMEOBJECT> objects;
+void CSampleKeyHander::OnKeyUp(int KeyCode)
+{
+	//DebugOut(L"[INFO] KeyUp: %d\n", KeyCode);
+}
 
+void CSampleKeyHander::KeyState(BYTE* states)
+{
+	if (game->IsKeyDown(DIK_RIGHT))
+		mario->SetState(MARIO_STATE_WALKING_RIGHT);
+	else if (game->IsKeyDown(DIK_LEFT))
+		mario->SetState(MARIO_STATE_WALKING_LEFT);
+	else mario->SetState(MARIO_STATE_IDLE);
+}
 
 LRESULT CALLBACK WinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
@@ -71,50 +82,80 @@ LRESULT CALLBACK WinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 	return 0;
 }
-//No changes
 
 /*
-	Load game resources. In this example, we only load a brick image
+	Load all game resources
+	In this example: load textures, sprites, animations and mario object
 */
 void LoadResources()
 {
-	CGame* game = CGame::GetInstance();
-	texBrick = game->LoadTexture(BRICK_TEXTURE_PATH);
-	texMario = game->LoadTexture(MARIO_TEXTURE_PATH);
+	CTextures* textures = CTextures::GetInstance();
 
-	mario = new CMario(MARIO_START_X, MARIO_START_Y, MARIO_START_VX, texMario);
-	
-	// Create a line of Brick under Mario
-	for (int i = 0; START_BRICK < SCREEN_WIDTH - BRICK_WIDTH; i++)
-	{
-		CGameObject* tBrick = new CGameObject(START_BRICK, BRICK_Y, texBrick);
-		objects.push_back(tBrick);
-		START_BRICK += BRICK_WIDTH;
-	}
+	textures->Add(ID_TEX_MARIO, L"textures\\mario.png", D3DCOLOR_XRGB(176, 224, 248));
 
+	CSprites* sprites = CSprites::GetInstance();
+	CAnimations* animations = CAnimations::GetInstance();
+
+	LPDIRECT3DTEXTURE9 texMario = textures->Get(ID_TEX_MARIO);
+
+
+	sprites->Add(10001, 246, 154, 260, 181, texMario);
+
+	sprites->Add(10002, 275, 154, 290, 181, texMario);
+	sprites->Add(10003, 304, 154, 321, 181, texMario);
+
+	sprites->Add(10011, 186, 154, 200, 181, texMario);
+
+	sprites->Add(10012, 155, 154, 170, 181, texMario);
+	sprites->Add(10013, 125, 154, 140, 181, texMario);
+
+
+	LPANIMATION ani;
+
+	ani = new CAnimation(100);
+	ani->Add(10001);
+	animations->Add(400, ani);
+
+	ani = new CAnimation(100);
+	ani->Add(10011);
+	animations->Add(401, ani);
+
+
+	ani = new CAnimation(100);
+	ani->Add(10001);
+	ani->Add(10002);
+	ani->Add(10003);
+	animations->Add(500, ani);
+
+	ani = new CAnimation(100);
+	ani->Add(10011);
+	ani->Add(10012);
+	ani->Add(10013);
+	animations->Add(501, ani);
+
+	mario = new CMario();
+	CMario::AddAnimation(400);		// idle right
+	CMario::AddAnimation(401);		// idle left
+	CMario::AddAnimation(500);		// walk right
+	CMario::AddAnimation(501);		// walk left
+
+	mario->SetPosition(0.0f, 100.0f);
 }
 
 /*
 	Update world status for this frame
 	dt: time period between beginning of last frame and beginning of this frame
-
-	IMPORTANT: no render-related code should be used inside this function.
 */
 void Update(DWORD dt)
 {
-
 	mario->Update(dt);
-	for (int i = 0; i < objects.size(); i++)
-		objects[i]->Update(dt);
 }
 
 /*
 	Render a frame
-	IMPORTANT: world status must NOT be changed during rendering
 */
 void Render()
 {
-	CGame* game = CGame::GetInstance();
 	LPDIRECT3DDEVICE9 d3ddv = game->GetDirect3DDevice();
 	LPDIRECT3DSURFACE9 bb = game->GetBackBuffer();
 	LPD3DXSPRITE spriteHandler = game->GetSpriteHandler();
@@ -126,11 +167,7 @@ void Render()
 
 		spriteHandler->Begin(D3DXSPRITE_ALPHABLEND);
 
-
 		mario->Render();
-		for (int i = 0; i < objects.size(); i++)
-			objects[i]->Render();
-
 
 		spriteHandler->End();
 		d3ddv->EndScene();
@@ -148,13 +185,10 @@ HWND CreateGameWindow(HINSTANCE hInstance, int nCmdShow, int ScreenWidth, int Sc
 	wc.style = CS_HREDRAW | CS_VREDRAW;
 	wc.hInstance = hInstance;
 
-	//Try this to see how the debug function prints out file and line 
-	//wc.hInstance = (HINSTANCE)-100; 
-
 	wc.lpfnWndProc = (WNDPROC)WinProc;
 	wc.cbClsExtra = 0;
 	wc.cbWndExtra = 0;
-	wc.hIcon = (HICON)LoadImage(hInstance, WINDOW_ICON_PATH, IMAGE_ICON, 0, 0, LR_LOADFROMFILE);;
+	wc.hIcon = NULL;
 	wc.hCursor = LoadCursor(NULL, IDC_ARROW);
 	wc.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);
 	wc.lpszMenuName = NULL;
@@ -166,7 +200,7 @@ HWND CreateGameWindow(HINSTANCE hInstance, int nCmdShow, int ScreenWidth, int Sc
 	HWND hWnd =
 		CreateWindow(
 			WINDOW_CLASS_NAME,
-			WINDOW_TITLE,
+			MAIN_WINDOW_TITLE,
 			WS_OVERLAPPEDWINDOW, // WS_EX_TOPMOST | WS_VISIBLE | WS_POPUP,
 			CW_USEDEFAULT,
 			CW_USEDEFAULT,
@@ -179,9 +213,9 @@ HWND CreateGameWindow(HINSTANCE hInstance, int nCmdShow, int ScreenWidth, int Sc
 
 	if (!hWnd)
 	{
+		OutputDebugString(L"[ERROR] CreateWindow failed");
 		DWORD ErrCode = GetLastError();
-		//DebugOut(L"[ERROR] CreateWindow failed! ErrCode: %d\nAt: %s %d \n", ErrCode, _W(__FILE__), __LINE__);
-		return 0;
+		return FALSE;
 	}
 
 	ShowWindow(hWnd, nCmdShow);
@@ -216,6 +250,9 @@ int Run()
 		if (dt >= tickPerFrame)
 		{
 			frameStart = now;
+
+			game->ProcessKeyboard();
+
 			Update(dt);
 			Render();
 		}
@@ -226,13 +263,17 @@ int Run()
 	return 1;
 }
 
-
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
 	HWND hWnd = CreateGameWindow(hInstance, nCmdShow, SCREEN_WIDTH, SCREEN_HEIGHT);
 
-	CGame* game = CGame::GetInstance();
+	game = CGame::GetInstance();
 	game->Init(hWnd);
+
+	keyHandler = new CSampleKeyHander();
+	game->InitKeyboard(keyHandler);
+
+
 	LoadResources();
 	Run();
 

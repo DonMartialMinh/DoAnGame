@@ -2,6 +2,10 @@
 
 #include <Windows.h>
 #include <d3dx9.h>
+#include <vector>
+#include "Sprites.h"
+
+using namespace std;
 
 class CGameObject
 {
@@ -9,29 +13,30 @@ protected:
 	float x;
 	float y;
 
-	LPDIRECT3DTEXTURE9 texture;
+	float vx;
+	float vy;
+
+	int nx;
+
+	int state;
+
+	static vector<LPANIMATION> animations;
 public:
 	void SetPosition(float x, float y) { this->x = x, this->y = y; }
-	float GetX() { return x; }
-	float GetY() { return y; }
+	void SetSpeed(float vx, float vy) { this->vx = vx, this->vy = vy; }
 
-	CGameObject(float x = 0.0f, float y = 0.0f, LPDIRECT3DTEXTURE9 texture = NULL);
+	void SetState(int state) { this->state = state; }
+	int GetState() { return this->state; }
 
-	virtual void Update(DWORD dt) { };
-	virtual void Render();
 
+	static void AddAnimation(int aniId);
+
+	CGameObject();
+
+	void Update(DWORD dt);
+	void Render();
 	~CGameObject();
 };
 
 typedef CGameObject * LPGAMEOBJECT;
 
-class CMario : public CGameObject
-{
-	float vx;
-public:
-	CMario(float x, float y, float vx ,LPDIRECT3DTEXTURE9 texture) : CGameObject(x, y, texture)
-	{
-		this->vx = vx;
-	}
-	void Update(DWORD dt);
-};

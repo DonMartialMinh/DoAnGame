@@ -1,37 +1,35 @@
 #include <d3dx9.h>
 #include "Game.h"
 #include "GameObject.h"
+#include "Sprites.h"
 
-CGameObject::CGameObject(float x, float y, LPDIRECT3DTEXTURE9 tex)
+vector<LPANIMATION> CGameObject::animations;
+
+CGameObject::CGameObject()
 {
-	this->x = x;
-	this->y = y;
-	this->texture = tex;
+	x = y = 0;
+	vx = vy = 0;
+	nx = 1;
+}
+
+void CGameObject::Update(DWORD dt)
+{
+	x += vx * dt;
+	y += vy * dt;
 }
 
 void CGameObject::Render()
 {
-	CGame::GetInstance()->Draw(x, y, texture);
 }
+
+void CGameObject::AddAnimation(int aniId)
+{
+	LPANIMATION ani = CAnimations::GetInstance()->Get(aniId);
+	animations.push_back(ani);
+}
+
+
 
 CGameObject::~CGameObject()
 {
-	if (texture != NULL) texture->Release();
-}
-
-#define MARIO_VX 0.1f
-#define MARIO_WIDTH 14
-
-void CMario::Update(DWORD dt)
-{
-	x += vx * dt;
-	int BackBufferWidth = CGame::GetInstance()->GetBackBufferWidth();
-	if (x <= 0 || x >= BackBufferWidth - MARIO_WIDTH)
-	{
-		vx = -vx;
-		if (x <= 0)
-			x = 0;
-		else if (x >= BackBufferWidth - MARIO_WIDTH)
-			x = (float)(BackBufferWidth - MARIO_WIDTH);
-	}
 }
