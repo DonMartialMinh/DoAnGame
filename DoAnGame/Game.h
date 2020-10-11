@@ -3,12 +3,13 @@
 #include <d3d9.h>
 #include <d3dx9.h>
 
-
 #define DIRECTINPUT_VERSION 0x0800
 #include <dinput.h>
 
 #define KEYBOARD_BUFFER_SIZE 1024
-
+/*
+Abstract class to define keyboard event handlers
+*/
 class CKeyEventHandler
 {
 public:
@@ -38,20 +39,41 @@ class CGame
 
 	LPKEYEVENTHANDLER keyHandler;
 
+	float cam_x = 0.0f;
+	float cam_y = 0.0f;
+
 public:
 	void InitKeyboard(LPKEYEVENTHANDLER handler);
-	void Init(HWND hwnd);
-	void Draw(float x, float y, LPDIRECT3DTEXTURE9 texture, int left, int top, int right, int bottom);
+	void Init(HWND hWnd);
+	void Draw(float x, float y, LPDIRECT3DTEXTURE9 texture, int left, int top, int right, int bottom, int alpha = 255);
 
 	int IsKeyDown(int KeyCode);
 	void ProcessKeyboard();
-	
+
+	static void SweptAABB(
+		float ml,			// move left 
+		float mt,			// move top
+		float mr,			// move right 
+		float mb,			// move bottom
+		float dx,			// 
+		float dy,			// 
+		float sl,			// static left
+		float st,
+		float sr,
+		float sb,
+		float& t,
+		float& nx,
+		float& ny);
+
 	LPDIRECT3DDEVICE9 GetDirect3DDevice() { return this->d3ddv; }
 	LPDIRECT3DSURFACE9 GetBackBuffer() { return backBuffer; }
 	LPD3DXSPRITE GetSpriteHandler() { return this->spriteHandler; }
+
+	void SetCamPos(float x, float y) { cam_x = x; cam_y = y; }
 
 	static CGame* GetInstance();
 
 	~CGame();
 };
+
 

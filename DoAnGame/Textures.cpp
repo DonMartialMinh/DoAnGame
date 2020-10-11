@@ -1,3 +1,5 @@
+#include <Windows.h>
+
 #include <d3d9.h>
 #include <d3dx9.h>
 
@@ -23,6 +25,7 @@ void CTextures::Add(int id, LPCWSTR filePath, D3DCOLOR transparentColor)
 	HRESULT result = D3DXGetImageInfoFromFile(filePath, &info);
 	if (result != D3D_OK)
 	{
+		//DebugOut(L"[ERROR] GetImageInfoFromFile failed: %s\n", filePath);
 		return;
 	}
 
@@ -53,9 +56,13 @@ void CTextures::Add(int id, LPCWSTR filePath, D3DCOLOR transparentColor)
 
 	textures[id] = texture;
 
+	//DebugOut(L"[INFO] Texture loaded Ok: id=%d, %s \n", id, filePath);
 }
 
 LPDIRECT3DTEXTURE9 CTextures::Get(unsigned int i)
 {
 	return textures[i];
 }
+
+
+
