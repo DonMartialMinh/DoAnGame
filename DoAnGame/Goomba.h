@@ -1,5 +1,4 @@
 #pragma once
-#pragma once
 #include "GameObject.h"
 
 #define GOOMBA_WALKING_SPEED 0.05f;
@@ -20,7 +19,7 @@ class CGoomba : public CGameObject
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void Render();
 
-
 public:
+	CGoomba();
 	virtual void SetState(int state);
 };
