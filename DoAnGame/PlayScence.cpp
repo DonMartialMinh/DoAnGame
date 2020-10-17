@@ -68,7 +68,7 @@ void CPlayScene::_ParseSection_SPRITES(string line)
 	LPDIRECT3DTEXTURE9 tex = CTextures::GetInstance()->Get(texID);
 	if (tex == NULL)
 	{
-		//DebugOut(L"[ERROR] Texture ID %d not found!\n", texID);
+		DebugOut(L"[ERROR] Texture ID %d not found!\n", texID);
 		return;
 	}
 
@@ -145,13 +145,13 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_MARIO:
 		if (player != NULL)
 		{
-			//DebugOut(L"[ERROR] MARIO object was created before!\n");
+			DebugOut(L"[ERROR] MARIO object was created before!\n");
 			return;
 		}
 		obj = new CMario(x, y);
 		player = (CMario*)obj;
 
-		//DebugOut(L"[INFO] Player object created!\n");
+		DebugOut(L"[INFO] Player object created!\n");
 		break;
 	case OBJECT_TYPE_GOOMBA: obj = new CGoomba(); break;
 	case OBJECT_TYPE_BRICK: obj = new CBrick(); break;
@@ -165,7 +165,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	}
 	break;
 	default:
-		//DebugOut(L"[ERR] Invalid object type: %d\n", object_type);
+		DebugOut(L"[ERR] Invalid object type: %d\n", object_type);
 		return;
 	}
 
@@ -180,7 +180,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 
 void CPlayScene::Load()
 {
-	//DebugOut(L"[INFO] Start loading scene resources from : %s \n", sceneFilePath);
+	DebugOut(L"[INFO] Start loading scene resources from : %s \n", sceneFilePath);
 
 	ifstream f;
 	f.open(sceneFilePath);
@@ -225,9 +225,9 @@ void CPlayScene::Load()
 
 	f.close();
 
-	CTextures::GetInstance()->Add(ID_TEX_BBOX, L"textures\\bbox.png", D3DCOLOR_XRGB(255, 255, 255));
+	CTextures::GetInstance()->Add(ID_TEX_BBOX, L"textures\\bbox.png", D3DCOLOR_XRGB(237, 28, 36));
 
-	//DebugOut(L"[INFO] Done loading scene resources %s\n", sceneFilePath);
+	DebugOut(L"[INFO] Done loading scene resources %s\n", sceneFilePath);
 }
 
 void CPlayScene::Update(DWORD dt)
@@ -252,12 +252,18 @@ void CPlayScene::Update(DWORD dt)
 	// Update camera to follow mario
 	float cx, cy;
 	player->GetPosition(cx, cy);
-
 	CGame* game = CGame::GetInstance();
-	cx -= game->GetScreenWidth() / 2;
-	cy -= game->GetScreenHeight() / 2;
+	if (cx < game->GetScreenWidth() / 2.2)
+		CGame::GetInstance()->SetCamPos(0.0f, 0.0f); // set Cam when game start
+	else if (cx > 2668.0f)
+		CGame::GetInstance()->SetCamPos(2526.0f, 0.0f); //set Cam when game end
+	else
+	{
+		cx -= game->GetScreenWidth() / 2.2;
+		cy -= game->GetScreenHeight() / 2.2;
 
-	CGame::GetInstance()->SetCamPos(cx, 0.0f /*cy*/);
+		CGame::GetInstance()->SetCamPos(cx, 0.0f); // set Cam Focus
+	}
 }
 
 void CPlayScene::Render()
@@ -277,7 +283,7 @@ void CPlayScene::Unload()
 	objects.clear();
 	player = NULL;
 
-	//DebugOut(L"[INFO] Scene %s unloaded! \n", sceneFilePath);
+	DebugOut(L"[INFO] Scene %s unloaded! \n", sceneFilePath);
 }
 
 void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)

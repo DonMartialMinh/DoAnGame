@@ -12,7 +12,7 @@ void CAnimation::Add(int spriteId, DWORD time)
 
 	if (sprite == NULL)
 	{
-		//DebugOut(L"[ERROR] Sprite ID %d cannot be found!\n", spriteId);
+		DebugOut(L"[ERROR] Sprite ID %d cannot be found!\n", spriteId);
 	}
 
 	LPANIMATION_FRAME frame = new CAnimationFrame(sprite, t);
@@ -59,7 +59,7 @@ LPANIMATION CAnimations::Get(int id)
 {
 	LPANIMATION ani = animations[id];
 	if (ani == NULL)
-		//DebugOut(L"[ERROR] Failed to find animation id: %d\n", id);
+		DebugOut(L"[ERROR] Failed to find animation id: %d\n", id);
 	return ani;
 }
 
@@ -89,7 +89,7 @@ LPANIMATION_SET CAnimationSets::Get(unsigned int id)
 {
 	LPANIMATION_SET ani_set = animation_sets[id];
 	if (ani_set == NULL)
-		//DebugOut(L"[ERROR] Failed to find animation set id: %d\n", id);
+		DebugOut(L"[ERROR] Failed to find animation set id: %d\n", id);
 
 	return ani_set;
 }

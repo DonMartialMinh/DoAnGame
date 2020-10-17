@@ -91,7 +91,7 @@ void CGame::InitKeyboard()
 
 	if (hr != DI_OK)
 	{
-		//DebugOut(L"[ERROR] DirectInput8Create failed!\n");
+		DebugOut(L"[ERROR] DirectInput8Create failed!\n");
 		return;
 	}
 
@@ -100,7 +100,7 @@ void CGame::InitKeyboard()
 	// TO-DO: put in exception handling
 	if (hr != DI_OK)
 	{
-		//DebugOut(L"[ERROR] CreateDevice failed!\n");
+		DebugOut(L"[ERROR] CreateDevice failed!\n");
 		return;
 	}
 
@@ -139,11 +139,11 @@ void CGame::InitKeyboard()
 	hr = didv->Acquire();
 	if (hr != DI_OK)
 	{
-		//DebugOut(L"[ERROR] DINPUT8::Acquire failed!\n");
+		DebugOut(L"[ERROR] DINPUT8::Acquire failed!\n");
 		return;
 	}
 
-	//DebugOut(L"[INFO] Keyboard has been initialized successfully\n");
+	DebugOut(L"[INFO] Keyboard has been initialized successfully\n");
 }
 
 void CGame::ProcessKeyboard()
@@ -160,7 +160,7 @@ void CGame::ProcessKeyboard()
 			HRESULT h = didv->Acquire();
 			if (h == DI_OK)
 			{
-				//DebugOut(L"[INFO] Keyboard re-acquired!\n");
+				DebugOut(L"[INFO] Keyboard re-acquired!\n");
 			}
 			else return;
 		}
@@ -326,8 +326,8 @@ void CGame::_ParseSection_SETTINGS(string line)
 	if (tokens.size() < 2) return;
 	if (tokens[0] == "start")
 		current_scene = atoi(tokens[1].c_str());
-	else;
-		//DebugOut(L"[ERROR] Unknown game setting %s\n", ToWSTR(tokens[0]).c_str());
+	else
+		DebugOut(L"[ERROR] Unknown game setting %s\n", ToWSTR(tokens[0]).c_str());
 }
 
 void CGame::_ParseSection_SCENES(string line)
@@ -347,7 +347,7 @@ void CGame::_ParseSection_SCENES(string line)
 */
 void CGame::Load(LPCWSTR gameFile)
 {
-	//DebugOut(L"[INFO] Start loading game file : %s\n", gameFile);
+	DebugOut(L"[INFO] Start loading game file : %s\n", gameFile);
 
 	ifstream f;
 	f.open(gameFile);
@@ -376,14 +376,14 @@ void CGame::Load(LPCWSTR gameFile)
 	}
 	f.close();
 
-	//DebugOut(L"[INFO] Loading game file : %s has been loaded successfully\n", gameFile);
+	DebugOut(L"[INFO] Loading game file : %s has been loaded successfully\n", gameFile);
 
 	SwitchScene(current_scene);
 }
 
 void CGame::SwitchScene(int scene_id)
 {
-	//DebugOut(L"[INFO] Switching to scene %d\n", scene_id);
+	DebugOut(L"[INFO] Switching to scene %d\n", scene_id);
 
 	scenes[current_scene]->Unload();;
 
