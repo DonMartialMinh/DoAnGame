@@ -256,15 +256,42 @@ void CPlayScene::Update(DWORD dt)
 	player->GetPosition(cx, cy);
 	CGame* game = CGame::GetInstance();
 	if (cx < game->GetScreenWidth() / 2.2)
-		CGame::GetInstance()->SetCamPos(0.0f, 0.0f); // set Cam when game start
+	{
+		if (cy < 0)
+		{
+			cy -= game->GetScreenHeight() / 2.2;
+			CGame::GetInstance()->SetCamPos(0.0f, cy);
+		}
+		else
+			CGame::GetInstance()->SetCamPos(0.0f, 0.0f); // set Cam when game start
+	}
 	else if (cx > 2668.0f)
-		CGame::GetInstance()->SetCamPos(2526.0f, 0.0f); //set Cam when game end
+	{
+		if (cy < 0)
+		{
+			cy -= game->GetScreenHeight() / 2.2;
+			CGame::GetInstance()->SetCamPos(2526.0f, cy);
+		}
+		else
+			CGame::GetInstance()->SetCamPos(2526.0f, 0.0f); //set Cam when game end
+	}
 	else
 	{
-		cx -= game->GetScreenWidth() / 2.2;
-		cy -= game->GetScreenHeight() / 2.2;
 
-		CGame::GetInstance()->SetCamPos(cx, 0.0f); // set Cam Focus
+
+		if (cy < 0)
+		{
+			cx -= game->GetScreenWidth() / 2.2;
+			cy -= game->GetScreenHeight() / 2.2;
+			CGame::GetInstance()->SetCamPos(cx, cy);
+		}
+		else
+		{
+			cx -= game->GetScreenWidth() / 2.2;
+			cy -= game->GetScreenHeight() / 2.2;
+			CGame::GetInstance()->SetCamPos(cx, 0.0f); // set Cam Focus
+		}
+
 	}
 }
 
