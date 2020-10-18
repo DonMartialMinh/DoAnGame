@@ -118,6 +118,9 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	// clean up collision events
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
+
+	if (vx > 0 && x > 2812) x = 2812;
+	if (vx < 0 && x < 3) x = 3;
 }
 
 void CMario::Render()
