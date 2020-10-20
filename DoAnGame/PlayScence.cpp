@@ -6,6 +6,7 @@
 #include "Textures.h"
 #include "Sprites.h"
 #include "Portal.h"
+#include <cmath> 
 
 using namespace std;
 
@@ -255,41 +256,39 @@ void CPlayScene::Update(DWORD dt)
 	float cx, cy;
 	player->GetPosition(cx, cy);
 	CGame* game = CGame::GetInstance();
-	if (cx < game->GetScreenWidth() / 2.2)
+	if (cx < game->GetScreenWidth() / 2)
 	{
 		if (cy < 0)
 		{
-			cy -= game->GetScreenHeight() / 2.2;
-			CGame::GetInstance()->SetCamPos(0.0f, cy);
+			cy -= game->GetScreenHeight() / 2;
+			CGame::GetInstance()->SetCamPos(0.0f, round(cy));
 		}
 		else
 			CGame::GetInstance()->SetCamPos(0.0f, 0.0f); // set Cam when game start
 	}
-	else if (cx > 2668.0f)
+	else if (cx > 2675.0f)
 	{
 		if (cy < 0)
 		{
-			cy -= game->GetScreenHeight() / 2.2;
-			CGame::GetInstance()->SetCamPos(2526.0f, cy);
+			cy -= game->GetScreenHeight() / 2;
+			CGame::GetInstance()->SetCamPos(2526.0f, round(cy));
 		}
 		else
 			CGame::GetInstance()->SetCamPos(2526.0f, 0.0f); //set Cam when game end
 	}
 	else
 	{
-
-
 		if (cy < 0)
 		{
-			cx -= game->GetScreenWidth() / 2.2;
-			cy -= game->GetScreenHeight() / 2.2;
-			CGame::GetInstance()->SetCamPos(cx, cy);
+			cx -= game->GetScreenWidth() / 2;
+			cy -= game->GetScreenHeight() / 2;
+			CGame::GetInstance()->SetCamPos(round(cx), round(cy));
 		}
 		else
 		{
-			cx -= game->GetScreenWidth() / 2.2;
-			cy -= game->GetScreenHeight() / 2.2;
-			CGame::GetInstance()->SetCamPos(cx, 0.0f); // set Cam Focus
+			cx -= game->GetScreenWidth() / 2;
+			cy -= game->GetScreenHeight() / 2;
+			CGame::GetInstance()->SetCamPos(round(cx), 0.0f); // set Cam Focus
 		}
 
 	}
