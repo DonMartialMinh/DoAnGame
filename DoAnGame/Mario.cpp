@@ -52,6 +52,8 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	}
 	else
 	{
+		isJumping = 0;	//if collision with object then can Jumping
+
 		float min_tx, min_ty, nx = 0, ny;
 		float rdx = 0;
 		float rdy = 0;
@@ -70,6 +72,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		if (nx != 0) vx = 0;
 		if (ny != 0) vy = 0;
 
+		
 
 		//
 		// Collision logic with other objects
@@ -121,6 +124,10 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	if (vx > 0 && x > 2812) x = 2812;
 	if (vx < 0 && x < 3) x = 3;
+
+
+	DebugOut(L"vx = %f", vx);
+	DebugOut(L"\tvy = %f\n", vy);
 }
 
 void CMario::Render()
@@ -176,7 +183,11 @@ void CMario::SetState(int state)
 		break;
 	case MARIO_STATE_JUMP:
 		// TODO: need to check if Mario is *current* on a platform before allowing to jump again
-		vy = -MARIO_JUMP_SPEED_Y;
+		if (isJumping == 0)
+		{
+			isJumping = 1;
+			vy = -MARIO_JUMP_SPEED_Y;
+		}
 		break;
 	case MARIO_STATE_IDLE:
 		vx = 0;
