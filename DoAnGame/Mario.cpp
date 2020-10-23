@@ -240,6 +240,41 @@ void CMario::Render()
 					ani = MARIO_ANI_FIRE_WALKING_LEFT;
 			}
 		}
+		else if (level == MARIO_LEVEL_RACOON)
+		{
+		if (vx == 0)
+		{
+			if (nx > 0)
+			{
+				if (isJumping == 1)
+					ani = MARIO_ANI_RACOON_JUMP_RIGHT;
+				else
+					ani = MARIO_ANI_RACOON_IDLE_RIGHT;
+
+			}
+			else
+			{
+				if (isJumping == 1)
+					ani = MARIO_ANI_RACOON_JUMP_LEFT;
+				else
+					ani = MARIO_ANI_RACOON_IDLE_LEFT;
+			}
+		}
+		else if (vx > 0)
+		{
+			if (isJumping == 1)
+				ani = MARIO_ANI_RACOON_JUMP_RIGHT;
+			else
+				ani = MARIO_ANI_RACOON_WALKING_RIGHT;
+		}
+		else
+		{
+			if (isJumping == 1)
+				ani = MARIO_ANI_RACOON_JUMP_LEFT;
+			else
+				ani = MARIO_ANI_RACOON_WALKING_LEFT;
+		}
+		}
 
 	int alpha = 255;
 	if (untouchable) alpha = 128;
@@ -288,6 +323,11 @@ void CMario::GetBoundingBox(float& left, float& top, float& right, float& bottom
 	{
 		right = x + MARIO_BIG_BBOX_WIDTH;
 		bottom = y + MARIO_BIG_BBOX_HEIGHT;
+	}
+	else if (level == MARIO_LEVEL_RACOON)
+	{
+		right = x + MARIO_RACOON_BBOX_WIDTH;
+		bottom = y + MARIO_RACOON_BBOX_HEIGHT;
 	}
 	else
 	{

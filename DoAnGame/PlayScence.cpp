@@ -336,6 +336,9 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 	case DIK_3:
 		mario->SetLevel(MARIO_LEVEL_FIRE);
 		break;
+	case DIK_4:
+		mario->SetLevel(MARIO_LEVEL_RACOON);
+		break;
 	}
 }
 
