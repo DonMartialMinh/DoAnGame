@@ -327,6 +327,15 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 	case DIK_A:
 		mario->Reset();
 		break;
+	case DIK_1:
+		mario->SetLevel(MARIO_LEVEL_SMALL);
+		break;
+	case DIK_2:
+		mario->SetLevel(MARIO_LEVEL_BIG);
+		break;
+	case DIK_3:
+		mario->SetLevel(MARIO_LEVEL_FIRE);
+		break;
 	}
 }
 
