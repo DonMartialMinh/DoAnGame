@@ -221,6 +221,7 @@
 #duck big left
 414	10017	100
 
+
 # idle fire right
 415	10040	100
 # idle fire left 
