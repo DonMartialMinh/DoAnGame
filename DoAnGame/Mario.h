@@ -50,6 +50,20 @@
 #define MARIO_ANI_RACOON_DUCK_RIGHT			29
 #define MARIO_ANI_RACOON_DUCK_LEFT			30
 
+#define MARIO_ANI_BIG_FALL_RIGHT			31
+#define MARIO_ANI_BIG_FALL_LEFT				32
+//#define MARIO_ANI_BIG_CHANGE_DIR_RIGHT		33
+//#define MARIO_ANI_BIG_CHANGE_DIR_LEFT		34
+#define MARIO_ANI_FIRE_FALL_RIGHT			33
+#define MARIO_ANI_FIRE_FALL_LEFT			34
+//#define MARIO_ANI_FIRE_CHANGE_DIR_RIGHT		37
+//#define MARIO_ANI_FIRE_CHANGE_DIR_LEFT		38
+#define MARIO_ANI_RACOON_FALL_RIGHT			35
+#define MARIO_ANI_RACOON_FALL_LEFT			36
+//#define MARIO_ANI_RACOON_CHANGE_DIR_RIGHT	41
+//#define MARIO_ANI_RACOON_CHANGE_DIR_LEFT	42
+//#define MARIO_ANI_SMALL_CHANGE_DIR_RIGHT	43
+//#define MARIO_ANI_SMALL_CHANGE_DIR_RIGHT	44
 
 #define MARIO_ANI_DIE				8
 
@@ -82,7 +96,7 @@ class CMario : public CGameObject
 	float start_x;			// initial position of Mario at scene
 	float start_y;
 public:
-	int isJumping = 0;
+	int isFlying = 0;
 	int isDucking = 0;
 	CMario(float x = 0.0f, float y = 0.0f);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects = NULL);
@@ -95,4 +109,6 @@ public:
 	void Reset();
 
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
+	int getLevel();
+
 };

@@ -348,7 +348,7 @@ void CPlayScenceKeyHandler::OnKeyUp(int KeyCode)
 	switch (KeyCode)
 	{
 	case DIK_DOWN:
-		if (mario->isJumping == 0)
+		if (mario->isFlying == 0 && mario->getLevel() != MARIO_LEVEL_SMALL)
 		{
 			mario->isDucking = 0;
 			mario->y -= (MARIO_BIG_BBOX_HEIGHT - MARIO_BIG_DUCK_BBOX_HEIGHT);
@@ -370,7 +370,10 @@ void CPlayScenceKeyHandler::KeyState(BYTE* states)
 	else if (game->IsKeyDown(DIK_LEFT))
 		mario->SetState(MARIO_STATE_WALKING_LEFT);
 	else if (game->IsKeyDown(DIK_DOWN))
-		mario->SetState(MARIO_STATE_DUCK);
+	{
+		if (mario->getLevel() != MARIO_LEVEL_SMALL)
+			mario->SetState(MARIO_STATE_DUCK);
+	}
 	else
 		mario->SetState(MARIO_STATE_IDLE);
 }

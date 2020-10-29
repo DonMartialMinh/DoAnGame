@@ -28,6 +28,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	// Simple fall down
 	vy += MARIO_GRAVITY * dt;
+	if (vy > 0.04f) isFlying = 1; // if falling then cant jump
 
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
@@ -115,10 +116,9 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			} // if Goomba
 			else if (dynamic_cast<CBrick*>(e->obj))
 			{
-				CBrick* brick = dynamic_cast<CBrick*>(e->obj);
 				if (e->ny < 0) // jump on top brick then can jumping again
 				{
-					isJumping = 0;
+					isFlying = 0;
 				}
 			}
 
@@ -137,8 +137,8 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	if (vx < 0 && x < 3) x = 3;
 
 
-	//DebugOut(L"vx = %f", vx);
-	//DebugOut(L"\tvy = %f\n", vy);
+	DebugOut(L"vx = %f", vx);
+	DebugOut(L"\tvy = %f\n", vy);
 }
 
 void CMario::Render()
@@ -153,17 +153,28 @@ void CMario::Render()
 			{
 				if (nx > 0)
 				{
-					if (isJumping == 1)
-						ani = MARIO_ANI_BIG_JUMP_RIGHT;
+					if (isFlying == 1)
+					{
+						if (vy < 0.0)
+							ani = MARIO_ANI_BIG_JUMP_RIGHT;
+						else 
+							ani = MARIO_ANI_BIG_FALL_RIGHT;
+							
+					}
 					else if (isDucking == 1)
 						ani = MARIO_ANI_BIG_DUCK_RIGHT;
-					else 
+					else
 						ani = MARIO_ANI_BIG_IDLE_RIGHT;
 				}
 				else
 				{
-					if (isJumping == 1)
-						ani = MARIO_ANI_BIG_JUMP_LEFT;
+					if (isFlying == 1)
+					{
+						if (vy < 0.0)
+							ani = MARIO_ANI_BIG_JUMP_LEFT;
+						else 
+							ani = MARIO_ANI_BIG_FALL_LEFT;
+					}
 					else if (isDucking == 1)
 						ani = MARIO_ANI_BIG_DUCK_LEFT;
 					else
@@ -172,8 +183,13 @@ void CMario::Render()
 			}
 			else if (vx > 0)
 			{
-				if (isJumping == 1)
-					ani = MARIO_ANI_BIG_JUMP_RIGHT;
+				if (isFlying == 1)
+				{
+					if (vy < 0.0)
+						ani = MARIO_ANI_BIG_JUMP_RIGHT;
+					else 
+						ani = MARIO_ANI_BIG_FALL_RIGHT;
+				}
 				else if (isDucking == 1)
 					ani = MARIO_ANI_BIG_DUCK_RIGHT;
 				else
@@ -181,8 +197,13 @@ void CMario::Render()
 			}
 			else
 			{
-				if (isJumping == 1)
-					ani = MARIO_ANI_BIG_JUMP_LEFT;
+				if (isFlying == 1)
+				{
+					if (vy < 0.0)
+						ani = MARIO_ANI_BIG_JUMP_LEFT;
+					else 
+						ani = MARIO_ANI_BIG_FALL_LEFT;
+				}
 				else if (isDucking == 1)
 					ani = MARIO_ANI_BIG_DUCK_LEFT;
 				else
@@ -195,7 +216,7 @@ void CMario::Render()
 			{
 				if (nx > 0)
 				{
-					if (isJumping == 1)
+					if (isFlying == 1)
 						ani = MARIO_ANI_SMALL_JUMP_RIGHT;
 					else
 						ani = MARIO_ANI_SMALL_IDLE_RIGHT;
@@ -203,7 +224,7 @@ void CMario::Render()
 				}
 				else
 				{
-					if (isJumping == 1)
+					if (isFlying == 1)
 						ani = MARIO_ANI_SMALL_JUMP_LEFT;
 					else
 						ani = MARIO_ANI_SMALL_IDLE_LEFT;
@@ -211,14 +232,14 @@ void CMario::Render()
 			}
 			else if (vx > 0)
 			{
-				if (isJumping == 1)
+				if (isFlying == 1)
 					ani = MARIO_ANI_SMALL_JUMP_RIGHT;
 				else
 					ani = MARIO_ANI_SMALL_WALKING_RIGHT;
 			}
 			else
 			{
-				if (isJumping == 1)
+				if (isFlying == 1)
 					ani = MARIO_ANI_SMALL_JUMP_LEFT;
 				else
 					ani = MARIO_ANI_SMALL_WALKING_LEFT;
@@ -230,18 +251,28 @@ void CMario::Render()
 			{
 				if (nx > 0)
 				{
-					if (isJumping == 1)
-						ani = MARIO_ANI_FIRE_JUMP_RIGHT;
+					if (isFlying == 1)
+					{
+						if (vy < 0.0)
+							ani = MARIO_ANI_FIRE_JUMP_RIGHT;
+						else
+							ani = MARIO_ANI_FIRE_FALL_RIGHT;
+
+					}
 					else if (isDucking == 1)
 						ani = MARIO_ANI_FIRE_DUCK_RIGHT;
 					else
 						ani = MARIO_ANI_FIRE_IDLE_RIGHT;
-
 				}
 				else
 				{
-					if (isJumping == 1)
-						ani = MARIO_ANI_FIRE_JUMP_LEFT;
+					if (isFlying == 1)
+					{
+						if (vy < 0.0)
+							ani = MARIO_ANI_FIRE_JUMP_LEFT;
+						else
+							ani = MARIO_ANI_FIRE_FALL_LEFT;
+					}
 					else if (isDucking == 1)
 						ani = MARIO_ANI_FIRE_DUCK_LEFT;
 					else
@@ -250,8 +281,13 @@ void CMario::Render()
 			}
 			else if (vx > 0)
 			{
-				if (isJumping == 1)
-					ani = MARIO_ANI_FIRE_JUMP_RIGHT;
+				if (isFlying == 1)
+				{
+					if (vy < 0.0)
+						ani = MARIO_ANI_FIRE_JUMP_RIGHT;
+					else
+						ani = MARIO_ANI_FIRE_FALL_RIGHT;
+				}
 				else if (isDucking == 1)
 					ani = MARIO_ANI_FIRE_DUCK_RIGHT;
 				else
@@ -259,8 +295,13 @@ void CMario::Render()
 			}
 			else
 			{
-				if (isJumping == 1)
-					ani = MARIO_ANI_FIRE_JUMP_LEFT;
+				if (isFlying == 1)
+				{
+					if (vy < 0.0)
+						ani = MARIO_ANI_FIRE_JUMP_LEFT;
+					else
+						ani = MARIO_ANI_FIRE_FALL_LEFT;
+				}
 				else if (isDucking == 1)
 					ani = MARIO_ANI_FIRE_DUCK_LEFT;
 				else
@@ -269,46 +310,66 @@ void CMario::Render()
 		}
 		else if (level == MARIO_LEVEL_RACOON)
 		{
-		if (vx == 0)
-		{
-			if (nx > 0)
+			if (vx == 0)
 			{
-				if (isJumping == 1)
-					ani = MARIO_ANI_RACOON_JUMP_RIGHT;
+				if (nx > 0)
+				{
+					if (isFlying == 1)
+					{
+						if (vy < 0.0)
+							ani = MARIO_ANI_RACOON_JUMP_RIGHT;
+						else
+							ani = MARIO_ANI_RACOON_FALL_RIGHT;
+
+					}
+					else if (isDucking == 1)
+						ani = MARIO_ANI_RACOON_DUCK_RIGHT;
+					else
+						ani = MARIO_ANI_RACOON_IDLE_RIGHT;
+				}
+				else
+				{
+					if (isFlying == 1)
+					{
+						if (vy < 0.0)
+							ani = MARIO_ANI_RACOON_JUMP_LEFT;
+						else
+							ani = MARIO_ANI_RACOON_FALL_LEFT;
+					}
+					else if (isDucking == 1)
+						ani = MARIO_ANI_RACOON_DUCK_LEFT;
+					else
+						ani = MARIO_ANI_RACOON_IDLE_LEFT;
+				}
+			}
+			else if (vx > 0)
+			{
+				if (isFlying == 1)
+				{
+					if (vy < 0.0)
+						ani = MARIO_ANI_RACOON_JUMP_RIGHT;
+					else
+						ani = MARIO_ANI_RACOON_FALL_RIGHT;
+				}
 				else if (isDucking == 1)
 					ani = MARIO_ANI_RACOON_DUCK_RIGHT;
 				else
-					ani = MARIO_ANI_RACOON_IDLE_RIGHT;
-
+					ani = MARIO_ANI_RACOON_WALKING_RIGHT;
 			}
 			else
 			{
-				if (isJumping == 1)
-					ani = MARIO_ANI_RACOON_JUMP_LEFT;
+				if (isFlying == 1)
+				{
+					if (vy < 0.0)
+						ani = MARIO_ANI_RACOON_JUMP_LEFT;
+					else
+						ani = MARIO_ANI_RACOON_FALL_LEFT;
+				}
 				else if (isDucking == 1)
 					ani = MARIO_ANI_RACOON_DUCK_LEFT;
 				else
-					ani = MARIO_ANI_RACOON_IDLE_LEFT;
+					ani = MARIO_ANI_RACOON_WALKING_LEFT;
 			}
-		}
-		else if (vx > 0)
-		{
-			if (isJumping == 1)
-				ani = MARIO_ANI_RACOON_JUMP_RIGHT;
-			else if (isDucking == 1)
-				ani = MARIO_ANI_RACOON_DUCK_RIGHT;
-			else
-				ani = MARIO_ANI_RACOON_WALKING_RIGHT;
-		}
-		else
-		{
-			if (isJumping == 1)
-				ani = MARIO_ANI_RACOON_JUMP_LEFT;
-			else if (isDucking == 1)
-				ani = MARIO_ANI_RACOON_DUCK_LEFT;
-			else
-				ani = MARIO_ANI_RACOON_WALKING_LEFT;
-		}
 		}
 
 	int alpha = 255;
@@ -340,14 +401,14 @@ void CMario::SetState(int state)
 		break;
 	case MARIO_STATE_JUMP:
 		// TODO: need to check if Mario is *current* on a platform before allowing to jump again
-		if (isJumping == 0 && isDucking == 0)
+		if (isFlying == 0 && isDucking == 0)
 		{
-			isJumping = 1;
+			isFlying = 1;
 			vy = -MARIO_JUMP_SPEED_Y;
 		}
 		break;
 	case MARIO_STATE_DUCK:
-		if (isJumping == 0 && isDucking == 0)
+		if (isFlying == 0 && isDucking == 0)
 		{
 			isDucking = 1;
 			y += MARIO_BIG_BBOX_HEIGHT - MARIO_BIG_DUCK_BBOX_HEIGHT;
@@ -402,5 +463,10 @@ void CMario::Reset()
 	SetLevel(MARIO_LEVEL_BIG);
 	SetPosition(start_x, start_y);
 	SetSpeed(0, 0);
+}
+
+int CMario::getLevel()
+{
+	return this->level;
 }
 
