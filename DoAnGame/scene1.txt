@@ -5,6 +5,7 @@
 20	textures\tiles.png	255	128	192
 30	textures\misc.png	176	224	248
 40	textures\misc2.png	4	193	170
+50	textures\enemies-2.png	0	128	128
 
 # id	left	top	right	bottom	texture_id
 [SPRITES]
@@ -83,6 +84,18 @@
 30002	25	14	41	29	10
 #die
 30003	45	21	61	29	10
+
+#KOOPAS
+#walk left
+50001	205	191	221	218	50
+50002	222	192	238	218	50
+#walk right
+50011	187	191	203	218	50
+50012	170	192	186	218	50
+#die
+50031	239	202	255	218	50
+
+
 
 #BRICK
 20001	239	222	255	238	20
@@ -304,6 +317,14 @@
 # die
 702	30003	100
 
+# ==== KOOPAS  =========
+#walk left
+801	50001	100	50002	100
+#walk right
+802	50011	100	50012	100
+#die
+803	50031	100
+
 # === SMALL BRUSH =======
 620	20020	100
 
@@ -405,6 +426,9 @@
 
 # GOOMBA
 28	701	702
+
+#KOOPAS
+39	801	802	803
 
 # SMALL BRUSH
 20	620
@@ -1520,8 +1544,10 @@
 0	17	158	1
 
 # GOOMBA
-2	256	170	28
-2	290	170	28
+2	220	170	28
+
+# KOOPAS
+3	790	120	39
 
 # BRICK 
 1	0	186	3
