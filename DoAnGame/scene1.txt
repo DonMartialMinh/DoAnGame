@@ -1,6 +1,7 @@
 # id	file_path	transparent_color_r	g	b
 [TEXTURES]
 0	textures\mario.png	255	255	255
+10	textures\enemies.png	3	26	110
 20	textures\tiles.png	255	128	192
 30	textures\misc.png	176	224	248
 40	textures\misc2.png	4	193	170
@@ -76,6 +77,12 @@
 #duck
 10058	422	719	444	737	0
 10059	2	719	24	737	0
+
+#GOOMBA
+30001	5	14	21	29	10
+30002	25	14	41	29	10
+#die
+30003	45	21	61	29	10
 
 #BRICK
 20001	239	222	255	238	20
@@ -291,6 +298,12 @@
 
 609	20009	100
 
+# ==== GOOMBA  =========
+# walk
+701	30001	100	30002	100
+# die
+702	30003	100
+
 # === SMALL BRUSH =======
 620	20020	100
 
@@ -389,6 +402,9 @@
 
 # QUESTION BRICK 
 29	610
+
+# GOOMBA
+28	701	702
 
 # SMALL BRUSH
 20	620
@@ -1502,6 +1518,10 @@
 
 # MARIO
 0	17	158	1
+
+# GOOMBA
+2	256	170	28
+2	290	170	28
 
 # BRICK 
 1	0	186	3

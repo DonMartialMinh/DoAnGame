@@ -1,4 +1,6 @@
 #include "Goomba.h"
+#include "Brick.h"
+#include "Utils.h"
 CGoomba::CGoomba()
 {
 	SetState(GOOMBA_STATE_WALKING);
@@ -18,21 +20,74 @@ void CGoomba::GetBoundingBox(float& left, float& top, float& right, float& botto
 
 void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-	CGameObject::Update(dt, coObjects);
-
+	CGameObject::Update(dt);
 	//
 	// TO-DO: make sure Goomba can interact with the world and to each of them too!
 	// 
+	vy += GOOMBA_GRAVITY * dt;
 
-	x += dx;
-	y += dy;
+	vector<LPCOLLISIONEVENT> coEvents;
+	vector<LPCOLLISIONEVENT> coEventsResult;
+
+	coEvents.clear();
+
+	if (state != GOOMBA_STATE_DIE)
+		CalcPotentialCollisions(coObjects, coEvents);
+
+	if (coEvents.size() == 0)
+	{
+		x += dx;
+		y += dy;
+	}
+	else
+	{
+
+		float min_tx, min_ty, nx = 0, ny;
+		float rdx = 0;
+		float rdy = 0;
+
+		// todo: this is a very ugly designed function!!!!
+		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny, rdx, rdy);
+
+		//if (rdx != 0 && rdx!=dx)
+		//	x += nx*abs(rdx); 
+
+		// block every object first!
+		//x += min_tx * dx + nx * 0.4f;
+		//y += min_ty * dy + ny * 0.4f;
+
+		//if (nx != 0) vx = 0;
+		if (ny != 0) vy = 0;
+
+		for (int i = 0; i < coEventsResult.size(); i++)
+		{
+			LPCOLLISIONEVENT e = coEventsResult[i];
+
+			if (dynamic_cast<CGoomba*>(e->obj)) // if e->obj is goomba 
+			{
+				CGoomba* goomba = dynamic_cast<CGoomba*>(e->obj);
+				if (e->nx != 0)
+				{
+					vx = -vx;
+					goomba->vx = -goomba->vx; // 2 Goombas change direction if they collide
+				}
+			}
+			else if (dynamic_cast<CBrick*>(e->obj))
+			{
+				DebugOut(L"nx = %f\n", e->nx);
+				DebugOut(L"ny = %f\n", e->ny);
+				if ( e->nx != 0 && e->ny < 0)
+				{
+					//DebugOut(L"nx = %f\n", e->nx);
+					vx = -vx;
+				}
+			}
+		}
+	}
+	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
 
 	if (vx < 0 && x < 0) {
 		x = 0; vx = -vx;
-	}
-
-	if (vx > 0 && x > 290) {
-		x = 290; vx = -vx;
 	}
 }
 
@@ -45,7 +100,7 @@ void CGoomba::Render()
 
 	animation_set->at(ani)->Render(x, y);
 
-	//RenderBoundingBox();
+	RenderBoundingBox();
 }
 
 void CGoomba::SetState(int state)
