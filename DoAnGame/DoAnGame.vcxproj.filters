@@ -60,6 +60,12 @@
     <ClCompile Include="Environment.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="UpsideBrick.h">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="UpsideBrick.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">

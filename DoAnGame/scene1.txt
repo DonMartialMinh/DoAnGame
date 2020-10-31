@@ -97,6 +97,7 @@
 
 
 
+
 #BRICK
 20001	239	222	255	238	20
 #LEFT BRICK
@@ -115,6 +116,8 @@
 #BRICK4
 20009	273	154	289	170	20
 
+#TRANSPARENT UPSIDEBRICK
+20010	256	1	272	2	20
 
 #QUESTION BRICK
 40001	120	52	136	68	40
@@ -311,6 +314,9 @@
 
 609	20009	100
 
+#TRANS BRICK
+611	20010	100
+
 # ==== GOOMBA  =========
 # walk
 701	30001	100	30002	100
@@ -420,6 +426,8 @@
 7	606
 9	608
 10	609
+#TRANS BRICK
+11	611
 
 # QUESTION BRICK 
 29	610
@@ -512,7 +520,7 @@
 
 [OBJECTS]
 # type	x	y	ani_set_id	extra_settings per object type
-# type: 0 = Mario , 1 = Brick, 2 = Goomba, 3 = Koopas, 4 = Environment
+# type: 0 = Mario , 1 = Brick, 2 = Goomba, 3 = Koopas, 4 = Environment, 5 = UpsideBrick
 
 # SMALL BRUSH
 4	176	170	20
@@ -1819,6 +1827,11 @@
 
 1	1456	-102	10
 
+#TRANS BRICK
+5	256	138	11
+5	272	138	11
+5	288	138	11
+
 #PIPE
 1	368	138	40
 1	384	138	42
@@ -1875,8 +1888,9 @@
 1	2272	-118	40
 1	2288	-118	42
 
+
 # --- SCENE PORTAL ----
 # type	l	t	ani_set_id	r	b	scene_id
-50	240	46	0	256	74	2
+#50	240	46	0	256	74	2
 
 

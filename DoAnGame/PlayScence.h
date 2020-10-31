@@ -8,6 +8,7 @@
 #include "Goomba.h"
 #include "Environment.h"
 #include "Koopas.h"
+#include "UpsideBrick.h"
 
 
 class CPlayScene : public CScene

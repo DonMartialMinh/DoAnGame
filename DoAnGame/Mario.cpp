@@ -9,6 +9,8 @@
 #include "Koopas.h"
 #include "Portal.h"
 #include "Brick.h"
+#include "UpsideBrick.h"
+#include "Environment.h"
 
 CMario::CMario(float x, float y) : CGameObject()
 {
@@ -64,15 +66,16 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny, rdx, rdy);
 
 		// how to push back Mario if collides with a moving objects, what if Mario is pushed this way into another object?
-		//if (rdx != 0 && rdx!=dx)
-		//	x += nx*abs(rdx); 
+		if (rdx != 0 && rdx!=dx)
+			x += nx*abs(rdx); 
 
 		// block every object first!
 		x += min_tx * dx + nx * 0.4f;
 		y += min_ty * dy + ny * 0.4f;
 
+
 		if (nx != 0) vx = 0;
-		if (ny != 0) vy = 0;
+		if (ny != 0) vy = 0; 
 
 		//
 		// Collision logic with other objects
@@ -80,6 +83,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		for (UINT i = 0; i < coEventsResult.size(); i++)
 		{
 			LPCOLLISIONEVENT e = coEventsResult[i];
+			int temp;
 
 			if (dynamic_cast<CGoomba*>(e->obj)) // if e->obj is Goomba 
 			{
@@ -159,6 +163,31 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			}  // if Koopas
 			else if (dynamic_cast<CBrick*>(e->obj))
 			{
+				CBrick* brick = dynamic_cast<CBrick*>(e->obj);
+				if (e->ny < 0) // jump on top brick then can jumping again
+				{
+					isFlying = 0;
+				}
+				else if (e->nx != 0  && e->ny == 0)
+				{
+					/*float magnitude = sqrt((vx * vx + vy * vy)) * (1-min_tx);
+					float dotprod = vx * ny + vy * nx;
+					if (dotprod > 0.0f)
+						dotprod = 1.0f;
+					else if (dotprod < 0.0f)
+						dotprod = -1.0f;
+					vx = dotprod * ny * magnitude;
+					vy = dotprod * nx * magnitude;*/
+					// slide
+					float dotprod = (vx * ny + vy * nx)
+						* (1 - min_tx);
+					vx = dotprod * ny;
+					vy = dotprod * nx;
+				}
+			}
+			else if (dynamic_cast<CUpsideBrick*>(e->obj))
+			{
+				CUpsideBrick* Upsidebrick = dynamic_cast<CUpsideBrick*>(e->obj);
 				if (e->ny < 0) // jump on top brick then can jumping again
 				{
 					isFlying = 0;
@@ -179,7 +208,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	if (vx < 0 && x < 3) x = 3;
 
 
-	//DebugOut(L"vx = %f", vx);
+	DebugOut(L"\nvx = %f", vx);
 	//DebugOut(L"\tvy = %f\n", vy);
 }
 
