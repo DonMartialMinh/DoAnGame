@@ -152,15 +152,21 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 			return;
 		}
 		obj = new CMario(x, y);
+		obj->type = 1;
 		player = (CMario*)obj;
 
 		DebugOut(L"[INFO] Player object created!\n");
 		break;
-	case OBJECT_TYPE_GOOMBA: obj = new CGoomba(); break;
+	case OBJECT_TYPE_GOOMBA: 
+		obj = new CGoomba(); 
+		break;
 	case OBJECT_TYPE_BRICK: obj = new CBrick(); break;
 	case OBJECT_TYPE_KOOPAS: obj = new CKoopas(); break;
 	case OBJECT_TYPE_ENVIRONMENT: obj = new CEnvironment(); break;
-	case OBJECT_TYPE_UPSIDEBRICK: obj = new CUpsideBrick(); break;
+	case OBJECT_TYPE_UPSIDEBRICK: 
+		obj = new CUpsideBrick(); 
+		obj->type = 6;
+		break;
 	case OBJECT_TYPE_PORTAL:
 	{
 		float r = atof(tokens[4].c_str());
@@ -330,9 +336,13 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 		mario->Reset();
 		break;
 	case DIK_1:
+		if (mario->getLevel() != MARIO_LEVEL_SMALL)
+			mario->y += (MARIO_BIG_BBOX_HEIGHT - MARIO_SMALL_BBOX_HEIGHT);
 		mario->SetLevel(MARIO_LEVEL_SMALL);
 		break;
 	case DIK_2:
+		if (mario->getLevel() == MARIO_LEVEL_SMALL)
+			mario->y -= (MARIO_BIG_BBOX_HEIGHT - MARIO_SMALL_BBOX_HEIGHT);
 		mario->SetLevel(MARIO_LEVEL_BIG);
 		break;
 	case DIK_3:

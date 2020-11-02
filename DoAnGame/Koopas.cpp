@@ -75,15 +75,14 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					koopas->vx = -koopas->vx; // 2 Goombas change direction if they collide
 				}
 			}
-			//else if (dynamic_cast<CBrick*>(e->obj))
-			//{
-			//	//DebugOut(L"nx = %f\n", e->nx);
-			//	//DebugOut(L"ny = %f\n", e->ny);
-			//	if (e->nx != 0 && e->ny < 0)
-			//	{
-			//		vx = -vx;
-			//	}
-			//}
+			else if (dynamic_cast<CBrick*>(e->obj))
+			{
+
+				if (abs(nx) > 0.0001f)
+					vx = -vx;
+				if (abs(ny) > 0.0001f)
+					vy = -vy;
+			}
 		}
 	}
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
@@ -96,12 +95,15 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 void CKoopas::Render()
 {
 	int ani = KOOPAS_ANI_WALKING_LEFT;
-	if (state == KOOPAS_STATE_DIE) {
+	if (state == KOOPAS_STATE_DIE && vx == 0) {
 		ani = KOOPAS_ANI_DIE;
 	}
+	else if (state == KOOPAS_STATE_DIE && vx > 0)
+		ani = KOOPAS_ANI_SPIN_RIGHT;
+	else if (state == KOOPAS_STATE_DIE && vx < 0)
+		ani = KOOPAS_ANI_SPIN_LEFT;
 	else if (vx > 0) ani = KOOPAS_ANI_WALKING_RIGHT;
 	else if (vx <= 0) ani = KOOPAS_ANI_WALKING_LEFT;
-
 	animation_set->at(ani)->Render(x, y);
 
 	RenderBoundingBox();
@@ -118,7 +120,8 @@ void CKoopas::SetState(int state)
 		vy = 0;
 		break;
 	case KOOPAS_STATE_WALKING:
-		vx = -KOOPAS_WALKING_SPEED;
+		vx = KOOPAS_WALKING_SPEED;
+		break;
 	}
 
 }

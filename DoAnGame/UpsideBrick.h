@@ -1,12 +1,15 @@
 #pragma once
 #include "GameObject.h"
+#include "Mario.h"
 
 #define UPSIDEBRICK_BBOX_WIDTH  16
 #define UPSIDEBRICK_BBOX_HEIGHT 1
 
 class CUpsideBrick : public CGameObject
 {
+	CMario* player;
 public:
+	int canStomped = 0;
 	virtual void Render();
 	virtual void GetBoundingBox(float& l, float& t, float& r, float& b);
 }; 

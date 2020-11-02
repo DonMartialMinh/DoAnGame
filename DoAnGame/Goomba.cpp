@@ -77,12 +77,11 @@ void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			}
 			else if (dynamic_cast<CBrick*>(e->obj))
 			{
-				//DebugOut(L"nx = %f\n", e->nx);
-				//DebugOut(L"ny = %f\n", e->ny);
-				if ( e->nx != 0 && e->ny < 0)
-				{
+
+				if (abs(nx) > 0.0001f)
 					vx = -vx;
-				}
+				if (abs(ny) > 0.0001f)
+					vy = -vy;
 			}
 		}
 	}

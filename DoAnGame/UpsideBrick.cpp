@@ -1,4 +1,5 @@
 #include "UpsideBrick.h"
+#include "Mario.h"
 
 void CUpsideBrick::Render()
 {
@@ -13,3 +14,11 @@ void CUpsideBrick::GetBoundingBox(float& l, float& t, float& r, float& b)
 		r = x + UPSIDEBRICK_BBOX_WIDTH;
 		b = y + UPSIDEBRICK_BBOX_HEIGHT;
 }
+
+//void CUpsideBrick::GetBoundingBox(float& l, float& t, float& r, float& b, float x, float y)
+//{
+//	l = x;
+//	t = y;
+//	r = x + UPSIDEBRICK_BBOX_WIDTH;
+//	b = y + UPSIDEBRICK_BBOX_HEIGHT;
+//}
