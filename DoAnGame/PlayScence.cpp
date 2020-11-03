@@ -164,7 +164,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_KOOPAS: obj = new CKoopas(); break;
 	case OBJECT_TYPE_ENVIRONMENT: obj = new CEnvironment(); break;
 	case OBJECT_TYPE_UPSIDEBRICK: obj = new CUpsideBrick(); break;
-	case OBJECT_TYPE_COIN:obj = new CCoin(); break;
+	case OBJECT_TYPE_COIN:	obj = new CCoin(); break;
 	case OBJECT_TYPE_PORTAL:
 	{
 		float r = atof(tokens[4].c_str());

@@ -85,6 +85,10 @@
 20012	120	375	135	391	30
 20013	136	375	152	391	30
 
+#COIN
+20015	256	1	272	2	20
+20016	171	137	185	153	20
+
 #BACKGROUND COLOR
 20020	222	546	238	562	30
 						
@@ -186,6 +190,10 @@
 # ==== BACKGROUND ===
 614	20020	100
 
+#COIN
+616	20016	100
+615	20015	100
+
 #
 # id	ani1	ani2	ani3
 #
@@ -201,10 +209,12 @@
 6	613
 # BACKGROUND COLOR
 7	614
+#COIN	
+8	616	615
 
 [OBJECTS]
 # type	x	y	ani_set_id	extra_settings per object type
-# type: 0 = Mario , 1 = Brick, 2 = Goomba, 3 = Koopas, 4 = Environment
+# type: 0 = Mario , 1 = Brick, 2 = Goomba, 3 = Koopas, 4 = Environment, 5 UpsideBrick, 6 Coin
 
 # BACKGROUND
 4	128	-6	7			
@@ -352,6 +362,19 @@
 # MARIO
 0	138.0	142	1
 
+#COIN
+6	210	122	8
+6	226	138	8
+6	242	138	8
+6	258	122	8
+6	258	106	8
+6	242	90	8
+6	226	90	8
+6	258	74	8
+6	258	58	8
+6	242	42	8
+6	226	42	8
+6	210	58	8
 
 # BRICK 
 # --- platform (hint: I created the list using Excel!) ----

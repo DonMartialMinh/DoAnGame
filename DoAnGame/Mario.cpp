@@ -203,11 +203,16 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			}
 			else if (dynamic_cast<CCoin*>(e->obj)) // if e->obj is Coin 
 			{
-				vy = temp;							//Mario went through the coin
-				x -= min_tx * dx + nx * 0.4f;
-				y -= min_ty * dy + ny * 0.4f;
-				x += dx;
-				y += dy;
+				CCoin* coin = dynamic_cast<CCoin*>(e->obj);
+				if (coin->GetState() != COIN_STATE_TRANS)
+				{
+					coin->SetState(COIN_STATE_TRANS);
+					vy = temp;							//Mario went through the coin
+					x -= min_tx * dx + nx * 0.4f;
+					y -= min_ty * dy + ny * 0.4f;
+					x += dx;
+					y += dy;
+				}
 			}
 			else if (dynamic_cast<CPortal*>(e->obj))
 			{
