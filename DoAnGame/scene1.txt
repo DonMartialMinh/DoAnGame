@@ -124,11 +124,16 @@
 #TRANSPARENT UPSIDEBRICK
 20010	256	1	272	2	20
 
+#COIN
+20011	171	137	185	153	20
+
 #QUESTION BRICK
 40001	120	52	136	68	40
 40002	137	52	153	68	40
 40003	154	52	170	68	40
 40004	171	52	187	68	40
+
+
 
 #SMALL BRUSH
 20020	222	205	238	221	20
@@ -322,6 +327,9 @@
 #TRANS BRICK
 611	20010	100
 
+#COIN
+612	20011	100
+
 # ==== GOOMBA  =========
 # walk
 701	30001	100	30002	100
@@ -439,6 +447,9 @@
 #TRANS BRICK
 11	611
 
+#COIN	
+12	612
+
 # QUESTION BRICK 
 29	610
 
@@ -530,7 +541,7 @@
 
 [OBJECTS]
 # type	x	y	ani_set_id	extra_settings per object type
-# type: 0 = Mario , 1 = Brick, 2 = Goomba, 3 = Koopas, 4 = Environment, 5 = UpsideBrick
+# type: 0 = Mario , 1 = Brick, 2 = Goomba, 3 = Koopas, 4 = Environment, 5 = UpsideBrick, 6 = Coin
 
 # SMALL BRUSH
 4	176	170	20
@@ -1562,10 +1573,14 @@
 0	17	158	1
 
 # GOOMBA
-2	220	170	28
+2	260	170	28
 
 # KOOPAS
 3	642	120	39
+3	760	130	39
+
+#COIN
+6	100	100	12
 
 # BRICK 
 1	0	186	3

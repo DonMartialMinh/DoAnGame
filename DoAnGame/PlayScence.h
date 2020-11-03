@@ -9,6 +9,7 @@
 #include "Environment.h"
 #include "Koopas.h"
 #include "UpsideBrick.h"
+#include "Coin.h"
 
 
 class CPlayScene : public CScene

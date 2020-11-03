@@ -34,7 +34,7 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 #define OBJECT_TYPE_KOOPAS	3
 #define OBJECT_TYPE_ENVIRONMENT 4
 #define OBJECT_TYPE_UPSIDEBRICK 5
-
+#define OBJECT_TYPE_COIN 6
 #define OBJECT_TYPE_PORTAL	50
 
 #define MAX_SCENE_LINE 1024
@@ -163,10 +163,8 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_BRICK: obj = new CBrick(); break;
 	case OBJECT_TYPE_KOOPAS: obj = new CKoopas(); break;
 	case OBJECT_TYPE_ENVIRONMENT: obj = new CEnvironment(); break;
-	case OBJECT_TYPE_UPSIDEBRICK: 
-		obj = new CUpsideBrick(); 
-		obj->type = 6;
-		break;
+	case OBJECT_TYPE_UPSIDEBRICK: obj = new CUpsideBrick(); break;
+	case OBJECT_TYPE_COIN:obj = new CCoin(); break;
 	case OBJECT_TYPE_PORTAL:
 	{
 		float r = atof(tokens[4].c_str());

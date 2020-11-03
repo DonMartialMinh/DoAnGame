@@ -1,5 +1,6 @@
 #include "Koopas.h"
 #include "Brick.h"
+#include "UpsideBrick.h"
 
 CKoopas::CKoopas()
 {
@@ -59,6 +60,7 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		x += min_tx * dx + nx * 0.4f;
 		//y += min_ty * dy + ny * 0.4f;
 
+		float temp = vy;
 		//if (nx != 0) vx = 0;
 		if (ny != 0) vy = 0;
 
@@ -69,10 +71,22 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			if (dynamic_cast<CKoopas*>(e->obj)) // if e->obj is goomba 
 			{
 				CKoopas* koopas = dynamic_cast<CKoopas*>(e->obj);
-				if (e->nx != 0)
+				//koopas->vx = -koopas->vx;
+				vx = -vx;
+					/*vx = -vx;
+					koopas->vx = -koopas->vx;*/ // 2 Goombas change direction if they collide
+			}
+			else if (dynamic_cast<CUpsideBrick*>(e->obj))
+			{
+				CUpsideBrick* Upsidebrick = dynamic_cast<CUpsideBrick*>(e->obj);
+
+				if (e->ny >= 0) 
 				{
-					vx = -vx;
-					koopas->vx = -koopas->vx; // 2 Goombas change direction if they collide
+					//If wrong side then go through
+					vy = temp;
+					x -= min_tx * dx + nx * 0.4f;
+					x += dx;
+					y += dy;
 				}
 			}
 			else if (dynamic_cast<CBrick*>(e->obj))
@@ -120,7 +134,7 @@ void CKoopas::SetState(int state)
 		vy = 0;
 		break;
 	case KOOPAS_STATE_WALKING:
-		vx = KOOPAS_WALKING_SPEED;
+		vx = -KOOPAS_WALKING_SPEED;
 		break;
 	}
 

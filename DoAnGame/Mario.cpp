@@ -10,6 +10,7 @@
 #include "Portal.h"
 #include "Brick.h"
 #include "UpsideBrick.h"
+#include "Coin.h"
 #include "Environment.h"
 
 CMario::CMario(float x, float y) : CGameObject()
@@ -74,8 +75,8 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		x += min_tx * dx + nx * 0.4f;
 		y += min_ty * dy + ny * 0.4f;
 
-
-		if (nx != 0) vx = 0;
+		float temp = vy;
+		//if (nx != 0) vx = 0;
 		if (ny != 0) vy = 0;
 
 		//
@@ -170,17 +171,16 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				}
 				else if (e->nx != 0  && e->ny == 0)
 				{
-					float magnitude = sqrt((vx * vx + vy * vy)) * (1-min_tx);
+					/*float magnitude = sqrt((vx * vx + vy * vy)) * (1 - min_tx) ;
 					float dotprod = vx * ny + vy * nx;
 					if (dotprod > 0.0f)
 						dotprod = 1.0f;
 					else if (dotprod < 0.0f)
 						dotprod = -1.0f;
 					vx = dotprod * ny * magnitude;
-					vy = dotprod * nx * magnitude;
+					vy = dotprod * nx * magnitude;*/
 					// slide
-					/*float dotprod = (vx * ny + vy * nx)
-						* (1 - min_tx);
+					/*float dotprod = (vx * ny + vy * nx) * (1- min_tx);
 					vx = dotprod * ny;
 					vy = dotprod * nx;*/
 				}
@@ -189,10 +189,25 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			{
 				CUpsideBrick* Upsidebrick = dynamic_cast<CUpsideBrick*>(e->obj);
 
-				if (e->ny < 0) // jump on top brick then can jumping again
+				if (e->ny >= 0) // jump on top brick then can jumping again
 				{
+					vy = temp;							//If wrong side then go through
+					x -= min_tx * dx + nx * 0.4f;
+					y -= min_ty * dy + ny * 0.4f;
+					x += dx;
+					y += dy;
+				}
+				else {
 					isFlying = 0;
 				}
+			}
+			else if (dynamic_cast<CCoin*>(e->obj)) // if e->obj is Coin 
+			{
+				vy = temp;							//Mario went through the coin
+				x -= min_tx * dx + nx * 0.4f;
+				y -= min_ty * dy + ny * 0.4f;
+				x += dx;
+				y += dy;
 			}
 			else if (dynamic_cast<CPortal*>(e->obj))
 			{
@@ -213,7 +228,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 
 	DebugOut(L"\nvx = %f", vx);
-	//DebugOut(L"\tvy = %f\n", vy);
+	DebugOut(L"\tvy = %f\n", vy);
 }
 
 void CMario::Render()
@@ -516,6 +531,8 @@ void CMario::GetBoundingBox(float& left, float& top, float& right, float& bottom
 	}
 	else if (level == MARIO_LEVEL_RACOON)
 	{
+		left = x;
+		top = y;
 		if (isDucking == 1)
 			bottom = y + MARIO_BIG_DUCK_BBOX_HEIGHT;
 		else

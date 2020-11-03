@@ -74,9 +74,7 @@ void CGameObject::CalcPotentialCollisions(
 		LPCOLLISIONEVENT e = SweptAABBEx(coObjects->at(i));
 		if (e->t > 0 && e->t <= 1.0f)
 		{
-			if (coObjects->at(i)->type == 6 && e->ny >= 0) // Upside Block collision
-				delete e;
-			else if (coObjects->at(i)->type == 1)			// avoid enemy push mario if collide
+			if (coObjects->at(i)->type == 1)			// avoid enemy push mario if collide
 				delete e;
 			else
 				coEvents.push_back(e);

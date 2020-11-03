@@ -52,8 +52,8 @@ void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		// todo: this is a very ugly designed function!!!!
 		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny, rdx, rdy);
 
-		//if (rdx != 0 && rdx!=dx)
-		//	x += nx*abs(rdx); 
+/*		if (rdx != 0 && rdx!=dx)
+			x += nx*abs(rdx);*/ 
 
 		// block every object first!
 		x += min_tx * dx + nx * 0.4f;
@@ -69,11 +69,8 @@ void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			if (dynamic_cast<CGoomba*>(e->obj)) // if e->obj is goomba 
 			{
 				CGoomba* goomba = dynamic_cast<CGoomba*>(e->obj);
-				if (e->nx != 0)
-				{
-					vx = -vx;
-					goomba->vx = -goomba->vx; // 2 Goombas change direction if they collide
-				}
+				//goomba->vx = -goomba->vx;
+				vx = -vx;
 			}
 			else if (dynamic_cast<CBrick*>(e->obj))
 			{
