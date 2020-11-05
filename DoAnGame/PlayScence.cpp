@@ -328,7 +328,8 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 	switch (KeyCode)
 	{
 	case DIK_SPACE:
-		mario->SetState(MARIO_STATE_JUMP);
+		if (mario->GetState() != MARIO_STATE_DUCK)
+			mario->SetState(MARIO_STATE_JUMP);
 		break;
 	case DIK_A:
 		mario->Reset();
@@ -376,9 +377,22 @@ void CPlayScenceKeyHandler::KeyState(BYTE* states)
 	// disable control key when Mario die 
 	if (mario->GetState() == MARIO_STATE_DIE) return;
 	if (game->IsKeyDown(DIK_RIGHT))
+	{
+		if (mario->getLevel() == MARIO_LEVEL_RACOON && mario->nx < 0)
+		{
+			mario->x = mario->x - (MARIO_RACOON_BBOX_WIDTH - MARIO_BIG_BBOX_WIDTH);
+		}
 		mario->SetState(MARIO_STATE_WALKING_RIGHT);
+	}
+
 	else if (game->IsKeyDown(DIK_LEFT))
+	{
+		if (mario->getLevel() == MARIO_LEVEL_RACOON && mario->nx > 0)
+		{
+			mario->x = mario->x + MARIO_RACOON_BBOX_WIDTH - MARIO_BIG_BBOX_WIDTH;
+		}
 		mario->SetState(MARIO_STATE_WALKING_LEFT);
+	}
 	else if (game->IsKeyDown(DIK_DOWN))
 	{
 		if (mario->getLevel() != MARIO_LEVEL_SMALL)

@@ -68,8 +68,8 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 		// how to push back Mario if collides with a moving objects, what if Mario is pushed this way into another object?
 
-		/*if (rdx != 0 && rdx != dx)
-			x += nx * abs(rdx);*/
+		//if (rdx != 0 && rdx != dx)
+		//	x += nx * abs(rdx);
 
 		// block every object first!
 		x += min_tx * dx + nx * 0.4f;
@@ -107,6 +107,8 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						{
 							if (level > MARIO_LEVEL_SMALL)
 							{
+								if (isDucking != 0)
+									isDucking = 0;
 								level = MARIO_LEVEL_SMALL;
 								StartUntouchable();
 							}
@@ -129,9 +131,9 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					}
 					else if (koopas->GetState() == KOOPAS_STATE_DIE && koopas->vx == 0 ) {
 						if (this->nx > 0)  // direction of koopas spin when being stomped
-							koopas->vx = 0.2f;
+							koopas->vx = KOOPAS_SPIN_SPEED;
 						else
-							koopas->vx = -0.2f;
+							koopas->vx = -KOOPAS_SPIN_SPEED;
 						vy = -MARIO_JUMP_DEFLECT_SPEED;
 					}
 					else if (koopas->GetState() == KOOPAS_STATE_DIE && koopas->vx != 0) {
@@ -147,6 +149,8 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						{
 							if (level > MARIO_LEVEL_SMALL)
 							{
+								if (isDucking != 0)
+									isDucking = 0;
 								level = MARIO_LEVEL_SMALL;
 								StartUntouchable();
 							}
@@ -169,9 +173,10 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				{
 					isFlying = 0;
 				}
-				else if (e->nx != 0  && e->ny == 0)
+				else if (e->nx != 0 && vx != 0)
 				{
-					/*float magnitude = sqrt((vx * vx + vy * vy)) * (1 - min_tx) ;
+					vx = 0;
+					/*float magnitude = sqrt((vx * vx + vy * vy))* (1-min_tx);
 					float dotprod = vx * ny + vy * nx;
 					if (dotprod > 0.0f)
 						dotprod = 1.0f;
@@ -180,26 +185,62 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					vx = dotprod * ny * magnitude;
 					vy = dotprod * nx * magnitude;*/
 					// slide
-					/*float dotprod = (vx * ny + vy * nx) * (1- min_tx);
-					vx = dotprod * ny;
-					vy = dotprod * nx;*/
+					//float dotprod = (vx * ny + vy * nx) * (1- min_tx);
+					//vx = dotprod * ny;
+					//vy = dotprod * nx;
 				}
 			}
 			else if (dynamic_cast<CUpsideBrick*>(e->obj))
 			{
 				CUpsideBrick* Upsidebrick = dynamic_cast<CUpsideBrick*>(e->obj);
 
-				if (e->ny >= 0) // jump on top brick then can jumping again
+				if (this->level >= MARIO_LEVEL_BIG )
 				{
-					vy = temp;							//If wrong side then go through
-					x -= min_tx * dx + nx * 0.4f;
-					y -= min_ty * dy + ny * 0.4f;
-					x += dx;
-					y += dy;
+					if (this->state == MARIO_STATE_DUCK)
+					{
+						if (e->ny > 0 || this->y + MARIO_BIG_DUCK_BBOX_HEIGHT > Upsidebrick->y)
+						{
+							vy = temp;							//If wrong side then go through
+							x -= min_tx * dx + nx * 0.4f;
+							y -= min_ty * dy + ny * 0.4f;
+							x += dx;
+							y += dy;
+						}
+						else {
+							isFlying = 0;	 // jump on top brick then can jumping again
+						}
+					}
+					else if (this->state != MARIO_STATE_DUCK)
+					{
+						if (e->ny > 0 || this->y + MARIO_BIG_BBOX_HEIGHT > Upsidebrick->y)
+						{
+							vy = temp;							//If wrong side then go through
+							x -= min_tx * dx + nx * 0.4f;
+							y -= min_ty * dy + ny * 0.4f;
+							x += dx;
+							y += dy;
+						}
+						else {
+							isFlying = 0;	 // jump on top brick then can jumping again
+						}
+					}
 				}
-				else {
-					isFlying = 0;
+				else if (this->level >= MARIO_LEVEL_SMALL)
+				{
+					if (e->ny > 0 || this->y + MARIO_SMALL_BBOX_HEIGHT > Upsidebrick->y)
+					{
+						vy = temp;							//If wrong side then go through
+						x -= min_tx * dx + nx * 0.4f;
+						y -= min_ty * dy + ny * 0.4f;
+						x += dx;
+						y += dy;
+					}
+					else {
+						isFlying = 0;	 // jump on top brick then can jumping again
+					}
 				}
+
+
 			}
 			else if (dynamic_cast<CCoin*>(e->obj)) // if e->obj is Coin 
 			{
@@ -481,6 +522,7 @@ void CMario::SetState(int state)
 	switch (state)
 	{
 	case MARIO_STATE_WALKING_RIGHT:
+
 		if (isDucking == 0)
 		{
 			vx = MARIO_WALKING_SPEED;
@@ -536,13 +578,23 @@ void CMario::GetBoundingBox(float& left, float& top, float& right, float& bottom
 	}
 	else if (level == MARIO_LEVEL_RACOON)
 	{
-		left = x;
-		top = y;
+		if (this->nx > 0)
+		{
+			left = x + MARIO_RACOON_BBOX_WIDTH - MARIO_BIG_BBOX_WIDTH;
+			top = y + MARIO_RACOON_BBOX_WIDTH - MARIO_BIG_BBOX_WIDTH;
+			right = left + MARIO_BIG_BBOX_WIDTH;
+		}
+		else {
+			left = x;
+			top = y;
+			right = x + MARIO_BIG_BBOX_WIDTH;
+		}
+
 		if (isDucking == 1)
 			bottom = y + MARIO_BIG_DUCK_BBOX_HEIGHT;
 		else
 			bottom = y + MARIO_RACOON_BBOX_HEIGHT;
-		right = x + MARIO_RACOON_BBOX_WIDTH;
+
 	}
 	else
 	{
