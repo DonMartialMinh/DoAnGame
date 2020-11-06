@@ -362,6 +362,8 @@ void CMario::Render()
 				}
 				else if (isDucking == 1)
 					ani = MARIO_ANI_BIG_DUCK_RIGHT;
+				else if (isRunning == 1)
+					ani = MARIO_ANI_BIG_RUNNING_RIGHT;
 				else
 					ani = MARIO_ANI_BIG_WALKING_RIGHT;
 			}
@@ -376,6 +378,8 @@ void CMario::Render()
 				}
 				else if (isDucking == 1)
 					ani = MARIO_ANI_BIG_DUCK_LEFT;
+				else if (isRunning == 1)
+					ani = MARIO_ANI_BIG_RUNNING_LEFT;
 				else
 					ani = MARIO_ANI_BIG_WALKING_LEFT;
 			}
@@ -404,6 +408,8 @@ void CMario::Render()
 			{
 				if (isFlying == 1)
 					ani = MARIO_ANI_SMALL_JUMP_RIGHT;
+				else if (isRunning == 1)
+					ani = MARIO_ANI_SMALL_RUNNING_RIGHT;
 				else
 					ani = MARIO_ANI_SMALL_WALKING_RIGHT;
 			}
@@ -411,6 +417,8 @@ void CMario::Render()
 			{
 				if (isFlying == 1)
 					ani = MARIO_ANI_SMALL_JUMP_LEFT;
+				else if (isRunning == 1)
+					ani = MARIO_ANI_SMALL_RUNNING_LEFT;
 				else
 					ani = MARIO_ANI_SMALL_WALKING_LEFT;
 			}
@@ -460,6 +468,8 @@ void CMario::Render()
 				}
 				else if (isDucking == 1)
 					ani = MARIO_ANI_FIRE_DUCK_RIGHT;
+				else if (isRunning == 1)
+					ani = MARIO_ANI_FIRE_RUNNING_RIGHT;
 				else
 					ani = MARIO_ANI_FIRE_WALKING_RIGHT;
 			}
@@ -474,6 +484,8 @@ void CMario::Render()
 				}
 				else if (isDucking == 1)
 					ani = MARIO_ANI_FIRE_DUCK_LEFT;
+				else if (isRunning == 1)
+					ani = MARIO_ANI_FIRE_RUNNING_LEFT;
 				else
 					ani = MARIO_ANI_FIRE_WALKING_LEFT;
 			}
@@ -524,6 +536,8 @@ void CMario::Render()
 				}
 				else if (isDucking == 1)
 					ani = MARIO_ANI_RACOON_DUCK_RIGHT;
+				else if (isRunning == 1)
+					ani = MARIO_ANI_RACOON_RUNNING_RIGHT;
 				else
 					ani = MARIO_ANI_RACOON_WALKING_RIGHT;
 			}
@@ -538,6 +552,8 @@ void CMario::Render()
 				}
 				else if (isDucking == 1)
 					ani = MARIO_ANI_RACOON_DUCK_LEFT;
+				else if (isRunning == 1)
+					ani = MARIO_ANI_RACOON_RUNNING_LEFT;
 				else
 					ani = MARIO_ANI_RACOON_WALKING_LEFT;
 			}
