@@ -339,6 +339,10 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 	case DIK_A:
 		mario->Reset();
 		break;
+	case DIK_Z:
+		if (mario->getLevel() == MARIO_LEVEL_RACOON)
+			mario->SetState(MARIO_RACOON_STATE_TAIL);
+		break;
 	case DIK_1:
 		if (mario->getLevel() != MARIO_LEVEL_SMALL)
 			mario->y += (MARIO_BIG_BBOX_HEIGHT - MARIO_SMALL_BBOX_HEIGHT);

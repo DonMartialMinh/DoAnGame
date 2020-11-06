@@ -74,6 +74,12 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		turning = 0;
 	}
 
+	if (GetTickCount() - tail_start > MARIO_TAILING_TIME)
+	{
+		tail_start = 0;
+		tailing = 0;
+	}
+
 	// No collision occured, proceed normally
 	if (coEvents.size() == 0)
 	{
@@ -322,7 +328,7 @@ void CMario::Render()
 		else
 			ani = MARIO_ANI_RACOON_FLY_LEFT;
 	}
-	else if (turning)
+	else if (turning && isFlying == 0)
 	{
 		if (nx > 0)
 		{
@@ -346,6 +352,13 @@ void CMario::Render()
 			else
 				ani = MARIO_ANI_RACOON_TURNING_LEFT;
 		}
+	}
+	else if (tailing)
+	{
+		if (nx > 0)
+			ani = MARIO_ANI_RACOON_TAIL_RIGHT;
+		else
+			ani = MARIO_ANI_RACOON_TAIL_LEFT;
 	}
 	else
 		if (level == MARIO_LEVEL_BIG)
@@ -656,6 +669,9 @@ void CMario::SetState(int state)
 		break;
 	case MARIO_RACOON_STATE_TURN:
 		StartTurning();
+		break;
+	case MARIO_RACOON_STATE_TAIL:
+		StartTailing();
 		break;
 	case MARIO_STATE_DIE:
 		vy = -MARIO_DIE_DEFLECT_SPEED;
