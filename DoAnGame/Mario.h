@@ -14,6 +14,7 @@
 #define MARIO_STATE_JUMP			300
 #define MARIO_STATE_DIE				400
 #define MARIO_STATE_DUCK			500
+#define MARIO_RACOON_STATE_FALL		600
 
 #define MARIO_ANI_BIG_IDLE_RIGHT			0
 #define MARIO_ANI_BIG_IDLE_LEFT				1
@@ -60,6 +61,8 @@
 //#define MARIO_ANI_FIRE_CHANGE_DIR_LEFT		38
 #define MARIO_ANI_RACOON_FALL_RIGHT			35
 #define MARIO_ANI_RACOON_FALL_LEFT			36
+#define MARIO_ANI_RACOON_FALL_RIGHT_1		37
+#define MARIO_ANI_RACOON_FALL_LEFT_1		38
 //#define MARIO_ANI_RACOON_CHANGE_DIR_RIGHT	41
 //#define MARIO_ANI_RACOON_CHANGE_DIR_LEFT	42
 //#define MARIO_ANI_SMALL_CHANGE_DIR_RIGHT	43
@@ -84,14 +87,16 @@
 #define MARIO_SMALL_BBOX_HEIGHT 15
 
 #define MARIO_UNTOUCHABLE_TIME 5000
-
+#define MARIO_FALLING_TIME 300
 
 class CMario : public CGameObject
 {
 	int level;
 	int untouchable;
+	int falling;
 
 	DWORD untouchable_start;
+	DWORD fall_start;
 
 	float start_x;			// initial position of Mario at scene
 	float start_y;
@@ -105,6 +110,7 @@ public:
 	void SetState(int state);
 	void SetLevel(int l) { level = l; }
 	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount(); }
+	void StartFalling() { falling = 1; fall_start = GetTickCount(); }
 
 	void Reset();
 

@@ -325,10 +325,13 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 	//DebugOut(L"[INFO] KeyDown: %d\n", KeyCode);
 
 	CMario* mario = ((CPlayScene*)scence)->GetPlayer();
+	if (mario->GetState() == MARIO_STATE_DIE) return;
 	switch (KeyCode)
 	{
 	case DIK_SPACE:
-		if (mario->GetState() != MARIO_STATE_DUCK)
+		if (mario->getLevel() == MARIO_LEVEL_RACOON && mario->isFlying == 1)
+			mario->SetState(MARIO_RACOON_STATE_FALL);
+		else if (mario->GetState() != MARIO_STATE_DUCK)
 			mario->SetState(MARIO_STATE_JUMP);
 		break;
 	case DIK_A:
@@ -349,6 +352,8 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 		break;
 	case DIK_4:
 		mario->SetLevel(MARIO_LEVEL_RACOON);
+		if (mario->nx > 0)
+			mario->x -= (MARIO_RACOON_BBOX_WIDTH - MARIO_BIG_BBOX_WIDTH);
 		break;
 	}
 }

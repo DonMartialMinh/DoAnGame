@@ -34,6 +34,9 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	vy += MARIO_GRAVITY * dt;
 	if (vy > 0.04f) isFlying = 1; // if falling then cant jump
 
+	if (falling)
+		vy = 0.035f;
+
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
 
@@ -48,6 +51,12 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	{
 		untouchable_start = 0;
 		untouchable = 0;
+	}
+
+	if (GetTickCount() - fall_start > MARIO_FALLING_TIME)
+	{
+		fall_start = 0;
+		falling = 0;
 	}
 
 	// No collision occured, proceed normally
@@ -172,6 +181,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				if (e->ny < 0) // jump on top brick then can jumping again
 				{
 					isFlying = 0;
+					falling = 0;
 				}
 				else if (e->nx != 0 && vx != 0)
 				{
@@ -207,7 +217,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 							y += dy;
 						}
 						else {
-							isFlying = 0;	 // jump on top brick then can jumping again
+							isFlying = 0; // jump on top brick then can jumping again
 						}
 					}
 					else if (this->state != MARIO_STATE_DUCK)
@@ -221,6 +231,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 							y += dy;
 						}
 						else {
+							falling = 0;
 							isFlying = 0;	 // jump on top brick then can jumping again
 						}
 					}
@@ -282,6 +293,13 @@ void CMario::Render()
 	int ani = -1;
 	if (state == MARIO_STATE_DIE)
 		ani = MARIO_ANI_DIE;
+	else if (falling)
+	{
+		if (nx > 0)
+			ani = MARIO_ANI_RACOON_FALL_RIGHT_1;
+		else
+			ani = MARIO_ANI_RACOON_FALL_LEFT_1;
+	}
 	else
 		if (level == MARIO_LEVEL_BIG)
 		{
@@ -470,7 +488,8 @@ void CMario::Render()
 						if (vy < 0.0)
 							ani = MARIO_ANI_RACOON_JUMP_LEFT;
 						else
-							ani = MARIO_ANI_RACOON_FALL_LEFT;
+								ani = MARIO_ANI_RACOON_FALL_LEFT;
+
 					}
 					else if (isDucking == 1)
 						ani = MARIO_ANI_RACOON_DUCK_LEFT;
@@ -554,6 +573,9 @@ void CMario::SetState(int state)
 		break;
 	case MARIO_STATE_IDLE:
 		vx = 0;
+		break;
+	case MARIO_RACOON_STATE_FALL:
+		StartFalling();
 		break;
 	case MARIO_STATE_DIE:
 		vy = -MARIO_DIE_DEFLECT_SPEED;

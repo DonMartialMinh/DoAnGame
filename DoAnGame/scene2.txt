@@ -3,6 +3,7 @@
 0	textures\mario.png	255	255	255
 20	textures\tiles.png	255	128	192
 30	textures\misc2.png	4	193	170
+40	textures\misc-2.png	166	185	255
 
 # id	left	top	right	bottom	texture_id
 [SPRITES]
@@ -88,6 +89,8 @@
 #COIN
 20015	256	1	272	2	20
 20016	171	137	185	153	20
+20017	370	100	384	116	40
+20018	353	100	367	116	40
 
 #BACKGROUND COLOR
 20020	222	546	238	562	30
@@ -191,7 +194,7 @@
 614	20020	100
 
 #COIN
-616	20016	100
+616	20016	100	20017	100	20018	100
 615	20015	100
 
 #
