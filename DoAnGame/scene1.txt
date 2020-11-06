@@ -162,7 +162,7 @@ fly left
 40002	137	52	153	68	40
 40003	154	52	170	68	40
 40004	171	52	187	68	40
-
+40005	188	52	204	68	40
 
 
 #SMALL BRUSH
@@ -381,7 +381,7 @@ fly left
 
 # ==== QUESTION BRICK =========
 610	40001	1000	40001	100	40002	100	40003	100	40004	100
-
+613	40005	100
 
 # ==== BRICK =========
 601	20001	100
@@ -524,7 +524,7 @@ fly left
 12	612	611
 
 # QUESTION BRICK 
-29	610	
+29	610	613
 
 # GOOMBA
 28	701	702
@@ -614,7 +614,7 @@ fly left
 
 [OBJECTS]
 # type	x	y	ani_set_id	extra_settings per object type
-# type: 0 = Mario , 1 = Brick, 2 = Goomba, 3 = Koopas, 4 = Environment, 5 = UpsideBrick, 6 = Coin
+# type: 0 = Mario , 1 = Brick, 2 = Goomba, 3 = Koopas, 4 = Environment, 5 = UpsideBrick, 6 = Coin, 7 = QBrick
 
 # SMALL BRUSH
 4	176	170	20
@@ -1881,19 +1881,19 @@ fly left
 
 #QUESTION BRICK
 
-1	192	122	29
-1	208	122	29
+7	192	122	29
+7	208	122	29
 
-1	240	74	29
-1	256	74	29
+7	240	74	29
+7	256	74	29
 
-1	432	90	29
+7	432	90	29
 
-1	672	154	29
+7	672	154	29
 
-1	720	122	29
+7	720	122	29
 
-1	1488	138	29
+7	1488	138	29
 
 #BRICK3
 1	1520	106	9

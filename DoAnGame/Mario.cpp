@@ -12,6 +12,7 @@
 #include "UpsideBrick.h"
 #include "Coin.h"
 #include "Environment.h"
+#include "QBrick.h"
 
 CMario::CMario(float x, float y) : CGameObject()
 {
@@ -219,6 +220,23 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					//float dotprod = (vx * ny + vy * nx) * (1- min_tx);
 					//vx = dotprod * ny;
 					//vy = dotprod * nx;
+				}
+			}
+			else if (dynamic_cast<CQBrick*>(e->obj))
+			{
+				CQBrick* qbrick = dynamic_cast<CQBrick*>(e->obj);
+				if (e->ny < 0) // jump on top brick then can jumping again
+				{
+					isFlying = 0;
+					falling = 0;
+				}
+				else if (e->ny > 0)
+				{
+					if (qbrick->GetState() != BRICK_STATE_EMP)
+					{
+						qbrick->SetState(BRICK_STATE_EMP);
+						qbrick->StartRinging();
+					}
 				}
 			}
 			else if (dynamic_cast<CUpsideBrick*>(e->obj))

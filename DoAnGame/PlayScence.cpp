@@ -35,6 +35,7 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 #define OBJECT_TYPE_ENVIRONMENT 4
 #define OBJECT_TYPE_UPSIDEBRICK 5
 #define OBJECT_TYPE_COIN 6
+#define OBJECT_TYPE_QBRICK 7
 #define OBJECT_TYPE_PORTAL	50
 
 #define MAX_SCENE_LINE 1024
@@ -165,6 +166,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_ENVIRONMENT: obj = new CEnvironment(); break;
 	case OBJECT_TYPE_UPSIDEBRICK: obj = new CUpsideBrick(); break;
 	case OBJECT_TYPE_COIN:	obj = new CCoin(); break;
+	case OBJECT_TYPE_QBRICK: obj = new CQBrick(); break;
 	case OBJECT_TYPE_PORTAL:
 	{
 		float r = atof(tokens[4].c_str());
@@ -328,7 +330,7 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 	if (mario->GetState() == MARIO_STATE_DIE) return;
 	switch (KeyCode)
 	{
-	case DIK_SPACE:
+	case DIK_X:
 		if ((mario->getLevel() == MARIO_LEVEL_RACOON && mario->isFlying == 1 && mario->isRunning == 1) || mario->flying)
 			mario->SetState(MARIO_RACOON_STATE_FLY);
 		else if (mario->getLevel() == MARIO_LEVEL_RACOON && mario->isFlying == 1)

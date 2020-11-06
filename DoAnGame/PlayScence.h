@@ -10,6 +10,7 @@
 #include "Koopas.h"
 #include "UpsideBrick.h"
 #include "Coin.h"
+#include "QBrick.h"
 
 
 class CPlayScene : public CScene
