@@ -394,7 +394,9 @@ void CPlayScenceKeyHandler::KeyState(BYTE* states)
 
 	if (game->IsKeyDown(DIK_RIGHT))
 	{
-		if (mario->getLevel() == MARIO_LEVEL_RACOON && mario->nx < 0)
+		if (mario->vx < 0 && mario->turning == 0)
+			mario->SetState(MARIO_RACOON_STATE_TURN);
+		else if (mario->getLevel() == MARIO_LEVEL_RACOON && mario->nx < 0)
 		{
 			mario->x = mario->x - (MARIO_RACOON_BBOX_WIDTH - MARIO_BIG_BBOX_WIDTH);
 		}
@@ -403,7 +405,9 @@ void CPlayScenceKeyHandler::KeyState(BYTE* states)
 
 	else if (game->IsKeyDown(DIK_LEFT))
 	{
-		if (mario->getLevel() == MARIO_LEVEL_RACOON && mario->nx > 0)
+		if (mario->vx > 0 && mario->turning == 0)
+			mario->SetState(MARIO_RACOON_STATE_TURN);
+		else if (mario->getLevel() == MARIO_LEVEL_RACOON && mario->nx > 0)
 		{
 			mario->x = mario->x + MARIO_RACOON_BBOX_WIDTH - MARIO_BIG_BBOX_WIDTH;
 		}

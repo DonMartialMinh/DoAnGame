@@ -68,6 +68,12 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		flying = 0;
 	}
 
+	if (GetTickCount() - turn_start > MARIO_TURNING_TIME)
+	{
+		turn_start = 0;
+		turning = 0;
+	}
+
 	// No collision occured, proceed normally
 	if (coEvents.size() == 0)
 	{
@@ -315,6 +321,31 @@ void CMario::Render()
 			ani = MARIO_ANI_RACOON_FLY_RIGHT;
 		else
 			ani = MARIO_ANI_RACOON_FLY_LEFT;
+	}
+	else if (turning)
+	{
+		if (nx > 0)
+		{
+			if (level == MARIO_LEVEL_BIG)
+				ani = MARIO_ANI_BIG_TURNING_RIGHT;
+			else if (level == MARIO_LEVEL_SMALL)
+				ani = MARIO_ANI_SMALL_TURNING_RIGHT;
+			else if (level == MARIO_LEVEL_FIRE)
+				ani = MARIO_ANI_FIRE_TURNING_RIGHT;
+			else
+				ani = MARIO_ANI_RACOON_TURNING_RIGHT;
+		}
+		else
+		{
+			if (level == MARIO_LEVEL_BIG)
+				ani = MARIO_ANI_BIG_TURNING_LEFT;
+			else if (level == MARIO_LEVEL_SMALL)
+				ani = MARIO_ANI_SMALL_TURNING_LEFT;
+			else if (level == MARIO_LEVEL_FIRE)
+				ani = MARIO_ANI_FIRE_TURNING_LEFT;
+			else
+				ani = MARIO_ANI_RACOON_TURNING_LEFT;
+		}
 	}
 	else
 		if (level == MARIO_LEVEL_BIG)
@@ -576,8 +607,11 @@ void CMario::SetState(int state)
 
 		if (isDucking == 0)
 		{
-			if (isRunning == 0)
+			if (turning)
+				vx = MARIO_WALKING_SPEED / 2;
+			else if (isRunning == 0)
 				vx = MARIO_WALKING_SPEED;
+
 			else
 				vx = MARIO_RUNNING_SPEED;
 		}
@@ -586,7 +620,9 @@ void CMario::SetState(int state)
 	case MARIO_STATE_WALKING_LEFT:
 		if (isDucking == 0)
 		{
-			if (isRunning == 0)
+			if (turning)
+				vx = -MARIO_WALKING_SPEED / 2;
+			else if (isRunning == 0)
 				vx = -MARIO_WALKING_SPEED;
 			else
 				vx = -MARIO_RUNNING_SPEED;
@@ -617,6 +653,9 @@ void CMario::SetState(int state)
 		break;
 	case MARIO_RACOON_STATE_FLY:
 		StartFlying();
+		break;
+	case MARIO_RACOON_STATE_TURN:
+		StartTurning();
 		break;
 	case MARIO_STATE_DIE:
 		vy = -MARIO_DIE_DEFLECT_SPEED;

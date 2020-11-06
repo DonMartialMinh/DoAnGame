@@ -17,6 +17,7 @@
 #define MARIO_STATE_DUCK			500
 #define MARIO_RACOON_STATE_FALL		600
 #define MARIO_RACOON_STATE_FLY		700
+#define MARIO_RACOON_STATE_TURN		800
 
 #define MARIO_ANI_BIG_IDLE_RIGHT			0
 #define MARIO_ANI_BIG_IDLE_LEFT				1
@@ -81,6 +82,16 @@
 #define MARIO_ANI_RACOON_RUNNING_RIGHT		47
 #define MARIO_ANI_RACOON_RUNNING_LEFT		48
 
+#define MARIO_ANI_SMALL_TURNING_RIGHT		49
+#define MARIO_ANI_SMALL_TURNING_LEFT		50
+#define MARIO_ANI_BIG_TURNING_RIGHT			51
+#define MARIO_ANI_BIG_TURNING_LEFT			52
+#define MARIO_ANI_FIRE_TURNING_RIGHT		53
+#define MARIO_ANI_FIRE_TURNING_LEFT			54
+#define MARIO_ANI_RACOON_TURNING_RIGHT		55
+#define MARIO_ANI_RACOON_TURNING_LEFT		56
+
+
 #define MARIO_ANI_DIE				8
 
 #define	MARIO_LEVEL_SMALL	1
@@ -102,6 +113,7 @@
 #define MARIO_UNTOUCHABLE_TIME 5000
 #define MARIO_FALLING_TIME 300
 #define MARIO_FLYING_TIME 300
+#define MARIO_TURNING_TIME 200
 
 class CMario : public CGameObject
 {
@@ -113,6 +125,7 @@ class CMario : public CGameObject
 	DWORD untouchable_start;
 	DWORD fall_start;
 	DWORD fly_start;
+	DWORD turn_start;
 
 	float start_x;			// initial position of Mario at scene
 	float start_y;
@@ -121,6 +134,7 @@ public:
 	int isFlying = 0;
 	int isDucking = 0;
 	int isRunning = 0;
+	int turning = 0;
 	CMario(float x = 0.0f, float y = 0.0f);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects = NULL);
 	virtual void Render();
@@ -130,6 +144,7 @@ public:
 	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount(); }
 	void StartFalling() { falling = 1; fall_start = GetTickCount(); }
 	void StartFlying() { flying = 1; fly_start = GetTickCount(); }
+	void StartTurning() { turning = 1; turn_start = GetTickCount(); }
 
 	void Reset();
 
