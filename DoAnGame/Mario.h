@@ -1,7 +1,8 @@
 #pragma once
 #include "GameObject.h"
 
-#define MARIO_WALKING_SPEED		0.15f 
+#define MARIO_WALKING_SPEED		0.13f 
+#define MARIO_RUNNING_SPEED		0.2f 
 //0.1f
 #define MARIO_JUMP_SPEED_Y		0.52f
 #define MARIO_JUMP_DEFLECT_SPEED 0.3f
@@ -15,6 +16,7 @@
 #define MARIO_STATE_DIE				400
 #define MARIO_STATE_DUCK			500
 #define MARIO_RACOON_STATE_FALL		600
+#define MARIO_RACOON_STATE_FLY		700
 
 #define MARIO_ANI_BIG_IDLE_RIGHT			0
 #define MARIO_ANI_BIG_IDLE_LEFT				1
@@ -63,6 +65,8 @@
 #define MARIO_ANI_RACOON_FALL_LEFT			36
 #define MARIO_ANI_RACOON_FALL_RIGHT_1		37
 #define MARIO_ANI_RACOON_FALL_LEFT_1		38
+#define MARIO_ANI_RACOON_FLY_RIGHT			39
+#define MARIO_ANI_RACOON_FLY_LEFT			40
 //#define MARIO_ANI_RACOON_CHANGE_DIR_RIGHT	41
 //#define MARIO_ANI_RACOON_CHANGE_DIR_LEFT	42
 //#define MARIO_ANI_SMALL_CHANGE_DIR_RIGHT	43
@@ -88,6 +92,7 @@
 
 #define MARIO_UNTOUCHABLE_TIME 5000
 #define MARIO_FALLING_TIME 300
+#define MARIO_FLYING_TIME 300
 
 class CMario : public CGameObject
 {
@@ -95,14 +100,18 @@ class CMario : public CGameObject
 	int untouchable;
 	int falling;
 
+
 	DWORD untouchable_start;
 	DWORD fall_start;
+	DWORD fly_start;
 
 	float start_x;			// initial position of Mario at scene
 	float start_y;
 public:
+	int flying;
 	int isFlying = 0;
 	int isDucking = 0;
+	int isRunning = 0;
 	CMario(float x = 0.0f, float y = 0.0f);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects = NULL);
 	virtual void Render();
@@ -111,6 +120,7 @@ public:
 	void SetLevel(int l) { level = l; }
 	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount(); }
 	void StartFalling() { falling = 1; fall_start = GetTickCount(); }
+	void StartFlying() { flying = 1; fly_start = GetTickCount(); }
 
 	void Reset();
 

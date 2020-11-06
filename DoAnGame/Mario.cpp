@@ -35,7 +35,10 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	if (vy > 0.04f) isFlying = 1; // if falling then cant jump
 
 	if (falling)
-		vy = 0.035f;
+		vy = 0.035f; 
+
+	if (flying)
+		vy = -0.045f;
 
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
@@ -57,6 +60,12 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	{
 		fall_start = 0;
 		falling = 0;
+	}
+
+	if (GetTickCount() - fly_start > MARIO_FLYING_TIME)
+	{
+		fly_start = 0;
+		flying = 0;
 	}
 
 	// No collision occured, proceed normally
@@ -299,6 +308,13 @@ void CMario::Render()
 			ani = MARIO_ANI_RACOON_FALL_RIGHT_1;
 		else
 			ani = MARIO_ANI_RACOON_FALL_LEFT_1;
+	}
+	else if (flying)
+	{
+		if (nx > 0)
+			ani = MARIO_ANI_RACOON_FLY_RIGHT;
+		else
+			ani = MARIO_ANI_RACOON_FLY_LEFT;
 	}
 	else
 		if (level == MARIO_LEVEL_BIG)
@@ -544,14 +560,20 @@ void CMario::SetState(int state)
 
 		if (isDucking == 0)
 		{
-			vx = MARIO_WALKING_SPEED;
+			if (isRunning == 0)
+				vx = MARIO_WALKING_SPEED;
+			else
+				vx = MARIO_RUNNING_SPEED;
 		}
 		nx = 1;
 		break;
 	case MARIO_STATE_WALKING_LEFT:
 		if (isDucking == 0)
 		{
-			vx = -MARIO_WALKING_SPEED;
+			if (isRunning == 0)
+				vx = -MARIO_WALKING_SPEED;
+			else
+				vx = -MARIO_RUNNING_SPEED;
 		}
 		nx = -1;
 		break;
@@ -576,6 +598,9 @@ void CMario::SetState(int state)
 		break;
 	case MARIO_RACOON_STATE_FALL:
 		StartFalling();
+		break;
+	case MARIO_RACOON_STATE_FLY:
+		StartFlying();
 		break;
 	case MARIO_STATE_DIE:
 		vy = -MARIO_DIE_DEFLECT_SPEED;

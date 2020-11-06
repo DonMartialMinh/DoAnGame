@@ -329,7 +329,9 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 	switch (KeyCode)
 	{
 	case DIK_SPACE:
-		if (mario->getLevel() == MARIO_LEVEL_RACOON && mario->isFlying == 1)
+		if ((mario->getLevel() == MARIO_LEVEL_RACOON && mario->isFlying == 1 && mario->isRunning == 1) || mario->flying)
+			mario->SetState(MARIO_RACOON_STATE_FLY);
+		else if (mario->getLevel() == MARIO_LEVEL_RACOON && mario->isFlying == 1)
 			mario->SetState(MARIO_RACOON_STATE_FALL);
 		else if (mario->GetState() != MARIO_STATE_DUCK)
 			mario->SetState(MARIO_STATE_JUMP);
@@ -381,6 +383,15 @@ void CPlayScenceKeyHandler::KeyState(BYTE* states)
 
 	// disable control key when Mario die 
 	if (mario->GetState() == MARIO_STATE_DIE) return;
+
+	if (game->IsKeyDown(DIK_LSHIFT))
+	{
+		mario->isRunning = 1;
+	}
+	else {
+		mario->isRunning = 0;
+	}
+
 	if (game->IsKeyDown(DIK_RIGHT))
 	{
 		if (mario->getLevel() == MARIO_LEVEL_RACOON && mario->nx < 0)
