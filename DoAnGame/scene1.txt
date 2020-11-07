@@ -195,6 +195,7 @@ fly left
 
 
 
+
 #BRICK
 20001	239	222	255	238	20
 #LEFT BRICK
@@ -227,6 +228,16 @@ fly left
 40003	154	52	170	68	40
 40004	171	52	187	68	40
 40005	188	52	204	68	40
+
+#FIREBALL
+40010	240	554	248	562	0
+40011	258	553	266	562	0
+40012	258	574	266	582	0
+40013	240	573	248	582	0
+40014	198	554	206	562	0
+40015	180	553	188	562	0
+40016	180	574	188	582	0
+40017	198	573	206	582	0
 
 
 #SMALL BRUSH
@@ -492,6 +503,10 @@ fly left
 #die
 408	10099	100
 
+#==== FIREBALL===
+500	40010	100	40011	100	40012	100	40013	100
+501	40014	100	40015	100	40016	100	40017	100
+
 # ==== QUESTION BRICK =========
 610	40001	1000	40001	100	40002	100	40003	100	40004	100
 613	40005	100
@@ -636,6 +651,9 @@ fly left
 #COIN	
 12	612	611
 
+#FIREBALL
+13	500	501
+
 # QUESTION BRICK 
 29	610	613
 
@@ -727,7 +745,7 @@ fly left
 
 [OBJECTS]
 # type	x	y	ani_set_id	extra_settings per object type
-# type: 0 = Mario , 1 = Brick, 2 = Goomba, 3 = Koopas, 4 = Environment, 5 = UpsideBrick, 6 = Coin, 7 = QBrick
+# type: 0 = Mario , 1 = Brick, 2 = Goomba, 3 = Koopas, 4 = Environment, 5 = UpsideBrick, 6 = Coin, 7 = QBrick, 8 = FireBall
 
 # SMALL BRUSH
 4	176	170	20
@@ -2173,6 +2191,10 @@ fly left
 1	2288	-102	43
 1	2272	-118	40
 1	2288	-118	42
+
+# FIREBALL
+
+8	15	120	13
 
 
 # --- SCENE PORTAL ----

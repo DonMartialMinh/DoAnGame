@@ -1,5 +1,6 @@
 #pragma once
 #include "GameObject.h"
+#include "FireBall.h"
 
 #define MARIO_WALKING_SPEED		0.13f 
 #define MARIO_RUNNING_SPEED		0.2f 
@@ -170,6 +171,7 @@ class CMario : public CGameObject
 	float start_y;
 public:
 	CGameObject* obj = NULL;
+	int fireball = 0;
 	int flying;
 	int isFlying = 0;
 	int isDucking = 0;
@@ -193,6 +195,7 @@ public:
 	void StartTailing() { tailing = 1; tail_start = GetTickCount(); }
 	void StartKicking() { kicking = 1; kick_start = GetTickCount(); }
 	void StartSliding() { sliding = 1; slide_start = GetTickCount(); }
+	CGameObject* NewFireBall();
 
 	void Reset();
 

@@ -36,6 +36,7 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 #define OBJECT_TYPE_UPSIDEBRICK 5
 #define OBJECT_TYPE_COIN 6
 #define OBJECT_TYPE_QBRICK 7
+#define OBJECT_TYPE_FIREBALL 8
 #define OBJECT_TYPE_PORTAL	50
 
 #define MAX_SCENE_LINE 1024
@@ -246,6 +247,12 @@ void CPlayScene::Update(DWORD dt)
 	// We know that Mario is the first object in the list hence we won't add him into the colliable object list
 	// TO-DO: This is a "dirty" way, need a more organized way 
 
+	if (player->fireball > 0)						// Draw fireball
+	{
+		player->fireball -= 1;
+		objects.push_back(player->NewFireBall());
+	}
+
 	vector<LPGAMEOBJECT> coObjects;
 	for (size_t i = 1; i < objects.size(); i++)
 	{
@@ -344,6 +351,8 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 	case DIK_Z:
 		if (mario->getLevel() == MARIO_LEVEL_RACOON)
 			mario->SetState(MARIO_RACOON_STATE_TAIL);
+		else if (mario->getLevel() == MARIO_LEVEL_FIRE)
+			mario->fireball += 1;							//Stack fireball
 		break;
 	case DIK_1:
 		if (mario->getLevel() != MARIO_LEVEL_SMALL)

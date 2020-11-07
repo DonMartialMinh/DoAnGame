@@ -399,8 +399,8 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	if (vx < 0 && x < 3) x = 3;
 
 
-	DebugOut(L"\nvx = %f", vx);
-	DebugOut(L"\tvy = %f\n", vy);
+	//DebugOut(L"\nvx = %f", vx);
+	//DebugOut(L"\tvy = %f\n", vy);
 }
 
 void CMario::Render()
@@ -909,5 +909,17 @@ void CMario::Reset()
 int CMario::getLevel()
 {
 	return this->level;
+}
+
+CGameObject* CMario::NewFireBall()
+{
+	int ani_set_id = 13;
+	CAnimationSets* animation_sets = CAnimationSets::GetInstance();
+	CGameObject* obj = NULL;
+	obj = new CFireBall(this->nx);
+	obj->SetPosition(this->x + MARIO_BIG_BBOX_WIDTH/2, this->y + MARIO_BIG_BBOX_HEIGHT/2);
+	LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
+	obj->SetAnimationSet(ani_set);
+	return obj;
 }
 

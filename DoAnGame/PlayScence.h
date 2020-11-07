@@ -11,13 +11,13 @@
 #include "UpsideBrick.h"
 #include "Coin.h"
 #include "QBrick.h"
+#include "FireBall.h"
 
 
 class CPlayScene : public CScene
 {
 protected:
 	CMario* player;					// A play scene has to have player, right? 
-
 	vector<LPGAMEOBJECT> objects;
 
 	void _ParseSection_TEXTURES(string line);
@@ -27,6 +27,7 @@ protected:
 	void _ParseSection_OBJECTS(string line);
 
 public:
+
 	CPlayScene(int id, LPCWSTR filePath);
 
 	virtual void Load();
