@@ -29,6 +29,11 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	vy += KOOPAS_GRAVITY * dt;
 
+
+	if (isHolded && vx == 0)
+		vy = 0;
+
+
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
 
@@ -73,14 +78,14 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				CKoopas* koopas = dynamic_cast<CKoopas*>(e->obj);
 				//koopas->vx = -koopas->vx;
 				vx = -vx;
-					/*vx = -vx;
-					koopas->vx = -koopas->vx;*/ // 2 Goombas change direction if they collide
+				/*vx = -vx;
+				koopas->vx = -koopas->vx;*/ // 2 Goombas change direction if they collide
 			}
 			else if (dynamic_cast<CUpsideBrick*>(e->obj))
 			{
 				CUpsideBrick* Upsidebrick = dynamic_cast<CUpsideBrick*>(e->obj);
 
-				if (e->ny >= 0) 
+				if (e->ny >= 0)
 				{
 					//If wrong side then go through
 					vy = temp;
@@ -105,6 +110,8 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		x = 0; vx = -vx;
 	}
 }
+
+
 
 void CKoopas::Render()
 {
@@ -139,3 +146,4 @@ void CKoopas::SetState(int state)
 	}
 
 }
+ 

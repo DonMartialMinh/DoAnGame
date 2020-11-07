@@ -27,6 +27,7 @@ class CKoopas : public CGameObject
 	virtual void Render();
 
 public:
+	int isHolded = 0;
 	CKoopas();
 	virtual void SetState(int state);
 };

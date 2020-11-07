@@ -19,6 +19,8 @@
 #define MARIO_RACOON_STATE_FLY		700
 #define MARIO_RACOON_STATE_TURN		800
 #define MARIO_RACOON_STATE_TAIL		900
+#define MARIO_STATE_HOLD			1000
+#define MARIO_STATE_SLIDE			1100
 
 #define MARIO_ANI_BIG_IDLE_RIGHT			0
 #define MARIO_ANI_BIG_IDLE_LEFT				1
@@ -96,6 +98,32 @@
 #define MARIO_ANI_RACOON_KICK_LEFT			65
 #define MARIO_ANI_RACOON_KICK_RIGHT			66	
 
+#define MARIO_ANI_BIG_HOLD_STILL_RIGHT		67
+#define MARIO_ANI_BIG_HOLD_WALK_RIGHT		68
+#define MARIO_ANI_BIG_HOLD_STILL_LEFT		69
+#define MARIO_ANI_BIG_HOLD_WALK_LEFT		70
+#define MARIO_ANI_SMALL_HOLD_STILL_RIGHT	71
+#define MARIO_ANI_SMALL_HOLD_WALK_RIGHT		72
+#define MARIO_ANI_SMALL_HOLD_STILL_LEFT		73
+#define MARIO_ANI_SMALL_HOLD_WALK_LEFT		74
+#define MARIO_ANI_FIRE_HOLD_STILL_RIGHT		75
+#define MARIO_ANI_FIRE_HOLD_WALK_RIGHT		76
+#define MARIO_ANI_FIRE_HOLD_STILL_LEFT		77
+#define MARIO_ANI_FIRE_HOLD_WALK_LEFT		78
+#define MARIO_ANI_RACOON_HOLD_STILL_RIGHT	79
+#define MARIO_ANI_RACOON_HOLD_WALK_RIGHT	80
+#define MARIO_ANI_RACOON_HOLD_STILL_LEFT	81
+#define MARIO_ANI_RACOON_HOLD_WALK_LEFT		82
+
+#define MARIO_ANI_SMALL_SLIDE_RIGHT			83
+#define MARIO_ANI_SMALL_SLIDE_LEFT			84
+#define MARIO_ANI_BIG_SLIDE_RIGHT			85
+#define MARIO_ANI_BIG_SLIDE_LEFT			86
+#define MARIO_ANI_FIRE_SLIDE_RIGHT			87
+#define MARIO_ANI_FIRE_SLIDE_LEFT			88
+#define MARIO_ANI_RACOON_SLIDE_RIGHT		89
+#define MARIO_ANI_RACOON_SLIDE_LEFT			90
+
 
 #define MARIO_ANI_DIE				8
 
@@ -119,8 +147,9 @@
 #define MARIO_FALLING_TIME 300
 #define MARIO_FLYING_TIME 300
 #define MARIO_TURNING_TIME 200
-#define MARIO_TAILING_TIME 450
+#define MARIO_TAILING_TIME 300
 #define MARIO_KICKING_TIME 200
+#define MARIO_SLIDING_TIME	1000
 
 class CMario : public CGameObject
 {
@@ -135,10 +164,12 @@ class CMario : public CGameObject
 	DWORD turn_start;
 	DWORD tail_start;
 	DWORD kick_start;
+	DWORD slide_start;
 
 	float start_x;			// initial position of Mario at scene
 	float start_y;
 public:
+	CGameObject* obj = NULL;
 	int flying;
 	int isFlying = 0;
 	int isDucking = 0;
@@ -146,6 +177,9 @@ public:
 	int turning = 0;
 	int tailing = 0;
 	int kicking = 0;
+	int holding = 0;
+	int canHold = 0;
+	int sliding = 0;
 	CMario(float x = 0.0f, float y = 0.0f);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects = NULL);
 	virtual void Render();
@@ -158,6 +192,7 @@ public:
 	void StartTurning() { turning = 1; turn_start = GetTickCount(); }
 	void StartTailing() { tailing = 1; tail_start = GetTickCount(); }
 	void StartKicking() { kicking = 1; kick_start = GetTickCount(); }
+	void StartSliding() { sliding = 1; slide_start = GetTickCount(); }
 
 	void Reset();
 
