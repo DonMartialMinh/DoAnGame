@@ -87,6 +87,15 @@
 #define MARIO_ANI_RACOON_TAIL_RIGHT			57
 #define MARIO_ANI_RACOON_TAIL_LEFT			58
 
+#define MARIO_ANI_SMALL_KICK_LEFT			59
+#define MARIO_ANI_SMALL_KICK_RIGHT			60
+#define MARIO_ANI_BIG_KICK_LEFT				61
+#define MARIO_ANI_BIG_KICK_RIGHT			62
+#define MARIO_ANI_FIRE_KICK_LEFT			63
+#define MARIO_ANI_FIRE_KICK_RIGHT			64
+#define MARIO_ANI_RACOON_KICK_LEFT			65
+#define MARIO_ANI_RACOON_KICK_RIGHT			66	
+
 
 #define MARIO_ANI_DIE				8
 
@@ -111,6 +120,7 @@
 #define MARIO_FLYING_TIME 300
 #define MARIO_TURNING_TIME 200
 #define MARIO_TAILING_TIME 450
+#define MARIO_KICKING_TIME 200
 
 class CMario : public CGameObject
 {
@@ -124,6 +134,7 @@ class CMario : public CGameObject
 	DWORD fly_start;
 	DWORD turn_start;
 	DWORD tail_start;
+	DWORD kick_start;
 
 	float start_x;			// initial position of Mario at scene
 	float start_y;
@@ -134,6 +145,7 @@ public:
 	int isRunning = 0;
 	int turning = 0;
 	int tailing = 0;
+	int kicking = 0;
 	CMario(float x = 0.0f, float y = 0.0f);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects = NULL);
 	virtual void Render();
@@ -145,6 +157,7 @@ public:
 	void StartFlying() { flying = 1; fly_start = GetTickCount(); }
 	void StartTurning() { turning = 1; turn_start = GetTickCount(); }
 	void StartTailing() { tailing = 1; tail_start = GetTickCount(); }
+	void StartKicking() { kicking = 1; kick_start = GetTickCount(); }
 
 	void Reset();
 

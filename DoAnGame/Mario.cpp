@@ -81,6 +81,12 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		tailing = 0;
 	}
 
+	if (GetTickCount() - kick_start > MARIO_KICKING_TIME)
+	{
+		kick_start = 0;
+		kicking = 0;
+	}
+
 	// No collision occured, proceed normally
 	if (coEvents.size() == 0)
 	{
@@ -193,6 +199,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 								koopas->vx = 0.2f;
 							else
 								koopas->vx = -0.2f;
+							StartKicking();
 						}
 					}
 				}
@@ -377,6 +384,31 @@ void CMario::Render()
 			ani = MARIO_ANI_RACOON_TAIL_RIGHT;
 		else
 			ani = MARIO_ANI_RACOON_TAIL_LEFT;
+	}
+	else if (kicking)
+	{
+		if (nx > 0)
+		{
+			if (level == MARIO_LEVEL_BIG)
+				ani = MARIO_ANI_BIG_KICK_LEFT;
+			else if (level == MARIO_LEVEL_SMALL)
+				ani = MARIO_ANI_SMALL_KICK_LEFT;
+			else if (level == MARIO_LEVEL_FIRE)
+				ani = MARIO_ANI_FIRE_KICK_LEFT;
+			else
+				ani = MARIO_ANI_RACOON_KICK_LEFT;
+		}
+		else
+		{
+			if (level == MARIO_LEVEL_BIG)
+				ani = MARIO_ANI_BIG_KICK_RIGHT;
+			else if (level == MARIO_LEVEL_SMALL)
+				ani = MARIO_ANI_SMALL_KICK_RIGHT;
+			else if (level == MARIO_LEVEL_FIRE)
+				ani = MARIO_ANI_FIRE_KICK_RIGHT;
+			else
+				ani = MARIO_ANI_RACOON_KICK_RIGHT;
+		}
 	}
 	else
 		if (level == MARIO_LEVEL_BIG)
