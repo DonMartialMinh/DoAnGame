@@ -9,16 +9,8 @@ void CUpsideBrick::Render()
 
 void CUpsideBrick::GetBoundingBox(float& l, float& t, float& r, float& b)
 {
-		l = x;
-		t = y;
-		r = x + UPSIDEBRICK_BBOX_WIDTH;
-		b = y + UPSIDEBRICK_BBOX_HEIGHT;
+	l = x;
+	t = y;
+	r = x + UPSIDEBRICK_BBOX_WIDTH;
+	b = y + UPSIDEBRICK_BBOX_HEIGHT;
 }
-
-//void CUpsideBrick::GetBoundingBox(float& l, float& t, float& r, float& b, float x, float y)
-//{
-//	l = x;
-//	t = y;
-//	r = x + UPSIDEBRICK_BBOX_WIDTH;
-//	b = y + UPSIDEBRICK_BBOX_HEIGHT;
-//}

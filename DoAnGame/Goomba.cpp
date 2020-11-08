@@ -8,14 +8,24 @@ CGoomba::CGoomba()
 
 void CGoomba::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
-	left = x;
-	top = y;
-	right = x + GOOMBA_BBOX_WIDTH;
-
-	if (state == GOOMBA_STATE_DIE)
-		bottom = y + GOOMBA_BBOX_HEIGHT_DIE;
+	if (isFinish)
+	{
+		left = NULL;
+		top = NULL; 
+		right = NULL;
+		bottom = NULL;
+	}
 	else
-		bottom = y + GOOMBA_BBOX_HEIGHT;
+	{
+		left = x;
+		top = y;
+		right = x + GOOMBA_BBOX_WIDTH;
+
+		if (state == GOOMBA_STATE_DIE)
+			bottom = y + GOOMBA_BBOX_HEIGHT_DIE;
+		else
+			bottom = y + GOOMBA_BBOX_HEIGHT;
+	}
 }
 
 void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
@@ -24,7 +34,18 @@ void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	//
 	// TO-DO: make sure Goomba can interact with the world and to each of them too!
 	// 
-	vy += GOOMBA_GRAVITY * dt;
+
+	if (isFinish && dying)	// if dying and die animation finish then return
+		return;
+
+	if (state != GOOMBA_STATE_DIE)	// if goomba not die then have vy
+		vy += GOOMBA_GRAVITY * dt;
+
+	if (GetTickCount() - die_start > GOOMBA_DYING_TIME)
+	{
+		die_start = 0;
+		dying = 1;
+	}
 
 
 	vector<LPCOLLISIONEVENT> coEvents;
@@ -91,6 +112,8 @@ void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 void CGoomba::Render()
 {
+	if (isFinish && dying)
+		return;
 	int ani = GOOMBA_ANI_WALKING;
 	if (state == GOOMBA_STATE_DIE) {
 		ani = GOOMBA_ANI_DIE;
@@ -107,10 +130,11 @@ void CGoomba::SetState(int state)
 	switch (state)
 	{
 	case GOOMBA_STATE_DIE:
-		y += GOOMBA_BBOX_HEIGHT - GOOMBA_BBOX_HEIGHT_DIE;
+		y += GOOMBA_BBOX_HEIGHT - GOOMBA_BBOX_HEIGHT_DIE + 1;
 		vx = 0;
-
 		vy = 0;
+		isFinish = 1;
+		StartDying();
 		break;
 	case GOOMBA_STATE_WALKING:
 		vx = -GOOMBA_WALKING_SPEED;

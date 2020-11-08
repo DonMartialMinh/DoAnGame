@@ -828,7 +828,6 @@ void CMario::SetState(int state)
 		nx = -1;
 		break;
 	case MARIO_STATE_JUMP:
-		// TODO: need to check if Mario is *current* on a platform before allowing to jump again
 		if (isFlying == 0 && isDucking == 0)
 		{
 			isFlying = 1;

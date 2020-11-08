@@ -176,6 +176,7 @@ class CMario : public CGameObject
 	DWORD throw_start;
 	float start_x;			// initial position of Mario at scene
 	float start_y;
+
 public:
 	CGameObject* obj = NULL;
 	int fireball = 0;
@@ -193,6 +194,7 @@ public:
 	CMario(float x = 0.0f, float y = 0.0f);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects = NULL);
 	virtual void Render();
+	CGameObject* NewFireBall();
 
 	void SetState(int state);
 	void SetLevel(int l) { level = l; }
@@ -204,7 +206,7 @@ public:
 	void StartKicking() { kicking = 1; kick_start = GetTickCount(); }
 	void StartSliding() { sliding = 1; slide_start = GetTickCount(); }
 	void StartThrowing() { throwing = 1; throw_start = GetTickCount(); }
-	CGameObject* NewFireBall();
+
 
 	void Reset();
 

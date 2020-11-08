@@ -14,13 +14,18 @@
 #define GOOMBA_ANI_WALKING 0
 #define GOOMBA_ANI_DIE 1
 
+#define GOOMBA_DYING_TIME	200
+
 class CGoomba : public CGameObject
 {
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void Render();
-
+	int isFinish = 0;
+	DWORD die_start;				//time die animation
 public:
+	int dying;
 	CGoomba();
 	virtual void SetState(int state);
+	void StartDying() { dying = 0; die_start = GetTickCount(); }	
 };

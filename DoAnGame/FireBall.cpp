@@ -56,25 +56,24 @@ void CFireBall::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	float min_tx, min_ty, nx = 0, ny;
 	float rdx = 0;
 	float rdy = 0;
+
 	FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny, rdx, rdy);
+
+	if (abs(nx) > 0.0001f)		// reflect 
+		vx = -vx;
+	if (abs(ny) > 0.0001f)
+		vy = -vy;
+
 	for (int i = 0; i < coEventsResult.size(); i++)
 	{
 		LPCOLLISIONEVENT e = coEventsResult[i];
 		if (dynamic_cast<CBrick*>(e->obj))
 		{
-			if (e->nx != 0)
+			if (e->nx != 0 && e->ny == 0)
 			{
 				isFinish = 1;			//delete fireball when collide with wall
 				vx = 0;
 				vy = 0;
-				return;
-			}
-			else
-			{
-				if (abs(nx) > 0.0001f)
-					vx = -vx;
-				if (abs(ny) > 0.0001f)
-					vy = -vy;
 			}
 		}
 	}

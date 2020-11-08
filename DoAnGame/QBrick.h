@@ -15,11 +15,11 @@
 class CQBrick : public CGameObject
 {
 	DWORD ring_start;
-public:
-	int ringing = 0;
-	CQBrick();
 	virtual void Render();
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void GetBoundingBox(float& l, float& t, float& r, float& b);
+public:
+	int ringing = 0;
+	CQBrick();
 	void StartRinging() { ringing = 1; ring_start = GetTickCount(); }
 };
