@@ -69,7 +69,6 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		untouchable_start = 0;
 		untouchable = 0;
 	}
-
 	if (GetTickCount() - fall_start > MARIO_FALLING_TIME)
 	{
 		fall_start = 0;
@@ -104,6 +103,12 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		slide_start = 0;
 		sliding = 0;
 	}
+	if (GetTickCount() - throw_start > MARIO_THROWING_TIME)
+	{
+		throw_start = 0;
+		throwing = 0;
+	}
+
 	if (vx == 0)
 		sliding = 0;
 
@@ -453,6 +458,23 @@ void CMario::Render()
 			ani = MARIO_ANI_RACOON_TAIL_RIGHT;
 		else
 			ani = MARIO_ANI_RACOON_TAIL_LEFT;
+	}
+	else if (throwing)
+	{
+		if (nx > 0)
+		{
+			if (isFlying)
+				ani = MARIO_ANI_FIRE_THROW2_RIGHT;
+			else 
+				ani = MARIO_ANI_FIRE_THROW_RIGHT;
+		}
+		else
+		{
+			if (isFlying)
+				ani = MARIO_ANI_FIRE_THROW2_LEFT;
+			else
+				ani = MARIO_ANI_FIRE_THROW_LEFT;
+		}
 	}
 	else if (kicking)
 	{
@@ -834,6 +856,10 @@ void CMario::SetState(int state)
 		break;
 	case MARIO_STATE_SLIDE:
 		StartSliding();
+		break;
+	case MARIO_FIRE_STATE_THROW:
+		StartThrowing();
+		this->fireball += 1;
 		break;
 	case MARIO_RACOON_STATE_FALL:
 		StartFalling();

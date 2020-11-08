@@ -22,6 +22,7 @@
 #define MARIO_RACOON_STATE_TAIL		900
 #define MARIO_STATE_HOLD			1000
 #define MARIO_STATE_SLIDE			1100
+#define MARIO_FIRE_STATE_THROW		1200
 
 #define MARIO_ANI_BIG_IDLE_RIGHT			0
 #define MARIO_ANI_BIG_IDLE_LEFT				1
@@ -125,6 +126,11 @@
 #define MARIO_ANI_RACOON_SLIDE_RIGHT		89
 #define MARIO_ANI_RACOON_SLIDE_LEFT			90
 
+#define MARIO_ANI_FIRE_THROW_RIGHT			91
+#define MARIO_ANI_FIRE_THROW_LEFT			92
+#define MARIO_ANI_FIRE_THROW2_RIGHT			93
+#define MARIO_ANI_FIRE_THROW2_LEFT			94
+
 
 #define MARIO_ANI_DIE				8
 
@@ -151,6 +157,7 @@
 #define MARIO_TAILING_TIME 300
 #define MARIO_KICKING_TIME 200
 #define MARIO_SLIDING_TIME	1000
+#define MARIO_THROWING_TIME	300
 
 class CMario : public CGameObject
 {
@@ -166,7 +173,7 @@ class CMario : public CGameObject
 	DWORD tail_start;
 	DWORD kick_start;
 	DWORD slide_start;
-
+	DWORD throw_start;
 	float start_x;			// initial position of Mario at scene
 	float start_y;
 public:
@@ -182,6 +189,7 @@ public:
 	int holding = 0;
 	int canHold = 0;
 	int sliding = 0;
+	int throwing = 0;
 	CMario(float x = 0.0f, float y = 0.0f);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects = NULL);
 	virtual void Render();
@@ -195,6 +203,7 @@ public:
 	void StartTailing() { tailing = 1; tail_start = GetTickCount(); }
 	void StartKicking() { kicking = 1; kick_start = GetTickCount(); }
 	void StartSliding() { sliding = 1; slide_start = GetTickCount(); }
+	void StartThrowing() { throwing = 1; throw_start = GetTickCount(); }
 	CGameObject* NewFireBall();
 
 	void Reset();
