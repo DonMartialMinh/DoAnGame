@@ -7,12 +7,12 @@ CCoin::CCoin()
 
 void CCoin::GetBoundingBox(float& l, float& t, float& r, float& b)
 {
-	if (state == COIN_STATE_TRANS)
+	if (isFinish)
 	{
-		l = 0;
-		t = 0;
-		r = 0;
-		b = 0;
+		l = NULL;
+		t = NULL;
+		r = NULL;
+		b = NULL;
 	}
 	else {
 
@@ -25,11 +25,9 @@ void CCoin::GetBoundingBox(float& l, float& t, float& r, float& b)
 
 void CCoin::Render()
 {
+	if (isFinish)		//delete coin 
+		return;
 	int ani = COIN_ANI_COIN;
-	if (state == COIN_STATE_TRANS) {
-		ani = COIN_ANI_TRANS;
-	}
-
 	animation_set->at(ani)->Render(x, y);
 	RenderBoundingBox();
 }
