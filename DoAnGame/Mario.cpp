@@ -69,17 +69,19 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		untouchable_start = 0;
 		untouchable = 0;
 	}
-	if (GetTickCount() - fall_start > MARIO_FALLING_TIME)
-	{
-		fall_start = 0;
-		falling = 0;
-	}
-
-	if (GetTickCount() - fly_start > MARIO_FLYING_TIME)
-	{
-		fly_start = 0;
-		flying = 0;
-	}
+	
+	if (level == MARIO_LEVEL_RACOON)
+		if (GetTickCount() - fall_start > MARIO_FALLING_TIME)
+		{
+			fall_start = 0;
+			falling = 0;
+		}
+	if (level == MARIO_LEVEL_RACOON)
+		if (GetTickCount() - fly_start > MARIO_FLYING_TIME)
+		{
+			fly_start = 0;
+			flying = 0;
+		}
 
 	if (GetTickCount() - turn_start > MARIO_TURNING_TIME)
 	{
@@ -87,11 +89,12 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		turning = 0;
 	}
 
-	if (GetTickCount() - tail_start > MARIO_TAILING_TIME)
-	{
-		tail_start = 0;
-		tailing = 0;
-	}
+	if (level == MARIO_LEVEL_RACOON)
+		if (GetTickCount() - tail_start > MARIO_TAILING_TIME)
+		{
+			tail_start = 0;
+			tailing = 0;
+		}
 
 	if (GetTickCount() - kick_start > MARIO_KICKING_TIME)
 	{
@@ -103,11 +106,12 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		slide_start = 0;
 		sliding = 0;
 	}
-	if (GetTickCount() - throw_start > MARIO_THROWING_TIME)
-	{
-		throw_start = 0;
-		throwing = 0;
-	}
+	if (level == MARIO_LEVEL_FIRE)
+		if (GetTickCount() - throw_start > MARIO_THROWING_TIME)
+		{
+			throw_start = 0;
+			throwing = 0;
+		}
 
 	if (vx == 0)
 		sliding = 0;
@@ -193,19 +197,19 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				// jump on top >> kill Koopas and deflect a bit 
 				if (e->ny < 0)
 				{
-					if (koopas->GetState() != KOOPAS_STATE_DIE)
+					if (koopas->GetState() == KOOPAS_STATE_WALKING)
 					{
 						koopas->SetState(KOOPAS_STATE_DIE);
 						vy = -MARIO_JUMP_DEFLECT_SPEED;
 					}
-					else if (koopas->GetState() == KOOPAS_STATE_DIE && koopas->vx == 0 ) {
+					else if ((koopas->GetState() == KOOPAS_STATE_DIE || koopas->GetState() == KOOPAS_STATE_DIE_DEFLECT) && koopas->vx == 0 ) {
 						if (this->nx > 0)  // direction of koopas spin when being stomped 
 							koopas->vx = KOOPAS_SPIN_SPEED;
 						else
 							koopas->vx = -KOOPAS_SPIN_SPEED;
 						vy = -MARIO_JUMP_DEFLECT_SPEED;
 					}
-					else if (koopas->GetState() == KOOPAS_STATE_DIE && koopas->vx != 0) {
+					else if ((koopas->GetState() == KOOPAS_STATE_DIE || koopas->GetState() == KOOPAS_STATE_DIE_DEFLECT) && koopas->vx != 0) {
 						vy = -MARIO_JUMP_DEFLECT_SPEED;
 						koopas->vx = 0;		// being stomped when spining then still
 					}
@@ -214,7 +218,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				{
 					if (untouchable == 0)
 					{
-						if (koopas->GetState() != KOOPAS_STATE_DIE || ((koopas->GetState() == KOOPAS_STATE_DIE )&& koopas->vx != 0))
+						if ((koopas->GetState() == KOOPAS_STATE_WALKING) || ((koopas->GetState() == KOOPAS_STATE_DIE || koopas->GetState() == KOOPAS_STATE_DIE_DEFLECT)&& koopas->vx != 0))
 						{
 							if (level > MARIO_LEVEL_BIG)
 							{

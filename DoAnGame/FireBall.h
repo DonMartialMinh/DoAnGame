@@ -2,14 +2,17 @@
 #include "GameObject.h"
 #include "Brick.h"
 #include "Game.h"
+#include "Goomba.h"
+#include "Koopas.h"
 
 #define FIREBALL_BBOX_WIDTH  8
 #define FIREBALL_BBOX_HEIGHT 9
 
 #define FIREBALL_SPIN_RIGHT		0
 #define FIREBALL_SPIN_LEFT		1
-#define FIREBALL_SPIN_SPEED		0.22f 
+#define FIREBALL_SPIN_SPEED		0.25f 
 #define FIREBALL_GRAVITY		0.001f
+#define FIREBALL_DEFLECT_SPEED  0.15f
 
 #define FIREBALL_STATE_SPIN		100
 

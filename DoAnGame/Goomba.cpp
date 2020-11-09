@@ -30,22 +30,33 @@ void CGoomba::GetBoundingBox(float& left, float& top, float& right, float& botto
 
 void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-	CGameObject::Update(dt, coObjects);
-	//
-	// TO-DO: make sure Goomba can interact with the world and to each of them too!
-	// 
+	CGame* game = CGame::GetInstance();
+	float camx;
+	float camy;
+	float scrh = game->GetScreenHeight();
+	game->GetCamPos(camx, camy);
+	if (y < camy || y > camy + scrh)		// out screen height then delete
+	{
+		isFinish = 1;
+		dying = 1;
+		return;
+	}
 
 	if (isFinish && dying)	// if dying and die animation finish then return
 		return;
 
-	if (state != GOOMBA_STATE_DIE)	// if goomba not die then have vy
+	CGameObject::Update(dt, coObjects);
+
+
+	if (state != GOOMBA_STATE_DIE)	// if goomba not die or die deflect then have vy
 		vy += GOOMBA_GRAVITY * dt;
 
-	if (GetTickCount() - die_start > GOOMBA_DYING_TIME)
-	{
-		die_start = 0;
-		dying = 1;
-	}
+	if (state == GOOMBA_STATE_DIE)
+		if (GetTickCount() - die_start > GOOMBA_DYING_TIME)
+		{
+			die_start = 0;
+			dying = 1;
+		}
 
 
 	vector<LPCOLLISIONEVENT> coEvents;
@@ -53,7 +64,7 @@ void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	coEvents.clear();
 
-	if (state != GOOMBA_STATE_DIE )
+	if (state != GOOMBA_STATE_DIE && state != GOOMBA_STATE_DIE_DEFLECT)
 		CalcPotentialCollisions(coObjects, coEvents);
 
 
@@ -78,7 +89,7 @@ void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 		// block every object first!
 		x += min_tx * dx + nx * 0.4f;
-		//y += min_ty * dy + ny * 0.4f;
+		y += min_ty * dy + ny * 0.4f;
 
 		//if (nx != 0) vx = 0;
 		if (ny != 0) vy = 0;
@@ -115,9 +126,10 @@ void CGoomba::Render()
 	if (isFinish && dying)
 		return;
 	int ani = GOOMBA_ANI_WALKING;
-	if (state == GOOMBA_STATE_DIE) {
+	if (state == GOOMBA_STATE_DIE)
 		ani = GOOMBA_ANI_DIE;
-	}
+	else if (state == GOOMBA_STATE_DIE_DEFLECT)
+		ani = GOOMBA_ANI_DIE_DEFLECT;
 
 	animation_set->at(ani)->Render(x, y);
 
@@ -135,6 +147,10 @@ void CGoomba::SetState(int state)
 		vy = 0;
 		isFinish = 1;
 		StartDying();
+		break;
+	case GOOMBA_STATE_DIE_DEFLECT:
+		isFinish = 1;
+		vy = -GOOMBA_DIE_DEFLECT_SPEED;
 		break;
 	case GOOMBA_STATE_WALKING:
 		vx = -GOOMBA_WALKING_SPEED;
