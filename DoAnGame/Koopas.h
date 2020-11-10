@@ -2,11 +2,12 @@
 
 #include "GameObject.h"
 #include "Goomba.h"
+#include "QBrick.h"
 
 #define KOOPAS_WALKING_SPEED 0.05f;
 #define KOOPAS_SPIN_SPEED 0.22f
 #define KOOPAS_GRAVITY		0.002f
-#define KOOPAS_DIE_DEFLECT_SPEED 0.5f
+#define KOOPAS_DIE_DEFLECT_SPEED 0.3f
 
 #define KOOPAS_BBOX_WIDTH 16
 #define KOOPAS_BBOX_HEIGHT 26

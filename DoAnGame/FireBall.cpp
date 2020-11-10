@@ -60,15 +60,16 @@ void CFireBall::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny, rdx, rdy);
 
-	if ( nx != 0 )		// reflect 
+	if (nx != 0)				// reflect 
 		vx = -vx;
-	if ( ny != 0 )
+	if (ny != 0)
 		vy = -FIREBALL_DEFLECT_SPEED;
 
 	for (int i = 0; i < coEventsResult.size(); i++)
 	{
 		LPCOLLISIONEVENT e = coEventsResult[i];
-		if (e->nx != 0)
+
+		if (e->nx != 0 && e->ny == 0)
 		{
 			isFinish = 1;			//delete fireball when collide with wall
 		}

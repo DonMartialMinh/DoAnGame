@@ -3,7 +3,7 @@
 #include "Game.h"
 
 #define GOOMBA_WALKING_SPEED 0.05f;
-#define GOOMBA_DIE_DEFLECT_SPEED	 0.5f
+#define GOOMBA_DIE_DEFLECT_SPEED	 0.3f
 
 #define GOOMBA_BBOX_WIDTH 16
 #define GOOMBA_BBOX_HEIGHT 15

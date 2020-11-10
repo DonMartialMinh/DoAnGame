@@ -1,6 +1,15 @@
 #pragma once
 #include "GameObject.h"
 #include "FireBall.h"
+#include "Goomba.h"
+#include "Koopas.h"
+#include "Portal.h"
+#include "Brick.h"
+#include "UpsideBrick.h"
+#include "Coin.h"
+#include "Environment.h"
+#include "QBrick.h"
+
 
 #define MARIO_WALKING_SPEED		0.13f 
 #define MARIO_RUNNING_SPEED		0.2f 
@@ -207,6 +216,8 @@ public:
 	void StartSliding() { sliding = 1; slide_start = GetTickCount(); }
 	void StartThrowing() { throwing = 1; throw_start = GetTickCount(); }
 
+	static void ToSmall(float& y) { y += (MARIO_BIG_BBOX_HEIGHT - MARIO_SMALL_BBOX_HEIGHT); };
+	static void ToBig(float& y) { y -= (MARIO_BIG_BBOX_HEIGHT - MARIO_SMALL_BBOX_HEIGHT); };
 
 	void Reset();
 

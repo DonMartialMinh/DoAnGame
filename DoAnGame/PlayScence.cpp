@@ -352,22 +352,26 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 		if (mario->getLevel() == MARIO_LEVEL_RACOON)
 			mario->SetState(MARIO_RACOON_STATE_TAIL);
 		else if (mario->getLevel() == MARIO_LEVEL_FIRE)
-			mario->SetState(MARIO_FIRE_STATE_THROW);						//Stack fireball
+			mario->SetState(MARIO_FIRE_STATE_THROW);						
 		break;
 	case DIK_1:
 		if (mario->getLevel() != MARIO_LEVEL_SMALL)
-			mario->y += (MARIO_BIG_BBOX_HEIGHT - MARIO_SMALL_BBOX_HEIGHT);
+			CMario::ToSmall(mario->y);
 		mario->SetLevel(MARIO_LEVEL_SMALL);
 		break;
 	case DIK_2:
 		if (mario->getLevel() == MARIO_LEVEL_SMALL)
-			mario->y -= (MARIO_BIG_BBOX_HEIGHT - MARIO_SMALL_BBOX_HEIGHT);
+			CMario::ToBig(mario->y);
 		mario->SetLevel(MARIO_LEVEL_BIG);
 		break;
 	case DIK_3:
+		if (mario->getLevel() == MARIO_LEVEL_SMALL)
+			CMario::ToBig(mario->y);
 		mario->SetLevel(MARIO_LEVEL_FIRE);
 		break;
 	case DIK_4:
+		if (mario->getLevel() == MARIO_LEVEL_SMALL)
+			CMario::ToBig(mario->y);
 		mario->SetLevel(MARIO_LEVEL_RACOON);
 		if (mario->nx > 0)
 			mario->x -= (MARIO_RACOON_BBOX_WIDTH - MARIO_BIG_BBOX_WIDTH);

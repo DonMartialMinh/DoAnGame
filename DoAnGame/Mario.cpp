@@ -5,14 +5,7 @@
 #include "Mario.h"
 #include "Game.h"
 
-#include "Goomba.h"
-#include "Koopas.h"
-#include "Portal.h"
-#include "Brick.h"
-#include "UpsideBrick.h"
-#include "Coin.h"
-#include "Environment.h"
-#include "QBrick.h"
+
 
 CMario::CMario(float x, float y) : CGameObject()
 {
@@ -70,18 +63,16 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		untouchable = 0;
 	}
 	
-	if (level == MARIO_LEVEL_RACOON)
-		if (GetTickCount() - fall_start > MARIO_FALLING_TIME)
-		{
-			fall_start = 0;
-			falling = 0;
-		}
-	if (level == MARIO_LEVEL_RACOON)
-		if (GetTickCount() - fly_start > MARIO_FLYING_TIME)
-		{
-			fly_start = 0;
-			flying = 0;
-		}
+	if (GetTickCount() - fall_start > MARIO_FALLING_TIME)
+	{
+		fall_start = 0;
+		falling = 0;
+	}
+	if (GetTickCount() - fly_start > MARIO_FLYING_TIME)
+	{
+		fly_start = 0;
+		flying = 0;
+	}
 
 	if (GetTickCount() - turn_start > MARIO_TURNING_TIME)
 	{
@@ -89,12 +80,11 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		turning = 0;
 	}
 
-	if (level == MARIO_LEVEL_RACOON)
-		if (GetTickCount() - tail_start > MARIO_TAILING_TIME)
-		{
-			tail_start = 0;
-			tailing = 0;
-		}
+	if (GetTickCount() - tail_start > MARIO_TAILING_TIME)
+	{
+		tail_start = 0;
+		tailing = 0;
+	}
 
 	if (GetTickCount() - kick_start > MARIO_KICKING_TIME)
 	{
@@ -106,12 +96,12 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		slide_start = 0;
 		sliding = 0;
 	}
-	if (level == MARIO_LEVEL_FIRE)
-		if (GetTickCount() - throw_start > MARIO_THROWING_TIME)
-		{
-			throw_start = 0;
-			throwing = 0;
-		}
+
+	if (GetTickCount() - throw_start > MARIO_THROWING_TIME)
+	{
+		throw_start = 0;
+		throwing = 0;
+	}
 
 	if (vx == 0)
 		sliding = 0;
@@ -178,11 +168,12 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 								level = MARIO_LEVEL_BIG;
 								StartUntouchable();
 							}
-							else if (level > MARIO_LEVEL_SMALL)
+							else if (level == MARIO_LEVEL_BIG)
 							{
 								if (isDucking != 0)					// if being touched when ducking then stand up
 									isDucking = 0;
 								level = MARIO_LEVEL_SMALL;
+								CMario::ToSmall(this->y);
 								StartUntouchable();
 							}
 							else
@@ -227,11 +218,12 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 								level = MARIO_LEVEL_BIG;
 								StartUntouchable();
 							}
-							else if (level = MARIO_LEVEL_BIG)
+							else if (level == MARIO_LEVEL_BIG)
 							{
 								if (isDucking != 0)					// if being touched when ducking then stand up
 									isDucking = 0;
 								level = MARIO_LEVEL_SMALL;
+								CMario::ToSmall(this->y);
 								StartUntouchable();
 							}
 							else
@@ -857,7 +849,7 @@ void CMario::SetState(int state)
 		break;
 	case MARIO_FIRE_STATE_THROW:
 		StartThrowing();
-		this->fireball += 1;
+		this->fireball += 1;	//Stack fireball
 		break;
 	case MARIO_RACOON_STATE_FALL:
 		StartFalling();
@@ -873,6 +865,7 @@ void CMario::SetState(int state)
 		break;
 	case MARIO_STATE_DIE:
 		vy = -MARIO_DIE_DEFLECT_SPEED;
+		vx = 0;
 		break;
 	}
 }
@@ -884,13 +877,11 @@ void CMario::GetBoundingBox(float& left, float& top, float& right, float& bottom
 
 	if (level == MARIO_LEVEL_BIG || level == MARIO_LEVEL_FIRE)
 	{
+		right = x + MARIO_BIG_BBOX_WIDTH;
 		if (isDucking == 1)
 			bottom = y + MARIO_BIG_DUCK_BBOX_HEIGHT;
 		else
-			bottom = y + MARIO_BIG_BBOX_HEIGHT;
-
-		right = x + MARIO_BIG_BBOX_WIDTH;
-		
+			bottom = y + MARIO_BIG_BBOX_HEIGHT;	  
 	}
 	else if (level == MARIO_LEVEL_RACOON)
 	{

@@ -72,37 +72,99 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		{
 			LPCOLLISIONEVENT e = coEventsResult[i];
 
-			if (dynamic_cast<CKoopas*>(e->obj)) // if e->obj is goomba 
-			{
-				CKoopas* koopas = dynamic_cast<CKoopas*>(e->obj);
-				vx = -vx;
-				koopas->vx = -koopas->vx; // 2 koopas change direction if they collide
-			}
-			else if (dynamic_cast<CGoomba*>(e->obj))
+			if (dynamic_cast<CGoomba*>(e->obj))	// if e->obj is goomba 
 			{
 				CGoomba* goomba = dynamic_cast<CGoomba*>(e->obj);
 				if ((state == KOOPAS_STATE_DIE || state == KOOPAS_STATE_DIE_DEFLECT) && vx != 0 )
 				{
-					goomba->SetState(GOOMBA_STATE_DIE_DEFLECT);
-					goomba->vx = 0.05f * this->nx;
-				}
-			}
-			else if (dynamic_cast<CUpsideBrick*>(e->obj))
-			{
-				CUpsideBrick* Upsidebrick = dynamic_cast<CUpsideBrick*>(e->obj);
-
-				if (e->ny >= 0)
-				{
-					//If wrong side then go through
-					vy = temp;
+					vy = temp;						// go through goomba
 					x -= min_tx * dx + nx * 0.4f;
 					x += dx;
 					y += dy;
+					goomba->SetState(GOOMBA_STATE_DIE_DEFLECT);
+					goomba->vx = 0.05f * this->nx;
+				}
+				else
+				{
+					if (abs(nx) > 0.0001f)
+						vx = -vx;
+					if (abs(ny) > 0.0001f)
+						vy = -vy;
 				}
 			}
-			else if (dynamic_cast<CBrick*>(e->obj))
+			else if (dynamic_cast<CKoopas*>(e->obj))	// if e->obj is goomba 
 			{
-
+				CKoopas* koopas = dynamic_cast<CKoopas*>(e->obj);
+				if ((state == KOOPAS_STATE_DIE || state == KOOPAS_STATE_DIE_DEFLECT) && vx != 0)
+				{
+					if (koopas->state == KOOPAS_STATE_WALKING)
+					{
+						vy = temp;						// go through goomba
+						x -= min_tx * dx + nx * 0.4f;
+						x += dx;
+						y += dy;
+						koopas->SetState(KOOPAS_STATE_DIE_DEFLECT);
+						//koopas->vx = 0.05f * this->nx;
+					}
+					else {
+						if (abs(nx) > 0.0001f)
+							vx = -vx;
+						if (abs(ny) > 0.0001f)
+							vy = -vy;
+					}
+				}
+				else 
+				{
+					if (abs(nx) > 0.0001f)
+						vx = -vx;
+					if (abs(ny) > 0.0001f)
+						vy = -vy;
+				}
+			}
+			else if (dynamic_cast<CUpsideBrick*>(e->obj))	// if e->obj is UpsideBrick 
+			{
+				CUpsideBrick* Upsidebrick = dynamic_cast<CUpsideBrick*>(e->obj);
+				if (state == KOOPAS_STATE_WALKING)
+				{
+					if (e->ny > 0 || this->y + KOOPAS_BBOX_HEIGHT > Upsidebrick->y)
+					{
+						//If wrong side then go through
+						vy = temp;
+						x -= min_tx * dx + nx * 0.4f;
+						x += dx;
+						y += dy;
+					}
+				}
+				else
+				{
+					if (e->ny > 0 || this->y + KOOPAS_BBOX_HEIGHT_DIE > Upsidebrick->y)
+					{
+						//If wrong side then go through
+						vy = temp;
+						x -= min_tx * dx + nx * 0.4f;
+						x += dx;
+						y += dy;
+					}
+				}
+			}
+			else if (dynamic_cast<CQBrick*>(e->obj))		//question brick
+			{
+				CQBrick* qbrick = dynamic_cast<CQBrick*>(e->obj);
+				if (e->nx != 0)
+				{
+					if (qbrick->GetState() != BRICK_STATE_EMP)
+					{
+						qbrick->SetState(BRICK_STATE_EMP);
+						qbrick->StartRinging();
+					}
+				}
+				if (abs(nx) > 0.0001f)
+					vx = -vx;
+				if (abs(ny) > 0.0001f)
+					vy = -vy;
+			}
+			else 
+			{
 				if (abs(nx) > 0.0001f)
 					vx = -vx;
 				if (abs(ny) > 0.0001f)
