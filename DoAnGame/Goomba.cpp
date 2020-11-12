@@ -84,8 +84,8 @@ void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		// todo: this is a very ugly designed function!!!!
 		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny, rdx, rdy);
 
-		//if (rdx != 0 && rdx!=dx)
-		//	x += nx*abs(rdx); 
+/*		if (rdx != 0 && rdx!=dx)
+			x += nx*abs(rdx);*/ 
 
 		// block every object first!
 		x += min_tx * dx + nx * 0.4f;

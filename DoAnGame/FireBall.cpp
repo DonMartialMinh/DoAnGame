@@ -44,9 +44,8 @@ void CFireBall::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		return;
 
 	CGameObject::Update(dt);
-	x += dx;
-	y += dy;
-	vy += FIREBALL_GRAVITY * dt;
+	if (isFinish != 1)
+		vy += FIREBALL_GRAVITY * dt;
 
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
@@ -54,36 +53,47 @@ void CFireBall::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	coEvents.clear();
 
 	CalcPotentialCollisions(coObjects, coEvents);
-	float min_tx, min_ty, nx = 0, ny;
-	float rdx = 0;
-	float rdy = 0;
 
-	FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny, rdx, rdy);
-
-	if (nx != 0)				// reflect 
-		vx = -vx;
-	if (ny != 0)
-		vy = -FIREBALL_DEFLECT_SPEED;
-
-	for (int i = 0; i < coEventsResult.size(); i++)
+	if (coEvents.size() == 0)
 	{
-		LPCOLLISIONEVENT e = coEventsResult[i];
+		x += dx;
+		y += dy;
+	}
+	else
+	{
 
-		if (e->nx != 0 && e->ny == 0)
+		float min_tx, min_ty, nx = 0, ny;
+		float rdx = 0;
+		float rdy = 0;
+
+		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny, rdx, rdy);
+
+		x += min_tx * dx + nx * 0.4f;
+		y += min_ty * dy + ny * 0.4f;
+
+		if (ny != 0)			// reflect 
+			vy = -FIREBALL_DEFLECT_SPEED;
+
+		for (int i = 0; i < coEventsResult.size(); i++)
 		{
-			isFinish = 1;			//delete fireball when collide with wall
-		}
-		if (dynamic_cast<CGoomba*>(e->obj))			// object is goomba
-		{
-			CGoomba* goomba = dynamic_cast<CGoomba*>(e->obj);
-			goomba->SetState(GOOMBA_STATE_DIE_DEFLECT);
-			goomba->vx = 0.05f * this->nx;
-		}
-		else if (dynamic_cast<CKoopas*>(e->obj))	// object is koopas
-		{
-			CKoopas* koopas = dynamic_cast<CKoopas*>(e->obj);
-			koopas->SetState(KOOPAS_STATE_DIE_DEFLECT);
-			//koopas->vx = 0.05f * this->nx;
+			LPCOLLISIONEVENT e = coEventsResult[i];
+
+			if (dynamic_cast<CGoomba*>(e->obj))			// object is goomba
+			{
+				CGoomba* goomba = dynamic_cast<CGoomba*>(e->obj);
+				goomba->SetState(GOOMBA_STATE_DIE_DEFLECT);
+				goomba->vx = 0.05f * this->nx;
+			}
+			else if (dynamic_cast<CKoopas*>(e->obj))	// object is koopas
+			{
+				CKoopas* koopas = dynamic_cast<CKoopas*>(e->obj);
+				koopas->SetState(KOOPAS_STATE_DIE_DEFLECT);
+				//koopas->vx = 0.05f * this->nx;
+			}
+			if (e->nx != 0)
+			{
+				isFinish = 1;		//delete fireball when collide with wall
+			}
 		}
 	}
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];

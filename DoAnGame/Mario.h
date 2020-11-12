@@ -76,8 +76,8 @@
 #define MARIO_ANI_RACOON_FALL_LEFT			36
 #define MARIO_ANI_RACOON_FALL_RIGHT_1		37
 #define MARIO_ANI_RACOON_FALL_LEFT_1		38
-#define MARIO_ANI_RACOON_FLY_RIGHT			39
-#define MARIO_ANI_RACOON_FLY_LEFT			40
+#define MARIO_ANI_RACOON_FLYING_RIGHT		39
+#define MARIO_ANI_RACOON_FLYING_LEFT		40
 
 #define MARIO_ANI_SMALL_RUNNING_RIGHT		41
 #define MARIO_ANI_SMALL_RUNNING_LEFT		42
@@ -140,6 +140,15 @@
 #define MARIO_ANI_FIRE_THROW2_RIGHT			93
 #define MARIO_ANI_FIRE_THROW2_LEFT			94
 
+#define MARIO_ANI_SMALL_FLY_RIGHT			95
+#define MARIO_ANI_SMALL_FLY_LEFT			96
+#define MARIO_ANI_BIG_FLY_RIGHT				97
+#define MARIO_ANI_BIG_FLY_LEFT				98
+#define MARIO_ANI_FIRE_FLY_RIGHT			99
+#define MARIO_ANI_FIRE_FLY_LEFT				100
+#define MARIO_ANI_RACOON_FLY_RIGHT			101
+#define MARIO_ANI_RACOON_FLY_LEFT			102
+
 
 #define MARIO_ANI_DIE				8
 
@@ -198,6 +207,7 @@ public:
 	int kicking = 0;
 	int holding = 0;
 	int canHold = 0;
+	int canSlide = 0;
 	int sliding = 0;
 	int throwing = 0;
 	CMario(float x = 0.0f, float y = 0.0f);
@@ -213,7 +223,7 @@ public:
 	void StartTurning() { turning = 1; turn_start = GetTickCount(); }
 	void StartTailing() { tailing = 1; tail_start = GetTickCount(); }
 	void StartKicking() { kicking = 1; kick_start = GetTickCount(); }
-	void StartSliding() { sliding = 1; slide_start = GetTickCount(); }
+	void StartSliding() { if(slide_start == 0) slide_start = GetTickCount(); }
 	void StartThrowing() { throwing = 1; throw_start = GetTickCount(); }
 
 	static void ToSmall(float& y) { y += (MARIO_BIG_BBOX_HEIGHT - MARIO_SMALL_BBOX_HEIGHT); };

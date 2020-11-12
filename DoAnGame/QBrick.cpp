@@ -15,8 +15,6 @@ void CQBrick::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		ringing = 0;
 	}
 
-	float ace = 0;
-
 	if (ringing)
 	{
 		if (GetTickCount() - ring_start >= BRICK_RINGING_TIME / 2)

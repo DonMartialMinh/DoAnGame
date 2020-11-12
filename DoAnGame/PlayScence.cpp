@@ -406,11 +406,15 @@ void CPlayScenceKeyHandler::KeyState(BYTE* states)
 	if (game->IsKeyDown(DIK_LSHIFT))
 	{
 		mario->isRunning = 1;
-		if (mario->vx != 0 && mario->sliding == 0);
+		if (mario->vx != 0 && mario->canSlide == 0);
+		{
 			mario->SetState(MARIO_STATE_SLIDE);
+		}
+
 	}
 	else {
 		mario->isRunning = 0;
+		mario->canSlide = 0;
 		mario->sliding = 0;
 	}
 
@@ -434,7 +438,6 @@ void CPlayScenceKeyHandler::KeyState(BYTE* states)
 		}
 		mario->SetState(MARIO_STATE_WALKING_RIGHT);
 	}
-
 	else if (game->IsKeyDown(DIK_LEFT))
 	{
 		if (mario->vx > 0 && mario->turning == 0)

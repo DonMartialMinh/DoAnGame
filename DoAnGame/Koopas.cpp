@@ -77,10 +77,6 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				CGoomba* goomba = dynamic_cast<CGoomba*>(e->obj);
 				if ((state == KOOPAS_STATE_DIE || state == KOOPAS_STATE_DIE_DEFLECT) && vx != 0 )
 				{
-					vy = temp;						// go through goomba
-					x -= min_tx * dx + nx * 0.4f;
-					x += dx;
-					y += dy;
 					goomba->SetState(GOOMBA_STATE_DIE_DEFLECT);
 					goomba->vx = 0.05f * this->nx;
 				}
@@ -99,18 +95,8 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				{
 					if (koopas->state == KOOPAS_STATE_WALKING)
 					{
-						vy = temp;						// go through goomba
-						x -= min_tx * dx + nx * 0.4f;
-						x += dx;
-						y += dy;
 						koopas->SetState(KOOPAS_STATE_DIE_DEFLECT);
 						//koopas->vx = 0.05f * this->nx;
-					}
-					else {
-						if (abs(nx) > 0.0001f)
-							vx = -vx;
-						if (abs(ny) > 0.0001f)
-							vy = -vy;
 					}
 				}
 				else 
@@ -150,7 +136,7 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			else if (dynamic_cast<CQBrick*>(e->obj))		//question brick
 			{
 				CQBrick* qbrick = dynamic_cast<CQBrick*>(e->obj);
-				if (e->nx != 0)
+				if (e->nx != 0 &&((state == KOOPAS_STATE_DIE || state == KOOPAS_STATE_DIE_DEFLECT) && vx != 0))
 				{
 					if (qbrick->GetState() != BRICK_STATE_EMP)
 					{

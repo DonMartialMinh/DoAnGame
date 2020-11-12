@@ -26,6 +26,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	// Simple fall down
 	vy += MARIO_GRAVITY * dt;
+
 	if (vy > 0.04f) isFlying = 1; // if falling then cant jump
 
 	if (falling)					// racoon falling 
@@ -91,10 +92,12 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		kick_start = 0;
 		kicking = 0;
 	}
+
 	if (GetTickCount() - slide_start > MARIO_SLIDING_TIME)
 	{
 		slide_start = 0;
-		sliding = 0;
+		if (canSlide == 1)
+			sliding = 1;
 	}
 
 	if (GetTickCount() - throw_start > MARIO_THROWING_TIME)
@@ -104,7 +107,10 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	}
 
 	if (vx == 0)
-		sliding = 0;
+	{
+		sliding = 0; canSlide = 0;
+	}
+
 
 	// No collision occured, proceed normally
 	if (coEvents.size() == 0)
@@ -395,7 +401,9 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	if (vx < 0 && x < 3) x = 3;
 
 
-	//DebugOut(L"\nvx = %f", vx);
+	DebugOut(L"\nsliding = %d", sliding);
+	DebugOut(L"\tcanSlide = %d", canSlide);
+	DebugOut(L"\tstate = %d", state);
 	//DebugOut(L"\tvy = %f\n", vy);
 }
 
@@ -414,9 +422,9 @@ void CMario::Render()
 	else if (flying)
 	{
 		if (nx > 0)
-			ani = MARIO_ANI_RACOON_FLY_RIGHT;
+			ani = MARIO_ANI_RACOON_FLYING_RIGHT;
 		else
-			ani = MARIO_ANI_RACOON_FLY_LEFT;
+			ani = MARIO_ANI_RACOON_FLYING_LEFT;
 	}
 	else if (turning && isFlying == 0 && holding == 0)
 	{
@@ -535,8 +543,13 @@ void CMario::Render()
 			{
 				if (holding)
 					ani = MARIO_ANI_BIG_HOLD_WALK_RIGHT;
-				else if (sliding)
-					ani = MARIO_ANI_BIG_SLIDE_RIGHT;
+				else if (sliding && canSlide)
+				{
+					if (isFlying == 1)
+						ani = MARIO_ANI_BIG_FLY_RIGHT;
+					else
+						ani = MARIO_ANI_BIG_SLIDE_RIGHT;
+				}
 				else if (isFlying == 1)
 				{
 					if (vy < 0.0)
@@ -555,8 +568,14 @@ void CMario::Render()
 			{
 				if (holding)
 					ani = MARIO_ANI_BIG_HOLD_WALK_LEFT;
-				else if (sliding)
-					ani = MARIO_ANI_BIG_SLIDE_LEFT;
+				else if (sliding && canSlide)
+				{
+					if (isFlying == 1)
+						ani = MARIO_ANI_BIG_FLY_LEFT;
+					else
+						ani = MARIO_ANI_BIG_SLIDE_LEFT;
+				}
+
 				else if (isFlying == 1)
 				{
 					if (vy < 0.0)
@@ -600,8 +619,14 @@ void CMario::Render()
 			{
 				if (holding)
 					ani = MARIO_ANI_SMALL_HOLD_WALK_RIGHT;
-				else if (sliding)
-					ani = MARIO_ANI_SMALL_SLIDE_RIGHT;
+				else if (sliding && canSlide)
+				{
+					if (isFlying == 1)
+						ani = MARIO_ANI_SMALL_FLY_RIGHT;
+					else
+						ani = MARIO_ANI_SMALL_SLIDE_RIGHT;
+				}
+
 				else if (isFlying == 1)
 					ani = MARIO_ANI_SMALL_JUMP_RIGHT;
 				else if (isRunning == 1)
@@ -613,8 +638,14 @@ void CMario::Render()
 			{
 				if (holding)
 					ani = MARIO_ANI_SMALL_HOLD_WALK_LEFT;
-				else if (sliding)
-					ani = MARIO_ANI_SMALL_SLIDE_LEFT;
+				else if (sliding && canSlide)
+				{
+					if (isFlying == 1)
+						ani = MARIO_ANI_SMALL_FLY_LEFT;
+					else
+						ani = MARIO_ANI_SMALL_SLIDE_LEFT;
+				}
+
 				else if (isFlying == 1)
 					ani = MARIO_ANI_SMALL_JUMP_LEFT;
 				else if (isRunning == 1)
@@ -666,8 +697,13 @@ void CMario::Render()
 
 				if (holding)
 					ani = MARIO_ANI_FIRE_HOLD_WALK_RIGHT;
-				else if (sliding)
-					ani = MARIO_ANI_FIRE_SLIDE_RIGHT;
+				else if (sliding && canSlide)
+				{
+					if (isFlying == 1)
+						ani = MARIO_ANI_FIRE_FLY_RIGHT;
+					else
+						ani = MARIO_ANI_FIRE_SLIDE_RIGHT;
+				}
 				else if (isFlying == 1)
 				{
 					if (vy < 0.0)
@@ -686,8 +722,13 @@ void CMario::Render()
 			{
 				if (holding)
 					ani = MARIO_ANI_FIRE_HOLD_WALK_LEFT;
-				else if (sliding)
-					ani = MARIO_ANI_FIRE_SLIDE_LEFT;
+				else if (sliding && canSlide)
+				{
+					if (isFlying == 1)
+						ani = MARIO_ANI_FIRE_FLY_LEFT;
+					else
+						ani = MARIO_ANI_FIRE_SLIDE_LEFT;
+				}
 				else if (isFlying == 1)
 				{
 					if (vy < 0.0)
@@ -746,8 +787,13 @@ void CMario::Render()
 			{
 				if (holding)
 					ani = MARIO_ANI_RACOON_HOLD_WALK_RIGHT;
-				else if (sliding)
-					ani = MARIO_ANI_RACOON_SLIDE_RIGHT;
+				else if (sliding && canSlide)
+				{
+					if (isFlying == 1)
+						ani = MARIO_ANI_RACOON_FLY_RIGHT;
+					else
+						ani = MARIO_ANI_RACOON_SLIDE_RIGHT;
+				}
 				else if (isFlying == 1)
 				{
 					if (vy < 0.0)
@@ -766,8 +812,13 @@ void CMario::Render()
 			{
 				if (holding)
 					ani = MARIO_ANI_RACOON_HOLD_WALK_LEFT;
-				else if (sliding)
-					ani = MARIO_ANI_RACOON_SLIDE_LEFT;
+				else if (sliding && canSlide)
+				{
+					if (isFlying == 1)
+						ani = MARIO_ANI_RACOON_FLY_LEFT;
+					else
+						ani = MARIO_ANI_RACOON_SLIDE_LEFT;
+				}
 				else if (isFlying == 1)
 				{
 					if (vy < 0.0)
@@ -827,7 +878,10 @@ void CMario::SetState(int state)
 		if (isFlying == 0 && isDucking == 0)
 		{
 			isFlying = 1;
-			vy = -MARIO_JUMP_SPEED_Y;
+			if (sliding && canSlide)
+				vy = -0.6f;
+			else
+				vy = -MARIO_JUMP_SPEED_Y;
 		}
 		break;
 	case MARIO_STATE_DUCK:
@@ -846,6 +900,7 @@ void CMario::SetState(int state)
 		break;
 	case MARIO_STATE_SLIDE:
 		StartSliding();
+		canSlide = 1;
 		break;
 	case MARIO_FIRE_STATE_THROW:
 		StartThrowing();
