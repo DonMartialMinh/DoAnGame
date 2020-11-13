@@ -1,5 +1,4 @@
-#include "UpsideBrick.h"
-#include "Mario.h"
+#include "UpsideBrick.h""
 
 void CUpsideBrick::Render()
 {

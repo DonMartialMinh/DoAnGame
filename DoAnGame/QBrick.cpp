@@ -2,14 +2,15 @@
 
 CQBrick::CQBrick()
 {
+	ring_start = NULL;
 	SetState(BRICK_STATE_QUES);
 }
 
-void CQBrick::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
+void CQBrick::Update(ULONGLONG dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	CGameObject::Update(dt);
 
-	if (GetTickCount() - ring_start > BRICK_RINGING_TIME)
+	if (GetTickCount64() - ring_start > BRICK_RINGING_TIME)
 	{
 		ring_start = 0;
 		ringing = 0;
@@ -17,13 +18,11 @@ void CQBrick::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	if (ringing)
 	{
-		if (GetTickCount() - ring_start >= BRICK_RINGING_TIME / 2)
-			y += 1.4;
+		if (GetTickCount64() - ring_start >= BRICK_RINGING_TIME / 2)
+			y += 1.4f;
 		else
 			y -= 1;
 	}
-	//else
-		//y += ace;
 
 }
 

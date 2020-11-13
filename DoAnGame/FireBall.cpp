@@ -26,13 +26,13 @@ void CFireBall::GetBoundingBox(float& l, float& t, float& r, float& b)
 	}
 }
 
-void CFireBall::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
+void CFireBall::Update(ULONGLONG dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	CGame* game = CGame::GetInstance();
 	float camx;
 	float camy;
-	float scrw = game->GetScreenWidth();
-	float scrh = game->GetScreenHeight();
+	float scrw = float(game->GetScreenWidth());
+	float scrh = float(game->GetScreenHeight());
 	game->GetCamPos(camx, camy);
 
 	if (x < camx || x > camx + scrw)						// delete fireball if out map
@@ -74,7 +74,7 @@ void CFireBall::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		if (ny != 0)			// reflect 
 			vy = -FIREBALL_DEFLECT_SPEED;
 
-		for (int i = 0; i < coEventsResult.size(); i++)
+		for (int i = 0; i < int(coEventsResult.size()); i++)
 		{
 			LPCOLLISIONEVENT e = coEventsResult[i];
 

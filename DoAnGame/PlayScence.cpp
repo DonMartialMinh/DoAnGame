@@ -13,6 +13,7 @@ using namespace std;
 CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 	CScene(id, filePath)
 {
+	player = NULL;
 	key_handler = new CPlayScenceKeyHandler(this);
 }
 
@@ -91,7 +92,7 @@ void CPlayScene::_ParseSection_ANIMATIONS(string line)
 	LPANIMATION ani = new CAnimation();
 
 	int ani_id = atoi(tokens[0].c_str());
-	for (int i = 1; i < tokens.size(); i += 2)	// why i+=2 ?  sprite_id | frame_time  
+	for (int i = 1; i < int(tokens.size()); i += 2)	// why i+=2 ?  sprite_id | frame_time  
 	{
 		int sprite_id = atoi(tokens[i].c_str());
 		int frame_time = atoi(tokens[i + 1].c_str());
@@ -113,7 +114,7 @@ void CPlayScene::_ParseSection_ANIMATION_SETS(string line)
 
 	CAnimations* animations = CAnimations::GetInstance();
 
-	for (int i = 1; i < tokens.size(); i++)
+	for (int i = 1; i < int(tokens.size()); i++)
 	{
 		int ani_id = atoi(tokens[i].c_str());
 
@@ -136,8 +137,8 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	if (tokens.size() < 3) return; // skip invalid lines - an object set must have at least id, x, y
 
 	int object_type = atoi(tokens[0].c_str());
-	float x = atof(tokens[1].c_str());
-	float y = atof(tokens[2].c_str());
+	float x = float(atof(tokens[1].c_str()));
+	float y = float(atof(tokens[2].c_str()));
 
 	int ani_set_id = atoi(tokens[3].c_str());
 
@@ -170,8 +171,8 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_QBRICK: obj = new CQBrick(); break;
 	case OBJECT_TYPE_PORTAL:
 	{
-		float r = atof(tokens[4].c_str());
-		float b = atof(tokens[5].c_str());
+		float r = float(atof(tokens[4].c_str()));
+		float b = float(atof(tokens[5].c_str()));
 		int scene_id = atoi(tokens[6].c_str());
 		obj = new CPortal(x, y, r, b, scene_id);
 	}
@@ -242,7 +243,7 @@ void CPlayScene::Load()
 	DebugOut(L"[INFO] Done loading scene resources %s\n", sceneFilePath);
 }
 
-void CPlayScene::Update(DWORD dt)
+void CPlayScene::Update(ULONGLONG dt)
 {
 	// We know that Mario is the first object in the list hence we won't add him into the colliable object list
 	// TO-DO: This is a "dirty" way, need a more organized way 
@@ -311,7 +312,7 @@ void CPlayScene::Update(DWORD dt)
 
 void CPlayScene::Render()
 {
-	for (int i = 0; i < objects.size(); i++)
+	for (int i = 0; i < int(objects.size()); i++)
 		objects[i]->Render();
 }
 
@@ -320,7 +321,7 @@ void CPlayScene::Render()
 */
 void CPlayScene::Unload()
 {
-	for (int i = 0; i < objects.size(); i++)
+	for (int i = 0; i < int(objects.size()); i++)
 		delete objects[i];
 
 	objects.clear();
@@ -338,7 +339,7 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 	switch (KeyCode)
 	{
 	case DIK_X:
-		if ((mario->getLevel() == MARIO_LEVEL_RACOON && mario->isFlying == 1 && mario->isRunning == 1) || mario->flying)
+		if ((mario->getLevel() == MARIO_LEVEL_RACOON && mario->isFlying == 1 && mario->isRunning == 1 && mario->sliding == 1) || mario->flying)			//condition to fly
 			mario->SetState(MARIO_RACOON_STATE_FLY);
 		else if (mario->getLevel() == MARIO_LEVEL_RACOON && mario->isFlying == 1)
 			mario->SetState(MARIO_RACOON_STATE_FALL);
@@ -373,8 +374,6 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 		if (mario->getLevel() == MARIO_LEVEL_SMALL)
 			CMario::ToBig(mario->y);
 		mario->SetLevel(MARIO_LEVEL_RACOON);
-		if (mario->nx > 0)
-			mario->x -= (MARIO_RACOON_BBOX_WIDTH - MARIO_BIG_BBOX_WIDTH);
 		break;
 	}
 }
@@ -406,7 +405,7 @@ void CPlayScenceKeyHandler::KeyState(BYTE* states)
 	if (game->IsKeyDown(DIK_LSHIFT))
 	{
 		mario->isRunning = 1;
-		if (mario->vx != 0 && mario->canSlide == 0);
+		if (mario->GetVx() != 0 && mario->canSlide == 0)
 		{
 			mario->SetState(MARIO_STATE_SLIDE);
 		}

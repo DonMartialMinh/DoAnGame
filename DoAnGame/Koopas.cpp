@@ -19,7 +19,7 @@ void CKoopas::GetBoundingBox(float& left, float& top, float& right, float& botto
 		bottom = y + KOOPAS_BBOX_HEIGHT;
 }
 
-void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
+void CKoopas::Update(ULONGLONG dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	CGameObject::Update(dt, coObjects);
 
@@ -68,7 +68,7 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		if (ny < 0) vy = 0;
 
 
-		for (int i = 0; i < coEventsResult.size(); i++)
+		for (int i = 0; i < int(coEventsResult.size()); i++)
 		{
 			LPCOLLISIONEVENT e = coEventsResult[i];
 

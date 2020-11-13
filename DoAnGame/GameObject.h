@@ -44,23 +44,23 @@ struct CCollisionEvent
 class CGameObject
 {
 public:
-	int type;
-	float x;
-	float y;
+	int type = -1;
+	float x = 0;
+	float y = 0;
 
-	float dx;	// dx = vx*dt
-	float dy;	// dy = vy*dt
+	float dx = 0;	// dx = vx*dt
+	float dy = 0;	// dy = vy*dt
 
-	float vx;
-	float vy;
+	float vx = 0;
+	float vy = 0;
 
-	int nx;
+	int nx = 0;
 
-	int state;
+	int state = -1;
 
-	DWORD dt;
+	ULONGLONG dt = NULL;
 
-	LPANIMATION_SET animation_set;
+	LPANIMATION_SET animation_set = NULL;
 
 public:
 	void SetPosition(float x, float y) { this->x = x, this->y = y; }
@@ -88,8 +88,13 @@ public:
 
 	CGameObject();
 
+	float GetVx() { return vx; };
+	float GetVy() { return vy; };
+	void SetVx(float vx) { this->vx = vx; };
+	void SetVy(float vy) { this->vy = vy; };
+
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom) = 0;
-	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects = NULL);
+	virtual void Update(ULONGLONG dt, vector<LPGAMEOBJECT>* coObjects = NULL);
 	virtual void Render() = 0;
 	virtual void SetState(int state) { this->state = state; }
 

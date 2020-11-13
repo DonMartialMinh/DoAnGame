@@ -28,12 +28,12 @@ void CGoomba::GetBoundingBox(float& left, float& top, float& right, float& botto
 	}
 }
 
-void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
+void CGoomba::Update(ULONGLONG dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	CGame* game = CGame::GetInstance();
 	float camx;
 	float camy;
-	float scrh = game->GetScreenHeight();
+	float scrh = float(game->GetScreenHeight());
 	game->GetCamPos(camx, camy);
 	if (y < camy || y > camy + scrh)		// out screen height then delete
 	{
@@ -52,7 +52,7 @@ void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		vy += GOOMBA_GRAVITY * dt;
 
 	if (state == GOOMBA_STATE_DIE)
-		if (GetTickCount() - die_start > GOOMBA_DYING_TIME)
+		if (GetTickCount64() - die_start > GOOMBA_DYING_TIME)
 		{
 			die_start = 0;
 			dying = 1;
@@ -93,7 +93,7 @@ void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 		if (ny != 0) vy = 0;
 
-		for (int i = 0; i < coEventsResult.size(); i++)
+		for (int i = 0; i < int(coEventsResult.size()); i++)
 		{
 			LPCOLLISIONEVENT e = coEventsResult[i];
 
