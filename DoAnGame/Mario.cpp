@@ -166,18 +166,19 @@ void CMario::Update(ULONGLONG dt, vector<LPGAMEOBJECT>* coObjects)
 					{
 						if (goomba->GetState() != GOOMBA_STATE_DIE)
 						{
-							if (level > MARIO_LEVEL_BIG)
+							if (level == MARIO_LEVEL_RACOON && tailing == 1)
 							{
-								if (isDucking != 0)					// if being touched when ducking then stand up
-									isDucking = 0;
+								goomba->SetState(GOOMBA_STATE_DIE_DEFLECT);
+								goomba->vx = 0.05f * this->nx;
+							}
+							else if (level > MARIO_LEVEL_BIG)
+							{
 								level = MARIO_LEVEL_BIG;
 								ResetState();
 								StartUntouchable();
 							}
 							else if (level == MARIO_LEVEL_BIG)
 							{
-								if (isDucking != 0)					// if being touched when ducking then stand up
-									isDucking = 0;
 								level = MARIO_LEVEL_SMALL;
 								ResetState();
 								CMario::ToSmall(this->y);
@@ -218,18 +219,16 @@ void CMario::Update(ULONGLONG dt, vector<LPGAMEOBJECT>* coObjects)
 					{
 						if ((koopas->GetState() == KOOPAS_STATE_WALKING) || ((koopas->GetState() == KOOPAS_STATE_DIE || koopas->GetState() == KOOPAS_STATE_DIE_DEFLECT)&& koopas->vx != 0))
 						{
-							if (level > MARIO_LEVEL_BIG)
+							if (level == MARIO_LEVEL_RACOON && tailing == 1)
+								koopas->SetState(KOOPAS_STATE_DIE_DEFLECT);
+							else if (level > MARIO_LEVEL_BIG)
 							{
-								if (isDucking != 0)					// if being touched when ducking then stand up
-									isDucking = 0;
 								level = MARIO_LEVEL_BIG;
 								ResetState();
 								StartUntouchable();
 							}
 							else if (level == MARIO_LEVEL_BIG)
 							{
-								if (isDucking != 0)					// if being touched when ducking then stand up
-									isDucking = 0;
 								level = MARIO_LEVEL_SMALL;
 								ResetState();
 								CMario::ToSmall(this->y);

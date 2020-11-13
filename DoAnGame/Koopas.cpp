@@ -65,7 +65,7 @@ void CKoopas::Update(ULONGLONG dt, vector<LPGAMEOBJECT>* coObjects)
 
 		float temp = vy;
 		//if (nx != 0) vx = 0;
-		if (ny < 0) vy = 0;
+		if (ny != 0) vy = 0;
 
 
 		for (int i = 0; i < int(coEventsResult.size()); i++)
