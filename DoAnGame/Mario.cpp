@@ -19,10 +19,10 @@ CMario::CMario(float x, float y) : CGameObject()
 	this->y = y;
 }
 
-void CMario::Update(ULONGLONG dt, vector<LPGAMEOBJECT>* coObjects)
+void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	// Calculate dx, dy 
-	CGameObject::Update(dt, coObjects);
+	CGameObject::Update(dt);
 	if (vy > 0.0f) isFlying = 1; // if falling then cant jump
 
 	// Simple fall down
@@ -160,7 +160,7 @@ void CMario::Update(ULONGLONG dt, vector<LPGAMEOBJECT>* coObjects)
 						vy = -MARIO_JUMP_DEFLECT_SPEED;
 					}
 				}
-				else if (e->nx != 0)
+				else
 				{
 					if (untouchable == 0)
 					{
@@ -196,12 +196,7 @@ void CMario::Update(ULONGLONG dt, vector<LPGAMEOBJECT>* coObjects)
 				// jump on top >> kill Koopas and deflect a bit 
 				if (e->ny < 0)
 				{
-					if (koopas->GetState() == KOOPAS_STATE_WALKING)
-					{
-						koopas->SetState(KOOPAS_STATE_DIE);
-						vy = -MARIO_JUMP_DEFLECT_SPEED;
-					}
-					else if ((koopas->GetState() == KOOPAS_STATE_DIE || koopas->GetState() == KOOPAS_STATE_DIE_DEFLECT) && koopas->vx == 0 ) {
+					if ((koopas->GetState() == KOOPAS_STATE_DIE || koopas->GetState() == KOOPAS_STATE_DIE_DEFLECT) && koopas->vx == 0 ) {
 						if (this->nx > 0)  // direction of koopas spin when being stomped 
 							koopas->vx = KOOPAS_SPIN_SPEED;
 						else
@@ -212,12 +207,17 @@ void CMario::Update(ULONGLONG dt, vector<LPGAMEOBJECT>* coObjects)
 						vy = -MARIO_JUMP_DEFLECT_SPEED;
 						koopas->vx = 0;		// being stomped when spining then still
 					}
+					else
+					{
+						koopas->SetState(KOOPAS_STATE_DIE);
+						vy = -MARIO_JUMP_DEFLECT_SPEED;
+					}
 				}
-				else if (e->nx != 0)
+				else
 				{
 					if (untouchable == 0)
 					{
-						if ((koopas->GetState() == KOOPAS_STATE_WALKING) || ((koopas->GetState() == KOOPAS_STATE_DIE || koopas->GetState() == KOOPAS_STATE_DIE_DEFLECT)&& koopas->vx != 0))
+						if (koopas->vx != 0)
 						{
 							if (level == MARIO_LEVEL_RACOON && tailing == 1)
 								koopas->SetState(KOOPAS_STATE_DIE_DEFLECT);

@@ -1,11 +1,10 @@
 #pragma once
 #include "GameObject.h"
-#include "Mario.h"
 
 #define UPSIDEBRICK_BBOX_WIDTH  16
 #define UPSIDEBRICK_BBOX_HEIGHT 1
 
-class CUpsideBrick : public CGameObject
+class CUpsideBrick: public CGameObject
 {
 public:
 	virtual void Render();

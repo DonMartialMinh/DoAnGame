@@ -15,7 +15,7 @@ CGameObject::CGameObject()
 	nx = 1;
 }
 
-void CGameObject::Update(ULONGLONG dt, vector<LPGAMEOBJECT>* coObjects)
+void CGameObject::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	this->dt = dt;
 	dx = vx * dt;
@@ -74,7 +74,7 @@ void CGameObject::CalcPotentialCollisions(
 		LPCOLLISIONEVENT e = SweptAABBEx(coObjects->at(i));
 		if (e->t > 0 && e->t <= 1.0f)
 		{
-			if (coObjects->at(i)->type == 1)			// avoid enemy change direction if collide
+			if (coObjects->at(i)->type == 0 || coObjects->at(i)->type == 4)			// avoid collision with mario and environment
 				delete e;
 			else
 				coEvents.push_back(e);

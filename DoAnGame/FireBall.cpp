@@ -10,23 +10,14 @@ CFireBall::CFireBall(int nx)
 void CFireBall::GetBoundingBox(float& l, float& t, float& r, float& b)
 {
 	if (isFinish)	//turn of boundingbox
-	{
-		l = NULL;
-		t = NULL;
-		r = NULL;
-		b = NULL;
-	}
-	else
-	{
-
-		l = x;
-		t = y;
-		r = x + FIREBALL_BBOX_WIDTH;
-		b = y + FIREBALL_BBOX_HEIGHT;
-	}
+		return;
+	l = x;
+	t = y;
+	r = x + FIREBALL_BBOX_WIDTH;
+	b = y + FIREBALL_BBOX_HEIGHT;
 }
 
-void CFireBall::Update(ULONGLONG dt, vector<LPGAMEOBJECT>* coObjects)
+void CFireBall::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	CGame* game = CGame::GetInstance();
 	float camx;

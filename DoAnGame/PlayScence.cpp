@@ -155,7 +155,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 			return;
 		}
 		obj = new CMario(x, y);
-		obj->type = 1;
+		obj->type = 0;
 		player = (CMario*)obj;
 
 		DebugOut(L"[INFO] Player object created!\n");
@@ -165,7 +165,10 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		break;
 	case OBJECT_TYPE_BRICK: obj = new CBrick(); break;
 	case OBJECT_TYPE_KOOPAS: obj = new CKoopas(); break;
-	case OBJECT_TYPE_ENVIRONMENT: obj = new CEnvironment(); break;
+	case OBJECT_TYPE_ENVIRONMENT: 
+		obj = new CEnvironment();
+		obj->type = 4;
+		break;
 	case OBJECT_TYPE_UPSIDEBRICK: obj = new CUpsideBrick(); break;
 	case OBJECT_TYPE_COIN:	obj = new CCoin(); break;
 	case OBJECT_TYPE_QBRICK: obj = new CQBrick(); break;
@@ -243,7 +246,7 @@ void CPlayScene::Load()
 	DebugOut(L"[INFO] Done loading scene resources %s\n", sceneFilePath);
 }
 
-void CPlayScene::Update(ULONGLONG dt)
+void CPlayScene::Update(DWORD dt)
 {
 	// We know that Mario is the first object in the list hence we won't add him into the colliable object list
 	// TO-DO: This is a "dirty" way, need a more organized way 

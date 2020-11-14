@@ -8,19 +8,11 @@ CCoin::CCoin()
 void CCoin::GetBoundingBox(float& l, float& t, float& r, float& b)
 {
 	if (isFinish)
-	{
-		l = NULL;
-		t = NULL;
-		r = NULL;
-		b = NULL;
-	}
-	else {
-
-		l = x;
-		t = y;
-		r = x + COIN_BBOX_WIDTH;
-		b = y + COIN_BBOX_HEIGHT;
-	}
+		return;
+	l = x;
+	t = y;
+	r = x + COIN_BBOX_WIDTH;
+	b = y + COIN_BBOX_HEIGHT;
 }
 
 void CCoin::Render()

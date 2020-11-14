@@ -23,13 +23,13 @@
 class CGoomba : public CGameObject
 {
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
-	virtual void Update(ULONGLONG dt, vector<LPGAMEOBJECT>* coObjects);
+	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void Render();
 	int isFinish = 0;
-	ULONGLONG die_start = NULL;				//time die animation
+	DWORD die_start = NULL;				//time die animation
 public:
 	int dying;
 	CGoomba();
 	virtual void SetState(int state);
-	void StartDying() { dying = 0; die_start = GetTickCount64(); }	
+	void StartDying() { dying = 0; die_start = GetTickCount(); }	
 };

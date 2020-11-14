@@ -54,7 +54,7 @@ LRESULT CALLBACK WinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	Update world status for this frame
 	dt: time period between beginning of last frame and beginning of this frame
 */
-void Update(ULONGLONG dt)
+void Update(DWORD dt)
 {
 	CGame::GetInstance()->GetCurrentScene()->Update(dt);
 }
@@ -68,7 +68,7 @@ void Render()
 	LPDIRECT3DSURFACE9 bb = game->GetBackBuffer();
 	LPD3DXSPRITE spriteHandler = game->GetSpriteHandler();
 
-	if (SUCCEEDED((d3ddv->BeginScene())))
+	if (((d3ddv->BeginScene())))
 	{
 		// Clear back buffer with a color
 		d3ddv->ColorFill(bb, NULL, BACKGROUND_COLOR);
@@ -136,8 +136,8 @@ int Run()
 {
 	MSG msg;
 	int done = 0;
-	ULONGLONG frameStart = GetTickCount64();
-	ULONGLONG tickPerFrame = 1000 / MAX_FRAME_RATE;
+	DWORD frameStart = GetTickCount();
+	DWORD tickPerFrame = 1000 / MAX_FRAME_RATE;
 
 	while (!done)
 	{
@@ -149,11 +149,11 @@ int Run()
 			DispatchMessage(&msg);
 		}
 
-		ULONGLONG now = GetTickCount64();
+		DWORD now = GetTickCount();
 
 		// dt: the time between (beginning of last frame) and now
 		// this frame: the frame we are about to render
-		ULONGLONG dt = now - frameStart;
+		DWORD dt = now - frameStart;
 
 		if (dt >= tickPerFrame)
 		{

@@ -6,7 +6,7 @@ CQBrick::CQBrick()
 	SetState(BRICK_STATE_QUES);
 }
 
-void CQBrick::Update(ULONGLONG dt, vector<LPGAMEOBJECT>* coObjects)
+void CQBrick::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	CGameObject::Update(dt);
 

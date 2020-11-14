@@ -9,26 +9,18 @@ CGoomba::CGoomba()
 void CGoomba::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
 	if (isFinish)
-	{
-		left = NULL;
-		top = NULL; 
-		right = NULL;
-		bottom = NULL;
-	}
-	else
-	{
-		left = x;
-		top = y;
-		right = x + GOOMBA_BBOX_WIDTH;
+		return;
+	left = x;
+	top = y;
+	right = x + GOOMBA_BBOX_WIDTH;
 
-		if (state == GOOMBA_STATE_DIE)
-			bottom = y + GOOMBA_BBOX_HEIGHT_DIE;
-		else
-			bottom = y + GOOMBA_BBOX_HEIGHT;
-	}
+	if (state == GOOMBA_STATE_DIE)
+		bottom = y + GOOMBA_BBOX_HEIGHT_DIE;
+	else
+		bottom = y + GOOMBA_BBOX_HEIGHT;
 }
 
-void CGoomba::Update(ULONGLONG dt, vector<LPGAMEOBJECT>* coObjects)
+void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	CGame* game = CGame::GetInstance();
 	float camx;
@@ -45,7 +37,7 @@ void CGoomba::Update(ULONGLONG dt, vector<LPGAMEOBJECT>* coObjects)
 	if (isFinish && dying)	// if dying and die animation finish then return
 		return;
 
-	CGameObject::Update(dt, coObjects);
+	CGameObject::Update(dt);
 
 
 	if (state != GOOMBA_STATE_DIE)	// if goomba not die or die deflect then have vy

@@ -58,7 +58,7 @@ public:
 
 	int state = -1;
 
-	ULONGLONG dt = NULL;
+	DWORD dt = NULL;
 
 	LPANIMATION_SET animation_set = NULL;
 
@@ -94,7 +94,7 @@ public:
 	void SetVy(float vy) { this->vy = vy; };
 
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom) = 0;
-	virtual void Update(ULONGLONG dt, vector<LPGAMEOBJECT>* coObjects = NULL);
+	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects = NULL);
 	virtual void Render() = 0;
 	virtual void SetState(int state) { this->state = state; }
 

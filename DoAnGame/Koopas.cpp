@@ -19,9 +19,9 @@ void CKoopas::GetBoundingBox(float& left, float& top, float& right, float& botto
 		bottom = y + KOOPAS_BBOX_HEIGHT;
 }
 
-void CKoopas::Update(ULONGLONG dt, vector<LPGAMEOBJECT>* coObjects)
+void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-	CGameObject::Update(dt, coObjects);
+	CGameObject::Update(dt);
 
 	//
 	// TO-DO: make sure Koopas can interact with the world and to each of them too!

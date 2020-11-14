@@ -6,7 +6,7 @@ CPortal::CPortal(float l, float t, float r, float b, int scene_id)
 	this->scene_id = scene_id;
 	x = l;
 	y = t;
-	width = int(r - l) + 1.;
+	width = int(r - l) + 1;
 	height = int(b - t) + 1;
 }
 

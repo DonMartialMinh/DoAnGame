@@ -186,14 +186,14 @@ class CMario : public CGameObject
 	int falling;
 
 
-	ULONGLONG untouchable_start;
-	ULONGLONG fall_start;
-	ULONGLONG fly_start;
-	ULONGLONG turn_start;
-	ULONGLONG tail_start;
-	ULONGLONG kick_start;
-	ULONGLONG slide_start;
-	ULONGLONG throw_start;
+	DWORD untouchable_start;
+	DWORD fall_start;
+	DWORD fly_start;
+	DWORD turn_start;
+	DWORD tail_start;
+	DWORD kick_start;
+	DWORD slide_start;
+	DWORD throw_start;
 	float start_x;			// initial position of Mario at scene
 	float start_y;
 
@@ -213,20 +213,20 @@ public:
 	int sliding = 0;
 	int throwing = 0;
 	CMario(float x = 0.0f, float y = 0.0f);
-	virtual void Update(ULONGLONG dt, vector<LPGAMEOBJECT>* colliable_objects = NULL);
+	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects = NULL);
 	virtual void Render();
 	CGameObject* NewFireBall();
 
 	void SetState(int state);
 	void SetLevel(int l) { level = l; }
-	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount64(); }
-	void StartFalling() { falling = 1; fall_start = GetTickCount64(); }
-	void StartFlying() { flying = 1; fly_start = GetTickCount64(); }
-	void StartTurning() { turning = 1; turn_start = GetTickCount64(); }
-	void StartTailing() { tailing = 1; tail_start = GetTickCount64(); }
-	void StartKicking() { kicking = 1; kick_start = GetTickCount64(); }
-	void StartSliding() { if(slide_start == 0) slide_start = GetTickCount64(); }
-	void StartThrowing() { throwing = 1; throw_start = GetTickCount64(); }
+	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount(); }
+	void StartFalling() { falling = 1; fall_start = GetTickCount(); }
+	void StartFlying() { flying = 1; fly_start = GetTickCount(); }
+	void StartTurning() { turning = 1; turn_start = GetTickCount(); }
+	void StartTailing() { tailing = 1; tail_start = GetTickCount(); }
+	void StartKicking() { kicking = 1; kick_start = GetTickCount(); }
+	void StartSliding() { if(slide_start == 0) slide_start = GetTickCount(); }
+	void StartThrowing() { throwing = 1; throw_start = GetTickCount(); }
 
 	void ResetState()
 	{
