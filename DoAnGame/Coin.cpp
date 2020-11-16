@@ -21,6 +21,6 @@ void CCoin::Render()
 		return;
 	int ani = COIN_ANI_COIN;
 	animation_set->at(ani)->Render(x, y);
-	RenderBoundingBox();
+	//RenderBoundingBox();
 }
 

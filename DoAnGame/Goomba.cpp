@@ -92,9 +92,17 @@ void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			if (dynamic_cast<CGoomba*>(e->obj))	// if e->obj is goomba 
 			{
 				CGoomba* goomba = dynamic_cast<CGoomba*>(e->obj);
-				if (goomba->vx != this->vx)
+				if (e->nx > 0)
 				{
-					this->vx = -this->vx;
+					vx = GOOMBA_WALKING_SPEED;
+					goomba->vx = -GOOMBA_WALKING_SPEED;
+					DebugOut(L"\nleft collision");
+				}
+				else if (e->nx < 0)
+				{
+					vx = -GOOMBA_WALKING_SPEED;
+					goomba->vx = GOOMBA_WALKING_SPEED;
+					DebugOut(L"\nright collision");
 				}
 			}
 			else
