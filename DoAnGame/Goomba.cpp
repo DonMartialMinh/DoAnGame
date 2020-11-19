@@ -92,25 +92,16 @@ void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			if (dynamic_cast<CGoomba*>(e->obj))	// if e->obj is goomba 
 			{
 				CGoomba* goomba = dynamic_cast<CGoomba*>(e->obj);
-				if (e->nx > 0)
+				if (e->nx)
 				{
-					vx = GOOMBA_WALKING_SPEED;
-					goomba->vx = -GOOMBA_WALKING_SPEED;
-					DebugOut(L"\nleft collision");
-				}
-				else if (e->nx < 0)
-				{
-					vx = -GOOMBA_WALKING_SPEED;
-					goomba->vx = GOOMBA_WALKING_SPEED;
-					DebugOut(L"\nright collision");
+					vx = -vx;
+					goomba->vx = -goomba->vx;
 				}
 			}
 			else
 			{
 				if (abs(nx) > 0.0001f)
 					vx = -vx;
-				if (abs(ny) > 0.0001f)
-					vy = -vy;
 			}
 		}
 	}
@@ -132,7 +123,6 @@ void CGoomba::Render()
 		ani = GOOMBA_ANI_DIE_DEFLECT;
 
 	animation_set->at(ani)->Render(x, y);
-
 	RenderBoundingBox();
 }
 

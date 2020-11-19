@@ -9,6 +9,8 @@ CKoopas::CKoopas()
 
 void CKoopas::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
+	if (isFinish)
+		return;
 	left = x;
 	top = y;
 	right = x + KOOPAS_BBOX_WIDTH;
@@ -29,7 +31,10 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	vy += KOOPAS_GRAVITY * dt;
 
-	if (isHolded && vx == 0)
+	if (vx != 0)
+		isHolded = 0;
+
+	if (isHolded)
 		vy = 0;
 
 
@@ -38,7 +43,8 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	coEvents.clear();
 
-	CalcPotentialCollisions(coObjects, coEvents);
+	if (state != KOOPAS_STATE_DIE_DEFLECT_OUT)
+		CalcPotentialCollisions(coObjects, coEvents);
 
 
 
@@ -80,7 +86,7 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					goomba->SetState(GOOMBA_STATE_DIE_DEFLECT);
 					goomba->vx = 0.05f * this->nx;
 				}
-				else
+				else if(goomba->state == GOOMBA_STATE_WALKING )
 				{
 					if (abs(nx) > 0.0001f)
 						vx = -vx;
@@ -93,18 +99,13 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				CKoopas* koopas = dynamic_cast<CKoopas*>(e->obj);
 				if ((state == KOOPAS_STATE_DIE || state == KOOPAS_STATE_DIE_DEFLECT) && vx != 0)
 				{
-					if (koopas->state == KOOPAS_STATE_WALKING)
-					{
-						koopas->SetState(KOOPAS_STATE_DIE_DEFLECT);
-						//koopas->vx = 0.05f * this->nx;
-					}
+					koopas->SetState(KOOPAS_STATE_DIE_DEFLECT_OUT);
+					//koopas->vx = 0.05f * this->nx;
 				}
 				else 
 				{
-					if (abs(nx) > 0.0001f)
-						vx = -vx;
-					if (abs(ny) > 0.0001f)
-						vy = -vy;
+					vx = -vx;
+					koopas->vx = -koopas->vx;
 				}
 			}
 			else if (dynamic_cast<CUpsideBrick*>(e->obj))	// if e->obj is UpsideBrick 
@@ -173,7 +174,7 @@ void CKoopas::Render()
 	if (state == KOOPAS_STATE_DIE && vx == 0) {
 		ani = KOOPAS_ANI_DIE;
 	}
-	else if (state == KOOPAS_STATE_DIE_DEFLECT && vx == 0)
+	else if (state == KOOPAS_STATE_DIE_DEFLECT || state == KOOPAS_STATE_DIE_DEFLECT_OUT)
 		ani = KOOPAS_ANI_DIE_DEFLECT;
 	else if (state == KOOPAS_STATE_DIE && vx > 0)
 		ani = KOOPAS_ANI_SPIN_RIGHT;
@@ -186,7 +187,6 @@ void CKoopas::Render()
 	else if (vx > 0) ani = KOOPAS_ANI_WALKING_RIGHT;
 	else if (vx <= 0) ani = KOOPAS_ANI_WALKING_LEFT;
 	animation_set->at(ani)->Render(x, y);
-
 	RenderBoundingBox();
 }
 
@@ -203,6 +203,10 @@ void CKoopas::SetState(int state)
 	case KOOPAS_STATE_DIE_DEFLECT:
 		vy = -KOOPAS_DIE_DEFLECT_SPEED;
 		vx = 0;
+		break;
+	case KOOPAS_STATE_DIE_DEFLECT_OUT:
+		vy = -KOOPAS_DIE_DEFLECT_SPEED;
+		isFinish = 1;
 		break;
 	case KOOPAS_STATE_WALKING:
 		vx = -KOOPAS_WALKING_SPEED;

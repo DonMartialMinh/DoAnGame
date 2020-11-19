@@ -6,7 +6,7 @@
 
 #define KOOPAS_WALKING_SPEED 0.05f;
 #define KOOPAS_SPIN_SPEED 0.22f
-#define KOOPAS_GRAVITY		0.002f
+#define KOOPAS_GRAVITY		0.001f
 #define KOOPAS_DIE_DEFLECT_SPEED 0.3f
 
 #define KOOPAS_BBOX_WIDTH 16
@@ -17,6 +17,7 @@
 #define KOOPAS_STATE_DIE 200
 #define KOOPAS_STATE_SPIN 300
 #define KOOPAS_STATE_DIE_DEFLECT 400
+#define KOOPAS_STATE_DIE_DEFLECT_OUT 500
 
 #define KOOPAS_ANI_WALKING_LEFT 0
 #define KOOPAS_ANI_WALKING_RIGHT 1
@@ -35,6 +36,7 @@ class CKoopas : public CGameObject
 
 public:
 	int isHolded = 0;
+	int isFinish = 0;
 	CKoopas();
 	virtual void SetState(int state);
 };

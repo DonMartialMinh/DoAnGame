@@ -35,8 +35,7 @@ void CFireBall::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		return;
 
 	CGameObject::Update(dt);
-	if (isFinish != 1)
-		vy += FIREBALL_GRAVITY * dt;
+	vy += FIREBALL_GRAVITY * dt;
 
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
@@ -78,8 +77,8 @@ void CFireBall::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			else if (dynamic_cast<CKoopas*>(e->obj))	// object is koopas
 			{
 				CKoopas* koopas = dynamic_cast<CKoopas*>(e->obj);
-				koopas->SetState(KOOPAS_STATE_DIE_DEFLECT);
-				//koopas->vx = 0.05f * this->nx;
+				koopas->SetState(KOOPAS_STATE_DIE_DEFLECT_OUT);
+				koopas->vx = 0.05f * this->nx;
 			}
 			if (e->nx != 0)
 			{
