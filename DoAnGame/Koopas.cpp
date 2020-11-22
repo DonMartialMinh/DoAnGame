@@ -172,10 +172,9 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 void CKoopas::Render()
 {
 	int ani = KOOPAS_ANI_WALKING_LEFT;
-	if (state == KOOPAS_STATE_DIE && vx == 0) {
+	if (state == KOOPAS_STATE_DIE && vx == 0)
 		ani = KOOPAS_ANI_DIE;
-	}
-	else if (state == KOOPAS_STATE_DIE_DEFLECT || state == KOOPAS_STATE_DIE_DEFLECT_OUT)
+	else if ((state == KOOPAS_STATE_DIE_DEFLECT && vx == 0) || state == KOOPAS_STATE_DIE_DEFLECT_OUT)
 		ani = KOOPAS_ANI_DIE_DEFLECT;
 	else if (state == KOOPAS_STATE_DIE && vx > 0)
 		ani = KOOPAS_ANI_SPIN_RIGHT;
