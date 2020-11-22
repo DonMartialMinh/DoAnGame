@@ -22,7 +22,7 @@ CMario::CMario(float x, float y) : CGameObject()
 void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	// Calculate dx, dy 
-	CGameObject::Update(dt);
+	CGameObject::Update(dt, coObjects);
 	if (vy > 0.0f) isFlying = 1; // if falling then cant jump
 
 	// Simple fall down

@@ -19,7 +19,7 @@ void CQBrick::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	if (ringing)
 	{
 		if (GetTickCount64() - ring_start >= BRICK_RINGING_TIME / 2)
-			y += 1.4f;
+			y += 1;
 		else
 			y -= 1;
 	}
@@ -43,3 +43,4 @@ void CQBrick::GetBoundingBox(float& l, float& t, float& r, float& b)
 	r = x + BRICK_BBOX_WIDTH;
 	b = y + BRICK_BBOX_HEIGHT;
 }
+

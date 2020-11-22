@@ -156,7 +156,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		}
 		obj = new CMario(x, y);
 		obj->type = 0;
-		player = (CMario*)obj;
+		player = (CMario*)obj; 
 
 		DebugOut(L"[INFO] Player object created!\n");
 		break;
@@ -274,8 +274,10 @@ void CPlayScene::Update(DWORD dt)
 
 	// Update camera to follow mario
 	float cx, cy;
+	float camx, camy;
 	player->GetPosition(cx, cy);
 	CGame* game = CGame::GetInstance();
+	game->GetCamPos(camx, camy);
 	if (cx < game->GetScreenWidth() / 2)
 	{
 		if (cy < 0)
@@ -310,7 +312,6 @@ void CPlayScene::Update(DWORD dt)
 			cy -= game->GetScreenHeight() / 2;
 			CGame::GetInstance()->SetCamPos(round(cx), 0.0f); // set Cam Focus
 		}
-
 	}
 }
 

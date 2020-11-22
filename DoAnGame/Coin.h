@@ -15,6 +15,4 @@ class CCoin : public CGameObject
 public:
 	int isFinish = 0;
 	CCoin();
-
-
 };
