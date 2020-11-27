@@ -202,6 +202,14 @@ fly left
 30003	45	21	61	29	10
 30004	262	292	278	308	80
 
+#GOOMBA 2
+40020	456	53	476	77	50
+40021	414	53	434	77	50
+40022	435	53	455	77	50
+40023	393	53	413	77	50
+40024	256	108	272	124	50
+40025	239	108	255	124	50
+
 #KOOPAS
 #walk left
 50001	205	191	221	218	50
@@ -589,6 +597,13 @@ fly left
 702	30003	100
 703	30004	100
 
+# GOOMBA 2
+# fly
+704	40020	100	40021	100	40022	100	40023	100
+# walk
+705	40024	100	40025	100
+
+
 # ==== KOOPAS  =========
 #walk left
 801	50001	100	50002	100
@@ -713,11 +728,15 @@ fly left
 #FIREBALL
 13	598	599
 
+#GOOMBA 2
+14	704	705	702	703
+
 # QUESTION BRICK 
 29	610	613
 
 # GOOMBA
 28	701	702	703
+
 
 #KOOPAS
 39	801	802	803	804	805	806	807	808
@@ -804,7 +823,7 @@ fly left
 
 [OBJECTS]
 # type	x	y	ani_set_id	extra_settings per object type
-# type: 0 = Mario , 1 = Brick, 2 = Goomba, 3 = Koopas, 4 = Environment, 5 = UpsideBrick, 6 = Coin, 7 = QBrick, 8 = FireBall
+# type: 0 = Mario , 1 = Brick, 2 = Goomba, 3 = Koopas, 4 = Environment, 5 = UpsideBrick, 6 = Coin, 7 = QBrick, 8 = FireBall, 9 = FlyGoomba
 
 # SMALL BRUSH
 4	176	170	20
@@ -2243,13 +2262,13 @@ fly left
 0	15	158	1
 
 # GOOMBA
-2	250	170	28
-2	300	170	28
+2	280	170	28
+9	200	150	14
 
 # KOOPAS
 3	642	120	39
 3	760	130	39
-3	200	150 	39
+3	250	150 	39
 
 
 

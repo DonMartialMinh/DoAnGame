@@ -74,6 +74,12 @@ void CFireBall::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				goomba->SetState(GOOMBA_STATE_DIE_DEFLECT);
 				goomba->vx = 0.05f * this->nx;
 			}
+			else if (dynamic_cast<CFlyGoomba*>(e->obj))			// object is goomba
+			{
+				CFlyGoomba* goomba = dynamic_cast<CFlyGoomba*>(e->obj);
+				goomba->SetState(FLYGOOMBA_STATE_DIE_DEFLECT);
+				goomba->vx = 0.05f * this->nx;
+			}
 			else if (dynamic_cast<CKoopas*>(e->obj))	// object is koopas
 			{
 				CKoopas* koopas = dynamic_cast<CKoopas*>(e->obj);

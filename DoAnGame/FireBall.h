@@ -3,6 +3,7 @@
 #include "Brick.h"
 #include "Game.h"
 #include "Goomba.h"
+#include "FlyGoomba.h"
 #include "Koopas.h"
 
 #define FIREBALL_BBOX_WIDTH  8

@@ -9,6 +9,7 @@
 #include "Coin.h"
 #include "Environment.h"
 #include "QBrick.h"
+#include "FlyGoomba.h"
 
 
 #define MARIO_WALKING_SPEED		0.13f 

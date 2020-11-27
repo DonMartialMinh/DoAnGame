@@ -95,6 +95,23 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					}
 				}
 			}
+			else if (dynamic_cast<CFlyGoomba*>(e->obj))	// if e->obj is goomba 
+			{
+				CFlyGoomba* goomba = dynamic_cast<CFlyGoomba*>(e->obj);
+				if ((state == KOOPAS_STATE_DIE || state == KOOPAS_STATE_DIE_DEFLECT) && vx != 0)
+				{
+					goomba->SetState(FLYGOOMBA_STATE_DIE_DEFLECT);
+					goomba->vx = 0.05f * this->nx;
+				}
+				else
+				{
+					if (e->nx)
+					{
+						vx = -vx;
+						goomba->vx = -goomba->vx;
+					}
+				}
+			}
 			else if (dynamic_cast<CKoopas*>(e->obj))	// if e->obj is koopas
 			{
 				CKoopas* koopas = dynamic_cast<CKoopas*>(e->obj);

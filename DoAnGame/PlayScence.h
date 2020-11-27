@@ -11,6 +11,7 @@
 #include "UpsideBrick.h"
 #include "Coin.h"
 #include "QBrick.h"
+#include "FlyGoomba.h"
 #include "FireBall.h"
 
 

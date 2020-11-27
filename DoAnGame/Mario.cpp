@@ -189,6 +189,54 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						}
 					}
 				}
+			}
+			if (dynamic_cast<CFlyGoomba*>(e->obj)) // if e->obj is Goomba 
+			{
+				CFlyGoomba* goomba = dynamic_cast<CFlyGoomba*>(e->obj);
+
+				// jump on top >> kill Goomba and deflect a bit 
+				if (e->ny < 0)
+				{
+					if (goomba->GetState() == FLYGOOMBA_STATE_FLYING)
+					{
+						goomba->SetState(FLYGOOMBA_STATE_WALKING);
+						vy = -MARIO_JUMP_DEFLECT_SPEED;
+					}
+					else if (goomba->GetState() == FLYGOOMBA_STATE_WALKING)
+					{
+						goomba->SetState(FLYGOOMBA_STATE_DIE);
+						vy = -MARIO_JUMP_DEFLECT_SPEED;
+					}
+				}
+				else
+				{
+					if (untouchable == 0)
+					{
+						if (goomba->GetState() != FLYGOOMBA_STATE_DIE)
+						{
+							if (level == MARIO_LEVEL_RACOON && tailing == 1)
+							{
+								goomba->SetState(FLYGOOMBA_STATE_DIE_DEFLECT);
+								goomba->vx = 0.05f * this->nx;
+							}
+							else if (level > MARIO_LEVEL_BIG)
+							{
+								level = MARIO_LEVEL_BIG;
+								ResetState();
+								StartUntouchable();
+							}
+							else if (level == MARIO_LEVEL_BIG)
+							{
+								level = MARIO_LEVEL_SMALL;
+								ResetState();
+								CMario::ToSmall(this->y);
+								StartUntouchable();
+							}
+							else
+								SetState(MARIO_STATE_DIE);
+						}
+					}
+				}
 			}if (dynamic_cast<CKoopas*>(e->obj)) // if e->obj is Koopas 
 			{
 				CKoopas* koopas = dynamic_cast<CKoopas*>(e->obj);
