@@ -5,6 +5,7 @@
 #include "Goomba.h"
 #include "FlyGoomba.h"
 #include "Koopas.h"
+#include "FlyKoopas.h"
 
 #define FIREBALL_BBOX_WIDTH  8
 #define FIREBALL_BBOX_HEIGHT 9

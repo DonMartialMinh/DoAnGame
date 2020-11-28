@@ -148,6 +148,7 @@
     <ClCompile Include="Environment.cpp" />
     <ClCompile Include="FireBall.cpp" />
     <ClCompile Include="FlyGoomba.cpp" />
+    <ClCompile Include="FlyKoopas.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="Goomba.cpp" />
@@ -171,6 +172,7 @@
     <ClInclude Include="Environment.h" />
     <ClInclude Include="FireBall.h" />
     <ClInclude Include="FlyGoomba.h" />
+    <ClInclude Include="FlyKoopas.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="Goomba.h" />

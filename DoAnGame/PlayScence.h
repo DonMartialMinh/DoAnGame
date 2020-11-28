@@ -13,6 +13,7 @@
 #include "QBrick.h"
 #include "FlyGoomba.h"
 #include "FireBall.h"
+#include "FlyKoopas.h"
 
 
 class CPlayScene : public CScene

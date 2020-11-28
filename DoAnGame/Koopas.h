@@ -4,6 +4,7 @@
 #include "Goomba.h"
 #include "QBrick.h"
 #include "FlyGoomba.h"
+#include "FlyKoopas.h"
 
 #define KOOPAS_WALKING_SPEED 0.05f;
 #define KOOPAS_SPIN_SPEED 0.22f

@@ -78,6 +78,9 @@
     <ClCompile Include="FlyGoomba.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="FlyKoopas.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -135,6 +138,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="FlyGoomba.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FlyKoopas.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

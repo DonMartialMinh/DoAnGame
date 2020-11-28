@@ -1,27 +1,27 @@
-#include "Koopas.h"
+#include "FlyKoopas.h"
 #include "Brick.h"
 #include "UpsideBrick.h"
+#include "Koopas.h"
 
-CKoopas::CKoopas()
+CFlyKoopas::CFlyKoopas()
 {
-	SetState(KOOPAS_STATE_WALKING);
+	SetState(FLYKOOPAS_STATE_FLYING);
 }
 
-void CKoopas::GetBoundingBox(float& left, float& top, float& right, float& bottom)
+void CFlyKoopas::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
 	if (isFinish)
 		return;
 	left = x;
 	top = y;
-	right = x + KOOPAS_BBOX_WIDTH;
-
-	if (state == KOOPAS_STATE_DIE || state == KOOPAS_STATE_DIE_DEFLECT)
-			bottom = y + KOOPAS_BBOX_HEIGHT_DIE;
+	right = x + FLYKOOPAS_BBOX_WIDTH;
+	if (state == FLYKOOPAS_STATE_DIE || state == FLYKOOPAS_STATE_DIE_DEFLECT)
+		bottom = y + FLYKOOPAS_BBOX_HEIGHT_DIE;
 	else
-		bottom = y + KOOPAS_BBOX_HEIGHT;
+		bottom = y + FLYKOOPAS_BBOX_HEIGHT;
 }
 
-void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
+void CFlyKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	CGameObject::Update(dt);
 
@@ -29,7 +29,7 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	// TO-DO: make sure Koopas can interact with the world and to each of them too!
 	// 
 
-	vy += KOOPAS_GRAVITY * dt;
+	vy += FLYKOOPAS_GRAVITY * dt;
 
 	if (vx != 0)
 		isHolded = 0;
@@ -43,7 +43,7 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	coEvents.clear();
 
-	if (state != KOOPAS_STATE_DIE_DEFLECT_OUT)
+	if (state != FLYKOOPAS_STATE_DIE_DEFLECT_OUT)
 		CalcPotentialCollisions(coObjects, coEvents);
 
 
@@ -68,10 +68,15 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		// block every object first!
 		x += min_tx * dx + nx * 0.4f;
 		y += min_ty * dy + ny * 0.4f;
-
+		if (ny != 0)
+		{
+			if (state == FLYKOOPAS_STATE_FLYING)
+				vy = -FLYKOOPAS_DEFLECT_SPEED;
+			else
+				vy = 0;
+		}
 		float temp = vy;
 		//if (nx != 0) vx = 0;
-		if (ny != 0) vy = 0;
 
 
 		for (int i = 0; i < int(coEventsResult.size()); i++)
@@ -81,7 +86,7 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			if (dynamic_cast<CGoomba*>(e->obj))	// if e->obj is goomba 
 			{
 				CGoomba* goomba = dynamic_cast<CGoomba*>(e->obj);
-				if ((state == KOOPAS_STATE_DIE || state == KOOPAS_STATE_DIE_DEFLECT) && vx != 0 )
+				if ((state == FLYKOOPAS_STATE_DIE || state == FLYKOOPAS_STATE_DIE_DEFLECT) && vx != 0)
 				{
 					goomba->SetState(GOOMBA_STATE_DIE_DEFLECT);
 					goomba->vx = 0.05f * this->nx;
@@ -98,7 +103,7 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			else if (dynamic_cast<CFlyGoomba*>(e->obj))	// if e->obj is goomba 
 			{
 				CFlyGoomba* goomba = dynamic_cast<CFlyGoomba*>(e->obj);
-				if ((state == KOOPAS_STATE_DIE || state == KOOPAS_STATE_DIE_DEFLECT) && vx != 0)
+				if ((state == FLYKOOPAS_STATE_DIE || state == FLYKOOPAS_STATE_DIE_DEFLECT) && vx != 0)
 				{
 					goomba->SetState(FLYGOOMBA_STATE_DIE_DEFLECT);
 					goomba->vx = 0.05f * this->nx;
@@ -115,35 +120,7 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			else if (dynamic_cast<CKoopas*>(e->obj))	// if e->obj is koopas
 			{
 				CKoopas* koopas = dynamic_cast<CKoopas*>(e->obj);
-				if ((state == KOOPAS_STATE_DIE || state == KOOPAS_STATE_DIE_DEFLECT) && vx != 0)
-				{
-					koopas->SetState(KOOPAS_STATE_DIE_DEFLECT_OUT);
-					//koopas->vx = 0.05f * this->nx;
-				}
-				else if (state == KOOPAS_STATE_WALKING)
-				{
-					vx = -vx;
-					koopas->vx = -koopas->vx;
-				}
-			}
-			else if (dynamic_cast<CKoopas*>(e->obj))	// if e->obj is koopas
-			{
-				CKoopas* koopas = dynamic_cast<CKoopas*>(e->obj);
-				if ((state == KOOPAS_STATE_DIE || state == KOOPAS_STATE_DIE_DEFLECT) && vx != 0)
-				{
-					koopas->SetState(KOOPAS_STATE_DIE_DEFLECT_OUT);
-					//koopas->vx = 0.05f * this->nx;
-				}
-				else if (state == KOOPAS_STATE_WALKING)
-				{
-					vx = -vx;
-					koopas->vx = -koopas->vx;
-				}
-			}
-			else if (dynamic_cast<CFlyKoopas*>(e->obj))	// if e->obj is koopas
-			{
-				CFlyKoopas* koopas = dynamic_cast<CFlyKoopas*>(e->obj);
-				if ((state == KOOPAS_STATE_DIE || state == KOOPAS_STATE_DIE_DEFLECT) && vx != 0)
+				if ((state == FLYKOOPAS_STATE_DIE || state == FLYKOOPAS_STATE_DIE_DEFLECT) && vx != 0)
 				{
 					koopas->SetState(FLYKOOPAS_STATE_DIE_DEFLECT_OUT);
 					//koopas->vx = 0.05f * this->nx;
@@ -157,9 +134,9 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			else if (dynamic_cast<CUpsideBrick*>(e->obj))	// if e->obj is UpsideBrick 
 			{
 				CUpsideBrick* Upsidebrick = dynamic_cast<CUpsideBrick*>(e->obj);
-				if (state == KOOPAS_STATE_WALKING)
+				if (state == FLYKOOPAS_STATE_WALKING)
 				{
-					if (e->ny > 0 || this->y + KOOPAS_BBOX_HEIGHT > Upsidebrick->y)
+					if (e->ny > 0 || this->y + FLYKOOPAS_BBOX_HEIGHT > Upsidebrick->y)
 					{
 						//If wrong side then go through
 						vy = temp;
@@ -170,7 +147,7 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				}
 				else
 				{
-					if (e->ny > 0 || this->y + KOOPAS_BBOX_HEIGHT_DIE > Upsidebrick->y)
+					if (e->ny > 0 || this->y + FLYKOOPAS_BBOX_HEIGHT_DIE > Upsidebrick->y)
 					{
 						//If wrong side then go through
 						vy = temp;
@@ -183,7 +160,7 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			else if (dynamic_cast<CQBrick*>(e->obj))		//question brick
 			{
 				CQBrick* qbrick = dynamic_cast<CQBrick*>(e->obj);
-				if (e->nx != 0 &&((state == KOOPAS_STATE_DIE || state == KOOPAS_STATE_DIE_DEFLECT) && vx != 0))
+				if (e->nx != 0 && ((state == FLYKOOPAS_STATE_DIE || state == FLYKOOPAS_STATE_DIE_DEFLECT) && vx != 0))
 				{
 					if (qbrick->GetState() != BRICK_STATE_EMP)
 					{
@@ -196,7 +173,7 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				if (abs(ny) > 0.0001f)
 					vy = -vy;
 			}
-			else 
+			else
 			{
 				if (abs(nx) > 0.0001f)
 					vx = -vx;
@@ -214,49 +191,52 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 
 
-void CKoopas::Render()
+void CFlyKoopas::Render()
 {
-	int ani = KOOPAS_ANI_WALKING_LEFT;
-	if (state == KOOPAS_STATE_DIE && vx == 0)
-		ani = KOOPAS_ANI_DIE;
-	else if ((state == KOOPAS_STATE_DIE_DEFLECT && vx == 0) || state == KOOPAS_STATE_DIE_DEFLECT_OUT)
-		ani = KOOPAS_ANI_DIE_DEFLECT;
+	int ani = FLYKOOPAS_ANI_WALKING_LEFT;
+	if (state == FLYKOOPAS_STATE_DIE && vx == 0)
+		ani = FLYKOOPAS_ANI_DIE;
+	else if ((state == FLYKOOPAS_STATE_DIE_DEFLECT && vx == 0) || state == FLYKOOPAS_STATE_DIE_DEFLECT_OUT)
+		ani = FLYKOOPAS_ANI_DIE_DEFLECT;
 	else if (state == KOOPAS_STATE_DIE && vx > 0)
-		ani = KOOPAS_ANI_SPIN_RIGHT;
-	else if (state == KOOPAS_STATE_DIE && vx < 0)
-		ani = KOOPAS_ANI_SPIN_LEFT;
-	else if (state == KOOPAS_STATE_DIE_DEFLECT && vx > 0)
-		ani = KOOPAS_ANI_SPIN_RIGHT_DEFLECT;
-	else if (state == KOOPAS_STATE_DIE_DEFLECT && vx < 0)
-		ani = KOOPAS_ANI_SPIN_LEFT_DEFLECT;
-	else if (vx > 0) ani = KOOPAS_ANI_WALKING_RIGHT;
-	else if (vx <= 0) ani = KOOPAS_ANI_WALKING_LEFT;
+		ani = FLYKOOPAS_ANI_SPIN_RIGHT;
+	else if (state == FLYKOOPAS_STATE_DIE && vx < 0)
+		ani = FLYKOOPAS_ANI_SPIN_LEFT;
+	else if (state == FLYKOOPAS_STATE_DIE_DEFLECT && vx > 0)
+		ani = FLYKOOPAS_ANI_SPIN_RIGHT_DEFLECT;
+	else if (state == FLYKOOPAS_STATE_DIE_DEFLECT && vx < 0)
+		ani = FLYKOOPAS_ANI_SPIN_LEFT_DEFLECT;
+	else if (vx > 0 && state == FLYKOOPAS_STATE_FLYING) ani = FLYKOOPAS_ANI_FLY_RIGHT;
+	else if (vx <= 0 && state == FLYKOOPAS_STATE_FLYING) ani = FLYKOOPAS_ANI_FLY_LEFT;
+	else if (vx > 0) ani = FLYKOOPAS_ANI_WALKING_RIGHT;
+	else if (vx <= 0) ani = FLYKOOPAS_ANI_WALKING_LEFT;
 	animation_set->at(ani)->Render(x, y);
 	RenderBoundingBox();
 }
 
-void CKoopas::SetState(int state)
+void CFlyKoopas::SetState(int state)
 {
 	CGameObject::SetState(state);
 	switch (state)
 	{
-	case KOOPAS_STATE_DIE:
-		y += KOOPAS_BBOX_HEIGHT - KOOPAS_BBOX_HEIGHT_DIE;
+	case FLYKOOPAS_STATE_DIE:
+		y += FLYKOOPAS_BBOX_HEIGHT - FLYKOOPAS_BBOX_HEIGHT_DIE;
 		vx = 0;
 		vy = 0;
 		break;
-	case KOOPAS_STATE_DIE_DEFLECT:
-		vy = -KOOPAS_DIE_DEFLECT_SPEED;
+	case FLYKOOPAS_STATE_DIE_DEFLECT:
+		vy = -FLYKOOPAS_DIE_DEFLECT_SPEED;
 		vx = 0;
 		break;
-	case KOOPAS_STATE_DIE_DEFLECT_OUT:
-		vy = -KOOPAS_DIE_DEFLECT_SPEED;
+	case FLYKOOPAS_STATE_DIE_DEFLECT_OUT:
+		vy = -FLYKOOPAS_DIE_DEFLECT_SPEED;
 		isFinish = 1;
 		break;
-	case KOOPAS_STATE_WALKING:
-		vx = -KOOPAS_WALKING_SPEED;
+	case FLYKOOPAS_STATE_WALKING:
+		break;
+	case FLYKOOPAS_STATE_FLYING:
+		vx = -FLYKOOPAS_WALKING_SPEED;
 		break;
 	}
 
 }
- 

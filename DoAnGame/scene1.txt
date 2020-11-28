@@ -9,6 +9,7 @@
 60	textures\misc-2.png	166	185	255
 70	textures\mario-2.png	255	255	255
 80	textures\enemies-2r.png	0	128	128
+90	textures\enemies-2reflect.png	0	128	128
 
 # id	left	top	right	bottom	texture_id
 [SPRITES]
@@ -226,6 +227,20 @@ fly left
 50016	262	198	278	214	80
 50017	245	198	261	214	80
 50018	228	198	244	214	80
+
+# fly left
+50019	256	248	273	276	50
+50020	205	248	221	276	50
+50021	222	248	238	276	50
+50022	239	248	255	276	50
+
+
+#fly right
+50023	262	248	278	276	90
+50024	313	248	329	276	90
+50025	296	248	312	276	90
+50026	279	248	295	276	90
+
 
 #die
 50031	239	202	255	218	50
@@ -624,6 +639,12 @@ fly left
 #die deflect
 808	50032	100
 
+
+#KOOPAS 2
+#Fly right
+809	50023	100	50024	100	50025	100	50026	100
+810	50019	100	50020	100	50021	100	50022	100
+
 # === SMALL BRUSH =======
 620	20020	100
 
@@ -741,6 +762,9 @@ fly left
 #KOOPAS
 39	801	802	803	804	805	806	807	808
 
+#KOOPAS
+15	801	802	803	804	805	806	807	808	809	810
+
 # SMALL BRUSH
 20	620
 
@@ -823,7 +847,7 @@ fly left
 
 [OBJECTS]
 # type	x	y	ani_set_id	extra_settings per object type
-# type: 0 = Mario , 1 = Brick, 2 = Goomba, 3 = Koopas, 4 = Environment, 5 = UpsideBrick, 6 = Coin, 7 = QBrick, 8 = FireBall, 9 = FlyGoomba
+# type: 0 = Mario , 1 = Brick, 2 = Goomba, 3 = Koopas, 4 = Environment, 5 = UpsideBrick, 6 = Coin, 7 = QBrick, 8 = FireBall, 9 = FlyGoomba, 10 = FlyKoopas
 
 # SMALL BRUSH
 4	176	170	20
@@ -2268,7 +2292,7 @@ fly left
 # KOOPAS
 3	642	120	39
 3	760	130	39
-3	250	150 	39
+10	250	150 	15
 
 
 

@@ -86,6 +86,12 @@ void CFireBall::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				koopas->SetState(KOOPAS_STATE_DIE_DEFLECT_OUT);
 				koopas->vx = 0.05f * this->nx;
 			}
+			else if (dynamic_cast<CFlyKoopas*>(e->obj))	// object is koopas
+			{
+				CFlyKoopas* koopas = dynamic_cast<CFlyKoopas*>(e->obj);
+				koopas->SetState(FLYKOOPAS_STATE_DIE_DEFLECT_OUT);
+				koopas->vx = 0.05f * this->nx;
+			}
 			if (e->nx != 0)
 			{
 				isFinish = 1;		//delete fireball when collide with wall

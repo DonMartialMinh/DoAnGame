@@ -305,6 +305,79 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					}
 				}
 			}  // if Koopas
+			else if (dynamic_cast<CFlyKoopas*>(e->obj)) // if e->obj is Koopas 
+			{
+				CFlyKoopas* koopas = dynamic_cast<CFlyKoopas*>(e->obj);
+
+				// jump on top >> kill Koopas and deflect a bit 
+				if (e->ny < 0)
+				{
+					if (koopas->GetState() == FLYKOOPAS_STATE_FLYING)
+					{
+						koopas->SetState(FLYKOOPAS_STATE_WALKING);
+						vy = -MARIO_JUMP_DEFLECT_SPEED;
+					}
+					else if ((koopas->GetState() == KOOPAS_STATE_DIE || koopas->GetState() == KOOPAS_STATE_DIE_DEFLECT) && koopas->vx == 0) {
+						if (this->nx > 0)  // direction of koopas spin when being stomped 
+							koopas->vx = KOOPAS_SPIN_SPEED;
+						else
+							koopas->vx = -KOOPAS_SPIN_SPEED;
+						vy = -MARIO_JUMP_DEFLECT_SPEED;
+					}
+					else if ((koopas->GetState() == KOOPAS_STATE_DIE || koopas->GetState() == KOOPAS_STATE_DIE_DEFLECT) && koopas->vx != 0) {
+						vy = -MARIO_JUMP_DEFLECT_SPEED;
+						koopas->vx = 0;		// being stomped when spining then still
+					}
+					else
+					{
+						koopas->SetState(KOOPAS_STATE_DIE);
+						vy = -MARIO_JUMP_DEFLECT_SPEED;
+					}
+				}
+				else
+				{
+					if (untouchable == 0)
+					{
+						if (koopas->vx != 0)
+						{
+							if (level == MARIO_LEVEL_RACOON && tailing == 1)
+								koopas->SetState(KOOPAS_STATE_DIE_DEFLECT);
+							else if (level > MARIO_LEVEL_BIG)
+							{
+								level = MARIO_LEVEL_BIG;
+								ResetState();
+								StartUntouchable();
+							}
+							else if (level == MARIO_LEVEL_BIG)
+							{
+								level = MARIO_LEVEL_SMALL;
+								ResetState();
+								CMario::ToSmall(this->y);
+								StartUntouchable();
+							}
+							else
+								SetState(MARIO_STATE_DIE);
+						}
+						else {
+							if (canHold == 0)								// Kicking an object
+							{
+								if (this->nx > 0)
+									koopas->vx = KOOPAS_SPIN_SPEED;
+								else
+									koopas->vx = -KOOPAS_SPIN_SPEED;
+								StartKicking();
+							}
+							else
+							{
+								this->SetState(MARIO_STATE_HOLD);				// Holding an object
+								obj = koopas;
+								koopas->isHolded = 1;
+							}
+
+						}
+					}
+				}
+			}  // if Koopas
 			else if (dynamic_cast<CBrick*>(e->obj))
 			{
 				CBrick* brick = dynamic_cast<CBrick*>(e->obj);
