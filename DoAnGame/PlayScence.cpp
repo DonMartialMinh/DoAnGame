@@ -289,8 +289,13 @@ void CPlayScene::Update(DWORD dt)
 			cy -= game->GetScreenHeight() / 2;
 			CGame::GetInstance()->SetCamPos(0.0f, round(cy));
 		}
-		else
+		else if (cy > 0 && cy < 240)
 			CGame::GetInstance()->SetCamPos(0.0f, 0.0f); // set Cam when game start
+		else if (cy > 240 && cy < 442)					// Cam in other screen
+		{
+			cy -= game->GetScreenHeight() / 2;
+			CGame::GetInstance()->SetCamPos(0.0f, 240.0f);
+		}
 	}
 	else if (cx > 2675.0f)
 	{
@@ -310,11 +315,17 @@ void CPlayScene::Update(DWORD dt)
 			cy -= game->GetScreenHeight() / 2;
 			CGame::GetInstance()->SetCamPos(round(cx), round(cy));
 		}
-		else
+		else if (cy > 0 && cy < 240 )
 		{
 			cx -= game->GetScreenWidth() / 2;
 			cy -= game->GetScreenHeight() / 2;
 			CGame::GetInstance()->SetCamPos(round(cx), 0.0f); // set Cam Focus
+		}
+		else if (cy > 240 && cy < 442)					// Cam in other screen
+		{
+			cx -= game->GetScreenWidth() / 2;
+			cy -= game->GetScreenHeight() / 2;
+			CGame::GetInstance()->SetCamPos(round(cx), 240.0f);
 		}
 	}
 }
@@ -357,6 +368,9 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 		break;
 	case DIK_A:
 		mario->Reset();
+		break;
+	case DIK_T:
+		mario->SetPosition(138,382);
 		break;
 	case DIK_Z:
 		if (mario->getLevel() == MARIO_LEVEL_RACOON)
