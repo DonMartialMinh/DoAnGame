@@ -1,7 +1,9 @@
 #include "Plant.h"
+#include "Utils.h"
 
-CPlant::CPlant()
+CPlant::CPlant(CGameObject*player)
 {
+	this->player = player;
 	StartRising();
 }
 
@@ -27,16 +29,24 @@ void CPlant::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	{
 		rise_start = 0;
 		rising = 0;
-		StartRising();
+		if (player->y >= this->y - 30 && player->x + 25 > this->x && player->x < this->x + 25);
+		else 
+			StartRising();
 	}
 
 	if (rising)
 	{
-		if (GetTickCount64() - rise_start >= 3000)
-			y += 0.3;
-		else if (GetTickCount64() - rise_start > 1500 || GetTickCount64() - rise_start < 3000);
-		else
-			y -= 0.3;
+		isUnderPipe = 0;
+		if (GetTickCount64() - rise_start >= 0 && GetTickCount64() - rise_start <= 1500)
+			y -= 0.25;
+		else if (GetTickCount64() - rise_start >= 1500 && GetTickCount64() - rise_start <= 2500);
+		else if (GetTickCount64() - rise_start >= 2500 && GetTickCount64() - rise_start <= 4000)
+			y += 0.25;
+		else {
+			isUnderPipe = 1;
+		}
 	}
+
+	DebugOut(L"\tx = %f\n", player->x);
 }
 

@@ -11,6 +11,7 @@
 80	textures\enemies-2r.png	0	128	128
 90	textures\enemies-2reflect.png	0	128	128
 100	textures\enemies-3.png	163	73	164
+110	textures\enemies-3reflect.png	163	73	164
 
 # id	left	top	right	bottom	texture_id
 [SPRITES]
@@ -392,6 +393,16 @@ fly left
 70001	38	100	54	124	100
 70002	57	100	73	124	100
 
+# PIRANHA PLANT
+70003	150	126	166	158	100
+70004	167	126	183	158	100
+70005	184	126	200	158	100
+70006	201	126	217	158	100
+
+70007	273	126	289	158	110
+70008	256	126	272	158	110
+70009	239	126	255	158	110
+70010	222	126	238	158	110	
 
 # ani_id	sprite1_id	time1	sprite2_id	time2	...
 [ANIMATIONS]
@@ -674,6 +685,20 @@ fly left
 #PLANT
 811	70001	100	70002	100
 
+#PIRANHA PLANT
+#LEFT BOT
+812	70003	100
+813	70003	100	70004	100
+#LEFT TOP
+814	70005	100
+815	70005	100	70006	100
+#RIGHT BOT
+816	70007	100
+817	70007	100	70008	100
+#RIGHT TOP
+818	70009	100
+819	70009	100	70010	100
+
 # === SMALL BRUSH =======
 620	20020	100
 
@@ -787,6 +812,9 @@ fly left
 #PLANT
 16	811
 
+#PIRANHA PLANT
+17	812	813	814	815	816	817	818	819
+
 # QUESTION BRICK 
 29	610	613
 
@@ -889,7 +917,7 @@ fly left
 
 [OBJECTS]
 # type	x	y	ani_set_id	extra_settings per object type
-# type: 0 = Mario , 1 = Brick, 2 = Goomba, 3 = Koopas, 4 = Environment, 5 = UpsideBrick, 6 = Coin, 7 = QBrick, 8 = FireBall, 9 = FlyGoomba, 10 = FlyKoopas, 11 = Plant
+# type: 0 = Mario , 1 = Brick, 2 = Goomba, 3 = Koopas, 4 = Environment, 5 = UpsideBrick, 6 = Coin, 7 = QBrick, 8 = FireBall, 9 = FlyGoomba, 10 = FlyKoopas, 11 = Plant, 12 PiranhaPlant
 
 
 
@@ -2784,14 +2812,8 @@ fly left
 #PLANT
 11	1816	155	16
 
-# GOOMBA
-2	280	170	28
-9	200	150	14
+#PIRANHA PLANT
 
-# KOOPAS
-3	642	120	39
-3	760	130	39
-10	250	150 	15
 
 #PIPE
 1	368	138	40
@@ -2849,6 +2871,13 @@ fly left
 1	2272	-118	40
 1	2288	-118	42
 
+# GOOMBA
+2	280	170	28
+9	200	150	14
 
+# KOOPAS
+3	642	120	39
+3	760	130	39
+10	250	150 	15
 
 

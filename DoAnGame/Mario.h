@@ -11,6 +11,7 @@
 #include "QBrick.h"
 #include "FlyGoomba.h"
 #include "FlyKoopas.h"
+#include "Plant.h"
 
 
 #define MARIO_WALKING_SPEED		0.13f 

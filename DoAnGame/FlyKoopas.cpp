@@ -131,6 +131,20 @@ void CFlyKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					koopas->vx = -koopas->vx;
 				}
 			}
+			else if (dynamic_cast<CFlyKoopas*>(e->obj))	// if e->obj is Flykoopas
+			{
+				CFlyKoopas* koopas = dynamic_cast<CFlyKoopas*>(e->obj);
+				if ((state == FLYKOOPAS_STATE_DIE || state == FLYKOOPAS_STATE_DIE_DEFLECT) && vx != 0)
+				{
+					koopas->SetState(FLYKOOPAS_STATE_DIE_DEFLECT_OUT);
+					//koopas->vx = 0.05f * this->nx;
+				}
+				else if (state == FLYKOOPAS_STATE_WALKING)
+				{
+					vx = -vx;
+					koopas->vx = -koopas->vx;
+				}
+			}
 			else if (dynamic_cast<CUpsideBrick*>(e->obj))	// if e->obj is UpsideBrick 
 			{
 				CUpsideBrick* Upsidebrick = dynamic_cast<CUpsideBrick*>(e->obj);
@@ -233,6 +247,7 @@ void CFlyKoopas::SetState(int state)
 		isFinish = 1;
 		break;
 	case FLYKOOPAS_STATE_WALKING:
+		vy = 0;
 		break;
 	case FLYKOOPAS_STATE_FLYING:
 		vx = -FLYKOOPAS_WALKING_SPEED;

@@ -122,7 +122,7 @@ void CFlyGoomba::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				}
 				else
 				{
-					if (e->ny > 0 || this->y + 16 > Upsidebrick->y)
+					if (e->ny > 0 || this->y + FLYGOOMBA_BBOX1_HEIGHT > Upsidebrick->y)
 					{
 						//If wrong side then go through
 						vy = temp;
@@ -185,6 +185,7 @@ void CFlyGoomba::SetState(int state)
 		break;
 	case FLYGOOMBA_STATE_WALKING:
 		y += FLYGOOMBA_BBOX_HEIGHT - FLYGOOMBA_BBOX1_HEIGHT + 1;
+		vy = 0;
 		break;
 	}
 }

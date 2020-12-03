@@ -21,6 +21,7 @@ CMario::CMario(float x, float y) : CGameObject()
 
 void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
+
 	// Calculate dx, dy 
 	CGameObject::Update(dt, coObjects);
 	if (vy > 0.0f) isFlying = 1; // if falling then cant jump
@@ -378,6 +379,30 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					}
 				}
 			}  // if Koopas
+			else if (dynamic_cast<CPlant*>(e->obj))
+			{
+			CPlant* plant = dynamic_cast<CPlant*>(e->obj);
+				if (untouchable == 0) {
+					if (!plant->isUnderPipe)
+					{
+						if (level > MARIO_LEVEL_BIG)
+						{
+							level = MARIO_LEVEL_BIG;
+							ResetState();
+							StartUntouchable();
+						}
+						else if (level == MARIO_LEVEL_BIG)
+						{
+							level = MARIO_LEVEL_SMALL;
+							ResetState();
+							CMario::ToSmall(this->y);
+							StartUntouchable();
+						}
+						else
+							SetState(MARIO_STATE_DIE);
+					}
+				}
+			}  // if Plant
 			else if (dynamic_cast<CBrick*>(e->obj))
 			{
 				CBrick* brick = dynamic_cast<CBrick*>(e->obj);
