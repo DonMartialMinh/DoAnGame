@@ -14,6 +14,7 @@
 #include "FlyGoomba.h"
 #include "FireBall.h"
 #include "FlyKoopas.h"
+#include "Plant.h"
 
 
 class CPlayScene : public CScene

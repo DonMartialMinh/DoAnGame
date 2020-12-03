@@ -40,6 +40,7 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 #define OBJECT_TYPE_FIREBALL 8
 #define OBJECT_TYPE_FLYGOOMBA 9
 #define OBJECT_TYPE_FLYKOOPAS 10
+#define OBJECT_TYPE_PLANT 11
 #define OBJECT_TYPE_PORTAL	50
 
 #define MAX_SCENE_LINE 1024
@@ -177,6 +178,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_QBRICK: obj = new CQBrick(); break;
 	case OBJECT_TYPE_FLYGOOMBA: obj = new CFlyGoomba(); break;
 	case OBJECT_TYPE_FLYKOOPAS: obj = new CFlyKoopas(); break;
+	case OBJECT_TYPE_PLANT: obj = new CPlant(); break;
 	case OBJECT_TYPE_PORTAL:
 	{
 		float r = float(atof(tokens[4].c_str()));
