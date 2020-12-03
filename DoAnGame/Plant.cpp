@@ -1,9 +1,11 @@
 #include "Plant.h"
 #include "Utils.h"
 
-CPlant::CPlant(CGameObject*player)
+CPlant::CPlant(CGameObject*player, float y)
 {
 	this->player = player;
+	min = y;
+	max = y - PLANT_BBOX_HEIGHT;
 	StartRising();
 }
 
@@ -39,14 +41,16 @@ void CPlant::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		isUnderPipe = 0;
 		if (GetTickCount64() - rise_start >= 0 && GetTickCount64() - rise_start <= 1500)
 			y -= 0.25;
-		else if (GetTickCount64() - rise_start >= 1500 && GetTickCount64() - rise_start <= 2500);
+		else if (GetTickCount64() - rise_start >= 1500 && GetTickCount64() - rise_start <= 2500)
+		{
+			y = max;
+		}
 		else if (GetTickCount64() - rise_start >= 2500 && GetTickCount64() - rise_start <= 4000)
 			y += 0.25;
 		else {
 			isUnderPipe = 1;
+			y = min;
 		}
 	}
-
-	DebugOut(L"\tx = %f\n", player->x);
 }
 

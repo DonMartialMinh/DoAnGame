@@ -1,0 +1,90 @@
+#include "PiranhaPlant.h"
+#include "Utils.h"
+
+CPiranhaPlant::CPiranhaPlant(CGameObject* player, float y)
+{
+	this->player = player;
+	min = y;
+	max = y - PIRANHAPLANT_BBOX_HEIGHT;
+	StartRising();
+}
+
+void CPiranhaPlant::GetBoundingBox(float& l, float& t, float& r, float& b)
+{
+	l = x;
+	t = y;
+	r = x + PIRANHAPLANT_BBOX_WIDTH;
+	b = y + PIRANHAPLANT_BBOX_HEIGHT;
+}
+
+void CPiranhaPlant::Render()
+{
+	int ani = PIRANHAPLANT_ANI_BOTLEFT;
+	if (player->x < this->x && player->y > this->y)
+	{
+		if (climax)
+			ani = PIRANHAPLANT_ANI_BOTLEFT_STILL;
+	}
+	if (player->x < this->x && player->y < this->y)
+	{
+		if (climax)
+			ani = PIRANHAPLANT_ANI_TOPLEFT_STILL;
+		else
+			ani = PIRANHAPLANT_ANI_TOPLEFT;
+	}
+	else if (player->x > this->x && player->y > this->y)
+	{
+		if (climax)
+			ani = PIRANHAPLANT_ANI_BOTRIGHT_STILL;
+		else
+			ani = PIRANHAPLANT_ANI_BOTRIGHT;
+	}
+	else if (player->x > this->x && player->y < this->y)
+	{
+		if (climax)
+			ani = PIRANHAPLANT_ANI_TOPRIGHT_STILL;
+		else
+			ani = PIRANHAPLANT_ANI_TOPRIGHT;
+	}
+	animation_set->at(ani)->Render(x, y);
+	RenderBoundingBox();
+}
+
+void CPiranhaPlant::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
+{
+	CGameObject::Update(dt);
+
+	if (GetTickCount64() - rise_start > PIRANHAPLANT_RISING_TIME)
+	{
+		rise_start = 0;
+		rising = 0;
+		if (player->y >= this->y - 30 && player->x + 25 > this->x && player->x < this->x + 25);
+		else
+			StartRising();
+	}
+
+	if (rising)
+	{
+		isUnderPipe = 0;
+		if (GetTickCount64() - rise_start >= 0 && GetTickCount64() - rise_start <= 2000)
+			y -= 0.25;
+		else if (GetTickCount64() - rise_start >= 2000 && GetTickCount64() - rise_start <= 3000)
+		{
+			y = max;
+		}
+		else if (GetTickCount64() - rise_start >= 3000 && GetTickCount64() - rise_start <= 5000)
+			y += 0.25;
+		else {
+			isUnderPipe = 1;
+			y = min;
+		}
+	}
+
+	if (y == max)
+		climax = 1;
+	else
+		climax = 0;
+
+	DebugOut(L"\tclimax = %f\n",climax);
+}
+
