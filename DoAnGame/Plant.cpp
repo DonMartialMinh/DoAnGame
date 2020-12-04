@@ -11,6 +11,8 @@ CPlant::CPlant(CGameObject*player, float y)
 
 void CPlant::GetBoundingBox(float& l, float& t, float& r, float& b)
 {
+	if (isFinish)
+		return;
 	l = x;
 	t = y;
 	r = x + PLANT_BBOX_WIDTH;
@@ -19,12 +21,16 @@ void CPlant::GetBoundingBox(float& l, float& t, float& r, float& b)
 
 void CPlant::Render()
 {
+	if (isFinish)
+		return;
 	animation_set->at(0)->Render(x, y);
 	RenderBoundingBox();
 }
 
 void CPlant::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
+	if (isFinish)
+		return;
 	CGameObject::Update(dt);
 
 	if (GetTickCount64() - rise_start > PLANT_RISING_TIME)

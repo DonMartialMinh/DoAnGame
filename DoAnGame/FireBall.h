@@ -6,6 +6,8 @@
 #include "FlyGoomba.h"
 #include "Koopas.h"
 #include "FlyKoopas.h"
+#include "Plant.h"
+#include "PiranhaPlant.h"
 
 #define FIREBALL_BBOX_WIDTH  8
 #define FIREBALL_BBOX_HEIGHT 9

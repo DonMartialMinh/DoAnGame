@@ -11,6 +11,8 @@ CPiranhaPlant::CPiranhaPlant(CGameObject* player, float y)
 
 void CPiranhaPlant::GetBoundingBox(float& l, float& t, float& r, float& b)
 {
+	if (isFinish)
+		return;
 	l = x;
 	t = y;
 	r = x + PIRANHAPLANT_BBOX_WIDTH;
@@ -19,6 +21,8 @@ void CPiranhaPlant::GetBoundingBox(float& l, float& t, float& r, float& b)
 
 void CPiranhaPlant::Render()
 {
+	if (isFinish)
+		return;
 	int ani = PIRANHAPLANT_ANI_BOTLEFT;
 	if (player->x < this->x && player->y > this->y)
 	{
@@ -52,6 +56,8 @@ void CPiranhaPlant::Render()
 
 void CPiranhaPlant::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
+	if (isFinish)
+		return;
 	CGameObject::Update(dt);
 
 	if (GetTickCount64() - rise_start > PIRANHAPLANT_RISING_TIME)
