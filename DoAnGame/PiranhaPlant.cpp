@@ -24,7 +24,7 @@ void CPiranhaPlant::Render()
 	if (isFinish)
 		return;
 	int ani = PIRANHAPLANT_ANI_BOTLEFT;
-	if (player->x < this->x && player->y > this->y)
+	if (player->x < this->x && player->y >this->y)
 	{
 		if (climax)
 			ani = PIRANHAPLANT_ANI_BOTLEFT_STILL;
@@ -60,6 +60,17 @@ void CPiranhaPlant::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		return;
 	CGameObject::Update(dt);
 
+	if (player->x < this->x)
+		nx = -1;
+	else
+		nx = 1;
+
+	if (player->y < this->y)
+		ny = -1;
+	else
+		ny = 1;
+
+
 	if (GetTickCount64() - rise_start > PIRANHAPLANT_RISING_TIME)
 	{
 		rise_start = 0;
@@ -77,6 +88,8 @@ void CPiranhaPlant::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		else if (GetTickCount64() - rise_start >= 2000 && GetTickCount64() - rise_start <= 3000)
 		{
 			y = max;
+			if (GetTickCount64() - rise_start == 2500)
+				this->fireball++;
 		}
 		else if (GetTickCount64() - rise_start >= 3000 && GetTickCount64() - rise_start <= 5000)
 			y += 0.25;
@@ -92,5 +105,17 @@ void CPiranhaPlant::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		climax = 0;
 
 	DebugOut(L"\tclimax = %f\n",climax);
+}
+
+CGameObject* CPiranhaPlant::NewFireBall()		// create fireball function
+{
+	int ani_set_id = 13;
+	CAnimationSets* animation_sets = CAnimationSets::GetInstance();
+	CGameObject* obj = NULL;
+	obj = new CPlantFireBall(this->nx, this->ny);
+	obj->SetPosition(this->x + PIRANHAPLANT_BBOX_WIDTH / 3, this->y);
+	LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
+	obj->SetAnimationSet(ani_set);
+	return obj;
 }
 

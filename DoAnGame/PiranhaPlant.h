@@ -1,6 +1,7 @@
 #pragma once
 #include "GameObject.h"
 #include "Mario.h"
+#include "PlantFireBall.h"
 
 #define PIRANHAPLANT_BBOX_WIDTH  16
 #define PIRANHAPLANT_BBOX_HEIGHT 32
@@ -27,9 +28,12 @@ public:
 	int isUnderPipe = 0;
 	int isFinish = 0;
 	int climax = 0;
+	int fireball = 0;
+	int ny = 1;
 	virtual void Render();
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void GetBoundingBox(float& l, float& t, float& r, float& b);
 	CPiranhaPlant(CGameObject* player, float y);
+	CGameObject* NewFireBall();
 	void StartRising() { rising = 1; rise_start = GetTickCount(); }
 };

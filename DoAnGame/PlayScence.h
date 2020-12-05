@@ -18,10 +18,12 @@
 #include "PiranhaPlant.h"
 
 
+
 class CPlayScene : public CScene
 {
 protected:
 	CMario* player;					// A play scene has to have player, right? 
+	vector<CPiranhaPlant*> plant;
 	vector<LPGAMEOBJECT> objects;
 
 	void _ParseSection_TEXTURES(string line);

@@ -179,8 +179,14 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_QBRICK: obj = new CQBrick(); break;
 	case OBJECT_TYPE_FLYGOOMBA: obj = new CFlyGoomba(); break;
 	case OBJECT_TYPE_FLYKOOPAS: obj = new CFlyKoopas(); break;
-	case OBJECT_TYPE_PLANT: obj = new CPlant(player, y); break;
-	case OBJECT_TYPE_PIRANHAPLANT: obj = new CPiranhaPlant(player, y); break;
+	case OBJECT_TYPE_PLANT: 
+		obj = new CPlant(player, y); 
+		break;
+	case OBJECT_TYPE_PIRANHAPLANT:
+		obj = new CPiranhaPlant(player, y); 
+		plant.push_back((CPiranhaPlant*)obj);
+		break;
+		break;
 	case OBJECT_TYPE_PORTAL:
 	{
 		float r = float(atof(tokens[4].c_str()));
@@ -270,6 +276,15 @@ void CPlayScene::Update(DWORD dt)
 	{
 		player->fireball -= 1;
 		objects.push_back(player->NewFireBall());
+	}
+
+	for (int i = 0; i < plant.size(); i++)
+	{
+		if (plant[i]->fireball > 0)						// Draw fireball
+		{
+			plant[i]->fireball -= 1;
+			objects.push_back(plant[i]->NewFireBall());
+		}
 	}
 
 	for (size_t i = 0; i < objects.size(); i++)
