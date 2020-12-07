@@ -1,6 +1,7 @@
 #pragma once
 #include "GameObject.h"
 #include "Coin.h"
+#include "MushRoom.h"
 
 #define BRICK_BBOX_WIDTH  16
 #define BRICK_BBOX_HEIGHT 16
