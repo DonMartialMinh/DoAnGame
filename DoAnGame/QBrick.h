@@ -1,5 +1,6 @@
 #pragma once
 #include "GameObject.h"
+#include "Coin.h"
 
 #define BRICK_BBOX_WIDTH  16
 #define BRICK_BBOX_HEIGHT 16
@@ -19,7 +20,10 @@ class CQBrick : public CGameObject
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void GetBoundingBox(float& l, float& t, float& r, float& b);
 public:
+	int setting = 0;
 	int ringing = 0;
-	CQBrick();
-	void StartRinging() { ringing = 1; ring_start = GetTickCount(); }
+	int trigger = 0;
+	CQBrick(int setting);
+	void StartRinging() { ringing = 1; ring_start = DWORD(GetTickCount64()); }
+	CGameObject* ShowItem();
 };

@@ -90,7 +90,7 @@ void CGameObject::FilterCollision(
 	float& min_tx, float& min_ty,
 	float& nx, float& ny, float& rdx, float& rdy)
 {
-	if (this->type == 0)
+	if (this->type == 0)	// Mario
 	{
 		min_tx = 1.0f;
 		min_ty = 1.0f;

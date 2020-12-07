@@ -1,7 +1,8 @@
 #include "QBrick.h"
 
-CQBrick::CQBrick()
+CQBrick::CQBrick(int setting)
 {
+	this->setting = setting;
 	ring_start = NULL;
 	SetState(BRICK_STATE_QUES);
 }
@@ -42,5 +43,21 @@ void CQBrick::GetBoundingBox(float& l, float& t, float& r, float& b)
 	t = y;
 	r = x + BRICK_BBOX_WIDTH;
 	b = y + BRICK_BBOX_HEIGHT;
+}
+
+CGameObject* CQBrick::ShowItem()
+{
+	CGameObject* obj = NULL;
+	if (setting == 0)
+	{
+		int ani_set_id = 12;
+		int isSparkle = 1;
+		CAnimationSets* animation_sets = CAnimationSets::GetInstance();
+		obj = new CCoin(isSparkle);
+		obj->SetPosition(this->x, this->y);
+		LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
+		obj->SetAnimationSet(ani_set);
+	}
+	return obj;
 }
 

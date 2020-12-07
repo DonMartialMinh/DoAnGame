@@ -143,8 +143,10 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	int object_type = atoi(tokens[0].c_str());
 	float x = float(atof(tokens[1].c_str()));
 	float y = float(atof(tokens[2].c_str()));
-
 	int ani_set_id = atoi(tokens[3].c_str());
+	int object_setting = 0;
+	if (tokens.size() == 5)
+		object_setting = atoi(tokens[4].c_str());
 
 	CAnimationSets* animation_sets = CAnimationSets::GetInstance();
 
@@ -176,7 +178,10 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		break;
 	case OBJECT_TYPE_UPSIDEBRICK: obj = new CUpsideBrick(); break;
 	case OBJECT_TYPE_COIN:	obj = new CCoin(); break;
-	case OBJECT_TYPE_QBRICK: obj = new CQBrick(); break;
+	case OBJECT_TYPE_QBRICK: 
+		obj = new CQBrick(object_setting); 
+		qbrick.push_back((CQBrick*)obj);
+		break;
 	case OBJECT_TYPE_FLYGOOMBA: obj = new CFlyGoomba(); break;
 	case OBJECT_TYPE_FLYKOOPAS: obj = new CFlyKoopas(); break;
 	case OBJECT_TYPE_PLANT: 
@@ -185,7 +190,6 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_PIRANHAPLANT:
 		obj = new CPiranhaPlant(player, y); 
 		plant.push_back((CPiranhaPlant*)obj);
-		break;
 		break;
 	case OBJECT_TYPE_PORTAL:
 	{
@@ -278,12 +282,21 @@ void CPlayScene::Update(DWORD dt)
 		objects.push_back(player->NewFireBall());
 	}
 
-	for (int i = 0; i < plant.size(); i++)
+	for (int i = 0; i < int(plant.size()); i++)
 	{
 		if (plant[i]->fireball > 0)						// Draw fireball
 		{
 			plant[i]->fireball -= 1;
 			objects.push_back(plant[i]->NewFireBall());
+		}
+	}
+
+	for (int i = 0; i < int(qbrick.size()); i++)
+	{
+		if (qbrick[i]->trigger == 1)						// show item
+		{
+			qbrick[i]->trigger = 0;
+			objects.push_back(qbrick[i]->ShowItem());
 		}
 	}
 

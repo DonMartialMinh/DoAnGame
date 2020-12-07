@@ -21,5 +21,5 @@ public:
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void GetBoundingBox(float& l, float& t, float& r, float& b);
 	CPlant(CGameObject* player, float y);
-	void StartRising() { rising = 1; rise_start = GetTickCount(); }
+	void StartRising() { rising = 1; rise_start = DWORD(GetTickCount64()); }
 };

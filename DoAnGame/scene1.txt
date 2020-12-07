@@ -798,7 +798,7 @@ fly left
 11	611
 
 #COIN	
-12	612	611	614
+12	612	614
 
 #FIREBALL
 13	598	599
@@ -917,7 +917,7 @@ fly left
 
 [OBJECTS]
 # type	x	y	ani_set_id	extra_settings per object type
-# type: 0 = Mario , 1 = Brick, 2 = Goomba, 3 = Koopas, 4 = Environment, 5 = UpsideBrick, 6 = Coin, 7 = QBrick, 8 = FireBall, 9 = FlyGoomba, 10 = FlyKoopas, 11 = Plant, 12 PiranhaPlant, 13 PiranHa Plant
+# type: 0 = Mario , 1 = Brick, 2 = Goomba, 3 = Koopas, 4 = Environment, 5 = UpsideBrick, 6 = Coin, 7 = QBrick, 8 = FireBall, 9 = FlyGoomba, 10 = FlyKoopas, 11 = Plant, 12 PiranhaPlant
 
 
 

@@ -38,5 +38,5 @@ public:
 	int dying;
 	CFlyGoomba();
 	virtual void SetState(int state);
-	void StartDying() { dying = 0; die_start = GetTickCount(); }
+	void StartDying() { dying = 0; die_start = DWORD(GetTickCount64()); }
 };

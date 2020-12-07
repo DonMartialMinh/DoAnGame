@@ -21,7 +21,6 @@ CMario::CMario(float x, float y) : CGameObject()
 
 void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-
 	// Calculate dx, dy 
 	CGameObject::Update(dt, coObjects);
 	if (vy > 0.0f) isFlying = 1; // if falling then cant jump
@@ -403,6 +402,27 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					}
 				}
 			}  // if Plant
+			else if (dynamic_cast<CPlantFireBall*>(e->obj))
+			{
+				CPlantFireBall* fireball = dynamic_cast<CPlantFireBall*>(e->obj);
+				if (untouchable == 0) {
+					if (level > MARIO_LEVEL_BIG)
+					{
+						level = MARIO_LEVEL_BIG;
+						ResetState();
+						StartUntouchable();
+					}
+					else if (level == MARIO_LEVEL_BIG)
+					{
+						level = MARIO_LEVEL_SMALL;
+						ResetState();
+						CMario::ToSmall(this->y);
+						StartUntouchable();
+					}
+					else
+						SetState(MARIO_STATE_DIE);
+				}
+			}  // if Plant
 			else if (dynamic_cast<CPiranhaPlant*>(e->obj))
 			{
 				CPiranhaPlant* plant = dynamic_cast<CPiranhaPlant*>(e->obj);
@@ -448,8 +468,9 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				{
 					if (qbrick->GetState() != BRICK_STATE_EMP)
 					{
-						qbrick->SetState(BRICK_STATE_EMP);
 						qbrick->StartRinging();
+						qbrick->trigger = 1;
+						qbrick->SetState(BRICK_STATE_EMP);
 					}
 				}
 			}

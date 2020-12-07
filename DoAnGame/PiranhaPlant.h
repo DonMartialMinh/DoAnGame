@@ -35,5 +35,5 @@ public:
 	virtual void GetBoundingBox(float& l, float& t, float& r, float& b);
 	CPiranhaPlant(CGameObject* player, float y);
 	CGameObject* NewFireBall();
-	void StartRising() { rising = 1; rise_start = GetTickCount(); }
+	void StartRising() { rising = 1; rise_start = DWORD(GetTickCount64()); }
 };

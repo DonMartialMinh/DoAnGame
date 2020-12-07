@@ -104,7 +104,7 @@ void CPiranhaPlant::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	else
 		climax = 0;
 
-	DebugOut(L"\tclimax = %f\n",climax);
+	//DebugOut(L"\tclimax = %f\n",climax);
 }
 
 CGameObject* CPiranhaPlant::NewFireBall()		// create fireball function
