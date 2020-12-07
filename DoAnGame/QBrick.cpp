@@ -1,20 +1,23 @@
 #include "QBrick.h"
+#include "Utils.h"
 
-CQBrick::CQBrick(int setting)
+CQBrick::CQBrick(CGameObject*player, int setting, float y)
 {
+	this->player = player;
 	this->setting = setting;
 	ring_start = NULL;
+	min = y;
 	SetState(BRICK_STATE_QUES);
 }
 
 void CQBrick::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	CGameObject::Update(dt);
-
 	if (GetTickCount64() - ring_start > BRICK_RINGING_TIME)
 	{
 		ring_start = 0;
 		ringing = 0;
+		y = min;
 	}
 
 	if (ringing)
@@ -24,7 +27,7 @@ void CQBrick::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		else
 			y -= 1;
 	}
-
+	//DebugOut(L"min = %f\n", min);
 }
 
 void CQBrick::Render()
@@ -58,14 +61,26 @@ CGameObject* CQBrick::ShowItem()
 		LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
 		obj->SetAnimationSet(ani_set);
 	}
-	else if (setting == 1)	// MUSHROOM  OR LEAF
+	else if (setting == 1)	// MUSHROOM OR LEAF
 	{
-		int ani_set_id = 18;
-		CAnimationSets* animation_sets = CAnimationSets::GetInstance();
-		obj = new CMushRoom(this->y);
-		obj->SetPosition(this->x, this->y);
-		LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
-		obj->SetAnimationSet(ani_set);
+		if ( player->level == MARIO_LEVEL_SMALL)
+		{
+			int ani_set_id = 18;
+			CAnimationSets* animation_sets = CAnimationSets::GetInstance();
+			obj = new CMushRoom(this->y,player->nx);
+			obj->SetPosition(this->x, this->y);
+			LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
+			obj->SetAnimationSet(ani_set);
+		}
+		else
+		{
+			int ani_set_id = 19;
+			CAnimationSets* animation_sets = CAnimationSets::GetInstance();
+			obj = new CLeaf(this->x);
+			obj->SetPosition(this->x, this->y);
+			LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
+			obj->SetAnimationSet(ani_set);
+		}
 	}
 	return obj;
 }

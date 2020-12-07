@@ -67,7 +67,7 @@ void CFlyKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 		// block every object first!
 		x += min_tx * dx + nx * 0.4f;
-		//y += min_ty * dy + ny * 0.4f;
+		y += min_ty * dy + ny * 0.4f;
 		if (ny != 0)
 		{
 			if (state == FLYKOOPAS_STATE_FLYING)
@@ -179,6 +179,7 @@ void CFlyKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					if (qbrick->GetState() != BRICK_STATE_EMP)
 					{
 						qbrick->SetState(BRICK_STATE_EMP);
+						qbrick->trigger = 1;
 						qbrick->StartRinging();
 					}
 				}

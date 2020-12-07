@@ -21,7 +21,7 @@ public:
 	virtual void Render();
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void GetBoundingBox(float& l, float& t, float& r, float& b);
-	CMushRoom( float y);
+	CMushRoom( float y, int nx);
 	void StartRising() { rising = 1; rise_start = DWORD(GetTickCount64()); }
 	virtual void SetState(int state);
 };

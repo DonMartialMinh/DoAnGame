@@ -54,6 +54,7 @@ public:
 	float vx = 0;
 	float vy = 0;
 
+	int level = 0;
 	int nx = 0;
 
 	int state = -1;

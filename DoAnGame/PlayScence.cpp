@@ -179,7 +179,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_UPSIDEBRICK: obj = new CUpsideBrick(); break;
 	case OBJECT_TYPE_COIN:	obj = new CCoin(); break;
 	case OBJECT_TYPE_QBRICK: 
-		obj = new CQBrick(object_setting); 
+		obj = new CQBrick(player, object_setting, y);
 		qbrick.push_back((CQBrick*)obj);
 		break;
 	case OBJECT_TYPE_FLYGOOMBA: obj = new CFlyGoomba(); break;
@@ -293,9 +293,9 @@ void CPlayScene::Update(DWORD dt)
 
 	for (int i = 0; i < int(qbrick.size()); i++)
 	{
-		if (qbrick[i]->trigger == 1)						// show item
+		if (qbrick[i]->trigger)						// show item
 		{
-			qbrick[i]->trigger = 0;
+			qbrick[i]->trigger -= 1;
 			objects.push_back(qbrick[i]->ShowItem());
 		}
 	}

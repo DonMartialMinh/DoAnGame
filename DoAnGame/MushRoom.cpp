@@ -1,10 +1,11 @@
 #include "MushRoom.h"
 #include "Utils.h"
 
-CMushRoom::CMushRoom(float y)
+CMushRoom::CMushRoom(float y, int nx)
 {
 	max = y - MUSHROOM_BBOX_HEIGHT - 1;
 	StartRising();
+	vx = MUSHROOM_MOVING_SPEED * nx;
 }
 
 void CMushRoom::GetBoundingBox(float& l, float& t, float& r, float& b)
@@ -45,7 +46,7 @@ void CMushRoom::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	if (state == MUSHROOM_STATE_MOVING)	// Out of QBrick
 	{
-		vx = -MUSHROOM_MOVING_SPEED;
+
 		vy += MUSHROOM_GRAVITY * dt;
 
 		vector<LPCOLLISIONEVENT> coEvents;

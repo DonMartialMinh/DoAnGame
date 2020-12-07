@@ -456,6 +456,32 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					falling = 0;		//	racoon mario cant fall slowly
 				}
 			}
+			else if (dynamic_cast<CMushRoom*>(e->obj))
+			{
+				CMushRoom* mushroom = dynamic_cast<CMushRoom*>(e->obj);
+				mushroom->isFinish = 1;
+
+				vy = temp;							//Mario went through the mushroom
+				x -= min_tx * dx + nx * 0.4f;
+				y -= min_ty * dy + ny * 0.4f;
+
+				if (level < MARIO_LEVEL_BIG)
+				{
+					CMario::ToBig(y);
+					level = MARIO_LEVEL_BIG;
+				}
+			}
+			else if (dynamic_cast<CLeaf*>(e->obj))
+			{
+				CLeaf* leaf = dynamic_cast<CLeaf*>(e->obj);
+				leaf->isFinish = 1;
+				vy = temp;							//Mario went through the mushroom
+				x -= min_tx * dx + nx * 0.4f;
+				y -= min_ty * dy + ny * 0.4f;
+				if (level == MARIO_LEVEL_SMALL)
+					CMario::ToBig(y);
+				level = MARIO_LEVEL_RACOON;
+			}
 			else if (dynamic_cast<CQBrick*>(e->obj))		//question brick
 			{
 				CQBrick* qbrick = dynamic_cast<CQBrick*>(e->obj);
@@ -473,7 +499,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						qbrick->SetState(BRICK_STATE_EMP);
 					}
 				}
-			}
+			} 
 			else if (dynamic_cast<CUpsideBrick*>(e->obj))
 			{
 				CUpsideBrick* Upsidebrick = dynamic_cast<CUpsideBrick*>(e->obj);		// Upside brick
@@ -534,8 +560,6 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				vy = temp;							//Mario went through the coin
 				x -= min_tx * dx + nx * 0.4f;
 				y -= min_ty * dy + ny * 0.4f;
-				x += dx;
-				y += dy;
 			}
 			else if (dynamic_cast<CPortal*>(e->obj))
 			{

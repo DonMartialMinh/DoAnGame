@@ -171,6 +171,7 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					if (qbrick->GetState() != BRICK_STATE_EMP)
 					{
 						qbrick->SetState(BRICK_STATE_EMP);
+						qbrick->trigger = 1;
 						qbrick->StartRinging();
 					}
 				}

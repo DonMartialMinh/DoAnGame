@@ -14,6 +14,8 @@
 #include "Plant.h"
 #include "PiranhaPlant.h"
 #include "PlantFireBall.h"
+#include "MushRoom.h"
+#include "Leaf.h"
 
 
 #define MARIO_WALKING_SPEED		0.13f 
@@ -186,7 +188,7 @@
 
 class CMario : public CGameObject
 {
-	int level;
+	//int level;
 	int untouchable;
 	int falling;
 

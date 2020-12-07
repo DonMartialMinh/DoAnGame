@@ -2,6 +2,8 @@
 #include "GameObject.h"
 #include "Coin.h"
 #include "MushRoom.h"
+#include "Mario.h"
+#include "Leaf.h"
 
 #define BRICK_BBOX_WIDTH  16
 #define BRICK_BBOX_HEIGHT 16
@@ -17,14 +19,17 @@
 class CQBrick : public CGameObject
 {
 	DWORD ring_start;
-	virtual void Render();
-	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
-	virtual void GetBoundingBox(float& l, float& t, float& r, float& b);
+	CGameObject* player = NULL; 
+	float min = 0;
+
 public:
 	int setting = 0;
 	int ringing = 0;
 	int trigger = 0;
-	CQBrick(int setting);
+	virtual void Render();
+	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
+	virtual void GetBoundingBox(float& l, float& t, float& r, float& b);
 	void StartRinging() { ringing = 1; ring_start = DWORD(GetTickCount64()); }
+	CQBrick(CGameObject* player, int setting, float y);
 	CGameObject* ShowItem();
 };
