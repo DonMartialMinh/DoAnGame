@@ -158,6 +158,9 @@
 #define MARIO_ANI_RACOON_FLY_RIGHT1			103
 #define MARIO_ANI_RACOON_FLY_LEFT1			104
 
+#define MARIO_ANI_TRANSFORM_RIGHT			105
+#define MARIO_ANI_TRANSFORM_LEFT			106
+
 
 #define MARIO_ANI_DIE				8
 
@@ -185,6 +188,7 @@
 #define MARIO_KICKING_TIME 200
 #define MARIO_SLIDING_TIME	1000
 #define MARIO_THROWING_TIME	300
+#define MARIO_TRANSFORM_TIME	500
 
 class CMario : public CGameObject
 {
@@ -201,6 +205,7 @@ class CMario : public CGameObject
 	DWORD kick_start;
 	DWORD slide_start;
 	DWORD throw_start;
+	DWORD trans_start;
 	float start_x;			// initial position of Mario at scene
 	float start_y;
 
@@ -219,6 +224,7 @@ public:
 	int canSlide = 0;
 	int sliding = 0;
 	int throwing = 0;
+	int transform = 0;
 	CMario(float x = 0.0f, float y = 0.0f);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects = NULL);
 	virtual void Render();
@@ -234,6 +240,7 @@ public:
 	void StartKicking() { kicking = 1; kick_start = DWORD(GetTickCount64()); }
 	void StartSliding() { if(slide_start == 0) slide_start = DWORD(GetTickCount64()); }
 	void StartThrowing() { throwing = 1; throw_start = DWORD(GetTickCount64()); }
+	void StartTransform() { transform = 1; trans_start = DWORD(GetTickCount64()); }
 
 	void ResetState()
 	{

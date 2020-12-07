@@ -105,6 +105,12 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		throwing = 0;
 	}
 
+	if (GetTickCount64() - trans_start > MARIO_TRANSFORM_TIME)
+	{
+		trans_start = 0;
+		transform = 0;
+	}
+
 	if (vx == 0)
 	{
 		sliding = 0; canSlide = 0;
@@ -469,6 +475,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				{
 					CMario::ToBig(y);
 					level = MARIO_LEVEL_BIG;
+					StartTransform();
 				}
 			}
 			else if (dynamic_cast<CLeaf*>(e->obj))
@@ -671,6 +678,13 @@ void CMario::Render()
 			ani = MARIO_ANI_RACOON_TAIL_RIGHT;
 		else
 			ani = MARIO_ANI_RACOON_TAIL_LEFT;
+	}
+	else if (transform)
+	{
+		if (nx > 0)
+			ani = MARIO_ANI_TRANSFORM_RIGHT;
+		else
+			ani = MARIO_ANI_TRANSFORM_LEFT;
 	}
 	else if (throwing)
 	{
