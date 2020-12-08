@@ -260,6 +260,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 									ResetState();
 									CMario::ToSmall(this->y);
 									StartUntouchable();
+
 								}
 								else
 									SetState(MARIO_STATE_DIE);

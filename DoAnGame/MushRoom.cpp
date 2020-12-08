@@ -1,9 +1,8 @@
 #include "MushRoom.h"
 #include "Utils.h"
 
-CMushRoom::CMushRoom(float y, int nx)
+CMushRoom::CMushRoom(int nx)
 {
-	max = y - MUSHROOM_BBOX_HEIGHT - 1;
 	StartRising();
 	vx = MUSHROOM_MOVING_SPEED * nx;
 }

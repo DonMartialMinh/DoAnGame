@@ -67,7 +67,7 @@ CGameObject* CQBrick::ShowItem()
 		{
 			int ani_set_id = 18;
 			CAnimationSets* animation_sets = CAnimationSets::GetInstance();
-			obj = new CMushRoom(this->y,player->nx);
+			obj = new CMushRoom(player->nx);
 			obj->SetPosition(this->x, this->y);
 			LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
 			obj->SetAnimationSet(ani_set);
