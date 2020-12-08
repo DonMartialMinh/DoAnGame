@@ -23,609 +23,657 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	// Calculate dx, dy 
 	CGameObject::Update(dt, coObjects);
-	if (vy > 0.0f) isFlying = 1; // if falling then cant jump
 
-	// Simple fall down
-	vy += MARIO_GRAVITY * dt;
-
-	if (falling)					// racoon falling 
-		vy = 0.035f; 
-
-	if (flying)						// racoon flying
-		vy = -0.045f;
-
-	if (canHold == 0 && obj != NULL)	// if Mario release Object
+	if (GetTickCount64() - switch_start > MARIO_SWITCHING_TIME)
 	{
-		holding = 0;
-		if (this->nx > 0)
-			obj->vx = KOOPAS_SPIN_SPEED;
+		switch_start = 0;
+		switching = 0;
+		if (teleport != 0)
+		{
+			SetPosition(toX, toY);
+			ResetState();
+			teleport = 0;
+		}
+
+	}
+	if (switching)
+	{
+		if (switchType == 0)
+			y += 0.5f;
 		else
-			obj->vx = -KOOPAS_SPIN_SPEED;
-		StartKicking();
-		obj = NULL;
-	}
-
-
-	vector<LPCOLLISIONEVENT> coEvents;
-	vector<LPCOLLISIONEVENT> coEventsResult;
-
-	coEvents.clear();
-
-	// turn off collision when die 
-	if (state != MARIO_STATE_DIE)
-		CalcPotentialCollisions(coObjects, coEvents);
-
-	// reset untouchable timer if untouchable time has passed
-	if (GetTickCount64() - untouchable_start > MARIO_UNTOUCHABLE_TIME)
-	{
-		untouchable_start = 0;
-		untouchable = 0;
-	}
-	
-	if (GetTickCount64() - fall_start > MARIO_FALLING_TIME)		//racoon falling time
-	{
-		fall_start = 0;
-		falling = 0;
-	}
-
-	if (GetTickCount64() - fly_start > MARIO_FLYING_TIME)			//racoon flying time
-	{
-		fly_start = 0;
-		flying = 0;
-	}
-
-	if (GetTickCount64() - turn_start > MARIO_TURNING_TIME)		// mario turning time
-	{
-		turn_start = 0;
-		turning = 0;
-	}
-
-	if (GetTickCount64() - tail_start > MARIO_TAILING_TIME)
-	{
-		tail_start = 0;
-		tailing = 0;
-	}
-
-	if (GetTickCount64() - kick_start > MARIO_KICKING_TIME)
-	{
-		kick_start = 0;
-		kicking = 0;
-	}
-
-	if (GetTickCount64() - slide_start > MARIO_SLIDING_TIME)
-	{
-		slide_start = 0;
-		if (canSlide == 1)
-			sliding = 1;
-	}
-
-	if (GetTickCount64() - throw_start > MARIO_THROWING_TIME)
-	{
-		throw_start = 0;
-		throwing = 0;
-	}
-
-	if (GetTickCount64() - trans_start > MARIO_TRANSFORM_TIME)
-	{
-		trans_start = 0;
-		transform = 0;
-	}
-
-	if (vx == 0)
-	{
-		sliding = 0; canSlide = 0;
-	}
-
-
-	// No collision occured, proceed normally
-	if (coEvents.size() == 0)
-	{
-		x += dx;
-		y += dy;
+			y -= 0.5f;
 	}
 	else
 	{
+		if (vy > 0.0f) isFlying = 1; // if falling then cant jump
 
-		float min_tx, min_ty, nx = 0, ny;
-		float rdx = 0;
-		float rdy = 0;
+		// Simple fall down
+		vy += MARIO_GRAVITY * dt;
 
-		// TODO: This is a very ugly designed function!!!!
-		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny, rdx, rdy);
+		if (falling)					// racoon falling 
+			vy = 0.035f;
 
-		// how to push back Mario if collides with a moving objects, what if Mario is pushed this way into another object?
+		if (flying)						// racoon flying
+			vy = -0.05f;
 
-		//if (rdx != 0 && rdx != dx)
-		//	x += nx * abs(rdx);
-
-		// block every object first!
-		x += min_tx * dx + nx * 0.4f;
-		y += min_ty * dy + ny * 0.4f;
-
-		float temp = vy;
-		//if (nx != 0) vx = 0;
-		if (ny != 0) vy = 0;
-
-		//
-		// Collision logic with other objects
-		//
-		for (UINT i = 0; i < coEventsResult.size(); i++)
+		if (canHold == 0 && obj != NULL)	// if Mario release Object
 		{
-			LPCOLLISIONEVENT e = coEventsResult[i];
-
-			if (dynamic_cast<CGoomba*>(e->obj)) // if e->obj is Goomba 
-			{
-				CGoomba* goomba = dynamic_cast<CGoomba*>(e->obj);
-
-				// jump on top >> kill Goomba and deflect a bit 
-				if (e->ny < 0)
-				{
-					if (goomba->GetState() != GOOMBA_STATE_DIE)
-					{
-						goomba->SetState(GOOMBA_STATE_DIE);
-						vy = -MARIO_JUMP_DEFLECT_SPEED;
-					}
-				}
-				else
-				{
-					if (untouchable == 0)
-					{
-						if (goomba->GetState() != GOOMBA_STATE_DIE)
-						{
-							if (level == MARIO_LEVEL_RACOON && tailing == 1)
-							{
-								goomba->SetState(GOOMBA_STATE_DIE_DEFLECT);
-								goomba->vx = 0.05f * this->nx;
-							}
-							else if (level > MARIO_LEVEL_BIG)
-							{
-								level = MARIO_LEVEL_BIG;
-								ResetState();
-								StartUntouchable();
-							}
-							else if (level == MARIO_LEVEL_BIG)
-							{
-								level = MARIO_LEVEL_SMALL;
-								ResetState();
-								CMario::ToSmall(this->y);
-								StartUntouchable();
-							}
-							else
-								SetState(MARIO_STATE_DIE);
-						}
-					}
-				}
-			}
-			if (dynamic_cast<CFlyGoomba*>(e->obj)) // if e->obj is Goomba 
-			{
-				CFlyGoomba* goomba = dynamic_cast<CFlyGoomba*>(e->obj);
-
-				// jump on top >> kill Goomba and deflect a bit 
-				if (e->ny < 0)
-				{
-					if (goomba->GetState() == FLYGOOMBA_STATE_FLYING)
-					{
-						goomba->SetState(FLYGOOMBA_STATE_WALKING);
-						vy = -MARIO_JUMP_DEFLECT_SPEED;
-					}
-					else if (goomba->GetState() == FLYGOOMBA_STATE_WALKING)
-					{
-						goomba->SetState(FLYGOOMBA_STATE_DIE);
-						vy = -MARIO_JUMP_DEFLECT_SPEED;
-					}
-				}
-				else
-				{
-					if (untouchable == 0)
-					{
-						if (goomba->GetState() != FLYGOOMBA_STATE_DIE)
-						{
-							if (level == MARIO_LEVEL_RACOON && tailing == 1)
-							{
-								goomba->SetState(FLYGOOMBA_STATE_DIE_DEFLECT);
-								goomba->vx = 0.05f * this->nx;
-							}
-							else if (level > MARIO_LEVEL_BIG)
-							{
-								level = MARIO_LEVEL_BIG;
-								ResetState();
-								StartUntouchable();
-							}
-							else if (level == MARIO_LEVEL_BIG)
-							{
-								level = MARIO_LEVEL_SMALL;
-								ResetState();
-								CMario::ToSmall(this->y);
-								StartUntouchable();
-							}
-							else
-								SetState(MARIO_STATE_DIE);
-						}
-					}
-				}
-			}if (dynamic_cast<CKoopas*>(e->obj)) // if e->obj is Koopas 
-			{
-				CKoopas* koopas = dynamic_cast<CKoopas*>(e->obj);
-
-				// jump on top >> kill Koopas and deflect a bit 
-				if (e->ny < 0)
-				{
-					if ((koopas->GetState() == KOOPAS_STATE_DIE || koopas->GetState() == KOOPAS_STATE_DIE_DEFLECT) && koopas->vx == 0 ) {
-						if (this->nx > 0)  // direction of koopas spin when being stomped 
-							koopas->vx = KOOPAS_SPIN_SPEED;
-						else
-							koopas->vx = -KOOPAS_SPIN_SPEED;
-						vy = -MARIO_JUMP_DEFLECT_SPEED;
-					}
-					else if ((koopas->GetState() == KOOPAS_STATE_DIE || koopas->GetState() == KOOPAS_STATE_DIE_DEFLECT) && koopas->vx != 0) {
-						vy = -MARIO_JUMP_DEFLECT_SPEED;
-						koopas->vx = 0;		// being stomped when spining then still
-					}
-					else
-					{
-						koopas->SetState(KOOPAS_STATE_DIE);
-						vy = -MARIO_JUMP_DEFLECT_SPEED;
-					}
-				}
-				else
-				{
-					if (untouchable == 0)
-					{
-						if (koopas->vx != 0)
-						{
-							if (level == MARIO_LEVEL_RACOON && tailing == 1)
-								koopas->SetState(KOOPAS_STATE_DIE_DEFLECT);
-							else if (level > MARIO_LEVEL_BIG)
-							{
-								level = MARIO_LEVEL_BIG;
-								ResetState();
-								StartUntouchable();
-							}
-							else if (level == MARIO_LEVEL_BIG)
-							{
-								level = MARIO_LEVEL_SMALL;
-								ResetState();
-								CMario::ToSmall(this->y);
-								StartUntouchable();
-							}
-							else
-								SetState(MARIO_STATE_DIE);
-						}
-						else{
-							if (canHold == 0)								// Kicking an object
-							{
-								if (this->nx > 0)
-									koopas->vx = KOOPAS_SPIN_SPEED;
-								else
-									koopas->vx = -KOOPAS_SPIN_SPEED;
-								StartKicking();
-							}
-							else
-							{	
-								this->SetState(MARIO_STATE_HOLD);				// Holding an object
-								obj = koopas;
-								koopas->isHolded = 1;
-							}
-
-						}
-					}
-				}
-			}  // if Koopas
-			else if (dynamic_cast<CFlyKoopas*>(e->obj)) // if e->obj is Koopas 
-			{
-				CFlyKoopas* koopas = dynamic_cast<CFlyKoopas*>(e->obj);
-
-				// jump on top >> kill Koopas and deflect a bit 
-				if (e->ny < 0)
-				{
-					if (koopas->GetState() == FLYKOOPAS_STATE_FLYING)
-					{
-						koopas->SetState(FLYKOOPAS_STATE_WALKING);
-						vy = -MARIO_JUMP_DEFLECT_SPEED;
-					}
-					else if ((koopas->GetState() == KOOPAS_STATE_DIE || koopas->GetState() == KOOPAS_STATE_DIE_DEFLECT) && koopas->vx == 0) {
-						if (this->nx > 0)  // direction of koopas spin when being stomped 
-							koopas->vx = KOOPAS_SPIN_SPEED;
-						else
-							koopas->vx = -KOOPAS_SPIN_SPEED;
-						vy = -MARIO_JUMP_DEFLECT_SPEED;
-					}
-					else if ((koopas->GetState() == KOOPAS_STATE_DIE || koopas->GetState() == KOOPAS_STATE_DIE_DEFLECT) && koopas->vx != 0) {
-						vy = -MARIO_JUMP_DEFLECT_SPEED;
-						koopas->vx = 0;		// being stomped when spining then still
-					}
-					else
-					{
-						koopas->SetState(KOOPAS_STATE_DIE);
-						vy = -MARIO_JUMP_DEFLECT_SPEED;
-					}
-				}
-				else
-				{
-					if (untouchable == 0)
-					{
-						if (koopas->vx != 0)
-						{
-							if (level == MARIO_LEVEL_RACOON && tailing == 1)
-								koopas->SetState(KOOPAS_STATE_DIE_DEFLECT);
-							else if (level > MARIO_LEVEL_BIG)
-							{
-								level = MARIO_LEVEL_BIG;
-								ResetState();
-								StartUntouchable();
-							}
-							else if (level == MARIO_LEVEL_BIG)
-							{
-								level = MARIO_LEVEL_SMALL;
-								ResetState();
-								CMario::ToSmall(this->y);
-								StartUntouchable();
-							}
-							else
-								SetState(MARIO_STATE_DIE);
-						}
-						else {
-							if (canHold == 0)								// Kicking an object
-							{
-								if (this->nx > 0)
-									koopas->vx = KOOPAS_SPIN_SPEED;
-								else
-									koopas->vx = -KOOPAS_SPIN_SPEED;
-								StartKicking();
-							}
-							else
-							{
-								this->SetState(MARIO_STATE_HOLD);				// Holding an object
-								obj = koopas;
-								koopas->isHolded = 1;
-							}
-
-						}
-					}
-				}
-			}  // if Koopas
-			else if (dynamic_cast<CPlant*>(e->obj))
-			{
-				CPlant* plant = dynamic_cast<CPlant*>(e->obj);
-				if (untouchable == 0) {
-					if (!plant->isUnderPipe)
-					{
-						if (level > MARIO_LEVEL_BIG)
-						{
-							level = MARIO_LEVEL_BIG;
-							ResetState();
-							StartUntouchable();
-						}
-						else if (level == MARIO_LEVEL_BIG)
-						{
-							level = MARIO_LEVEL_SMALL;
-							ResetState();
-							CMario::ToSmall(this->y);
-							StartUntouchable();
-						}
-						else
-							SetState(MARIO_STATE_DIE);
-					}
-				}
-			}  // if Plant
-			else if (dynamic_cast<CPlantFireBall*>(e->obj))
-			{
-				CPlantFireBall* fireball = dynamic_cast<CPlantFireBall*>(e->obj);
-				if (untouchable == 0) {
-					if (level > MARIO_LEVEL_BIG)
-					{
-						level = MARIO_LEVEL_BIG;
-						ResetState();
-						StartUntouchable();
-					}
-					else if (level == MARIO_LEVEL_BIG)
-					{
-						level = MARIO_LEVEL_SMALL;
-						ResetState();
-						CMario::ToSmall(this->y);
-						StartUntouchable();
-					}
-					else
-						SetState(MARIO_STATE_DIE);
-				}
-			}  // if Plant
-			else if (dynamic_cast<CPiranhaPlant*>(e->obj))
-			{
-				CPiranhaPlant* plant = dynamic_cast<CPiranhaPlant*>(e->obj);
-				if (untouchable == 0) {
-					if (!plant->isUnderPipe)
-					{
-						if (level > MARIO_LEVEL_BIG)
-						{
-							level = MARIO_LEVEL_BIG;
-							ResetState();
-							StartUntouchable();
-						}
-						else if (level == MARIO_LEVEL_BIG)
-						{
-							level = MARIO_LEVEL_SMALL;
-							ResetState();
-							CMario::ToSmall(this->y);
-							StartUntouchable();
-						}
-						else
-							SetState(MARIO_STATE_DIE);
-					}
-				}
-			} // if Plant
-			else if (dynamic_cast<CBrick*>(e->obj))
-			{
-				CBrick* brick = dynamic_cast<CBrick*>(e->obj);
-				if (e->ny < 0) // jump on top brick then can jumping again
-				{
-					isFlying = 0;
-					falling = 0;		//	racoon mario cant fall slowly
-				}
-			}
-			else if (dynamic_cast<CMushRoom*>(e->obj))
-			{
-				CMushRoom* mushroom = dynamic_cast<CMushRoom*>(e->obj);
-				mushroom->isFinish = 1;
-
-				vy = temp;							//Mario went through the mushroom
-				x -= min_tx * dx + nx * 0.4f;
-				y -= min_ty * dy + ny * 0.4f;
-
-				if (level < MARIO_LEVEL_BIG)
-				{
-					CMario::ToBig(y);
-					level = MARIO_LEVEL_BIG;
-					StartTransform();
-				}
-			}
-			else if (dynamic_cast<CLeaf*>(e->obj))
-			{
-				CLeaf* leaf = dynamic_cast<CLeaf*>(e->obj);
-				leaf->isFinish = 1;
-				vy = temp;							//Mario went through the mushroom
-				x -= min_tx * dx + nx * 0.4f;
-				y -= min_ty * dy + ny * 0.4f;
-				if (level == MARIO_LEVEL_SMALL)
-					CMario::ToBig(y);
-				level = MARIO_LEVEL_RACOON;
-			}
-			else if (dynamic_cast<CQBrick*>(e->obj))		//question brick
-			{
-				CQBrick* qbrick = dynamic_cast<CQBrick*>(e->obj);
-				if (e->ny < 0) // jump on top brick then can jumping again
-				{
-					isFlying = 0;
-					falling = 0;		//	racoon mario cant fall slowly
-				}
-				else if (e->ny > 0)
-				{
-					if (qbrick->GetState() != BRICK_STATE_EMP)
-					{
-						qbrick->StartRinging();
-						qbrick->trigger = 1;
-						qbrick->SetState(BRICK_STATE_EMP);
-					}
-				}
-			} 
-			else if (dynamic_cast<CUpsideBrick*>(e->obj))
-			{
-				CUpsideBrick* Upsidebrick = dynamic_cast<CUpsideBrick*>(e->obj);		// Upside brick
-
-				if (this->level >= MARIO_LEVEL_BIG )
-				{
-					if (this->state == MARIO_STATE_DUCK)
-					{
-						if (e->ny > 0 || this->y + MARIO_BIG_DUCK_BBOX_HEIGHT > Upsidebrick->y)
-						{
-							vy = temp;							//If wrong side then go through
-							x -= min_tx * dx + nx * 0.4f;
-							y -= min_ty * dy + ny * 0.4f;
-							x += dx;
-							y += dy;
-						}
-						else {
-							isFlying = 0; // jump on top brick then can jumping again
-						}
-					}
-					else if (this->state != MARIO_STATE_DUCK)
-					{
-						if (e->ny > 0 || this->y + MARIO_BIG_BBOX_HEIGHT > Upsidebrick->y)
-						{
-							vy = temp;							//If wrong side then go through
-							x -= min_tx * dx + nx * 0.4f;
-							y -= min_ty * dy + ny * 0.4f;
-							x += dx;
-							y += dy;
-						}
-						else {
-							falling = 0;	//	racoon mario cant fall slowly
-							isFlying = 0;	 // jump on top brick then can jumping again
-						}
-					}
-				}
-				else if (this->level >= MARIO_LEVEL_SMALL)
-				{
-					if (e->ny > 0 || this->y + MARIO_SMALL_BBOX_HEIGHT > Upsidebrick->y)
-					{
-						vy = temp;							//If wrong side then go through
-						x -= min_tx * dx + nx * 0.4f;
-						y -= min_ty * dy + ny * 0.4f;
-						x += dx;
-						y += dy;
-					}
-					else {
-						isFlying = 0;	 // jump on top brick then can jumping again
-					}
-				}
-
-
-			}
-			else if (dynamic_cast<CCoin*>(e->obj)) // if e->obj is Coin 
-			{
-				CCoin* coin = dynamic_cast<CCoin*>(e->obj);
-				coin->isFinish = 1;					// Make coin disappear
-				vy = temp;							//Mario went through the coin
-				x -= min_tx * dx + nx * 0.4f;
-				y -= min_ty * dy + ny * 0.4f;
-			}
-			else if (dynamic_cast<CPortal*>(e->obj))
-			{
-				CPortal* p = dynamic_cast<CPortal*>(e->obj);
-				CGame::GetInstance()->SwitchScene(p->GetSceneId());
-			}
+			holding = 0;
+			if (this->nx > 0)
+				obj->vx = KOOPAS_SPIN_SPEED;
+			else
+				obj->vx = -KOOPAS_SPIN_SPEED;
+			StartKicking();
+			obj = NULL;
 		}
 
-	}
-	if (obj != NULL)	// set position of obj when being holded
-	{
-		if (nx > 0)
+
+		vector<LPCOLLISIONEVENT> coEvents;
+		vector<LPCOLLISIONEVENT> coEventsResult;
+
+		coEvents.clear();
+
+		// turn off collision when die 
+		if (state != MARIO_STATE_DIE)
+			CalcPotentialCollisions(coObjects, coEvents);
+
+		// reset untouchable timer if untouchable time has passed
+		if (GetTickCount64() - untouchable_start > MARIO_UNTOUCHABLE_TIME)
 		{
-			if (level == MARIO_LEVEL_SMALL)
-			{
-				obj->x = x + 12;
-				obj->y = y - 4;
-			}
-			else if (level == MARIO_LEVEL_RACOON)
-			{
-				obj->x = x + 19;
-				obj->y = y + 7;
-			}
-			else
-			{
-				obj->x = x + 12;
-				obj->y = y + 7;
-			}
+			untouchable_start = 0;
+			untouchable = 0;
+		}
+
+		if (GetTickCount64() - fall_start > MARIO_FALLING_TIME)		//racoon falling time
+		{
+			fall_start = 0;
+			falling = 0;
+		}
+
+		if (GetTickCount64() - fly_start > MARIO_FLYING_TIME)			//racoon flying time
+		{
+			fly_start = 0;
+			flying = 0;
+		}
+
+		if (GetTickCount64() - turn_start > MARIO_TURNING_TIME)		// mario turning time
+		{
+			turn_start = 0;
+			turning = 0;
+		}
+
+		if (GetTickCount64() - tail_start > MARIO_TAILING_TIME)
+		{
+			tail_start = 0;
+			tailing = 0;
+		}
+
+		if (GetTickCount64() - kick_start > MARIO_KICKING_TIME)
+		{
+			kick_start = 0;
+			kicking = 0;
+		}
+
+		if (GetTickCount64() - slide_start > MARIO_SLIDING_TIME)
+		{
+			slide_start = 0;
+			if (canSlide == 1)
+				sliding = 1;
+		}
+
+		if (GetTickCount64() - throw_start > MARIO_THROWING_TIME)
+		{
+			throw_start = 0;
+			throwing = 0;
+		}
+
+		if (GetTickCount64() - trans_start > MARIO_TRANSFORM_TIME)
+		{
+			trans_start = 0;
+			transform = 0;
+		}
+
+
+		if (vx == 0)
+		{
+			sliding = 0; canSlide = 0;
+		}
+
+
+		// No collision occured, proceed normally
+		if (coEvents.size() == 0)
+		{
+			x += dx;
+			y += dy;
 		}
 		else
 		{
-			if (level == MARIO_LEVEL_SMALL)
+
+			float min_tx, min_ty, nx = 0, ny;
+			float rdx = 0;
+			float rdy = 0;
+
+			// TODO: This is a very ugly designed function!!!!
+			FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny, rdx, rdy);
+
+			// how to push back Mario if collides with a moving objects, what if Mario is pushed this way into another object?
+
+			//if (rdx != 0 && rdx != dx)
+			//	x += nx * abs(rdx);
+
+			// block every object first!
+			x += min_tx * dx + nx * 0.4f;
+			y += min_ty * dy + ny * 0.4f;
+
+			float temp = vy;
+			//if (nx != 0) vx = 0;
+			if (ny != 0) vy = 0;
+
+			//
+			// Collision logic with other objects
+			//
+			for (UINT i = 0; i < coEventsResult.size(); i++)
 			{
-				obj->x = x - 13;
-				obj->y = y - 4;
-			}
-			else if (level == MARIO_LEVEL_RACOON)
-			{
-				obj->x = x - 14;
-				obj->y = y + 7;
-			}
-			else
-			{
-				obj->x = x - 13;
-				obj->y = y + 7;
+				LPCOLLISIONEVENT e = coEventsResult[i];
+
+				if (dynamic_cast<CGoomba*>(e->obj)) // if e->obj is Goomba 
+				{
+					CGoomba* goomba = dynamic_cast<CGoomba*>(e->obj);
+
+					// jump on top >> kill Goomba and deflect a bit 
+					if (e->ny < 0)
+					{
+						if (goomba->GetState() != GOOMBA_STATE_DIE)
+						{
+							goomba->SetState(GOOMBA_STATE_DIE);
+							vy = -MARIO_JUMP_DEFLECT_SPEED;
+						}
+					}
+					else
+					{
+						if (untouchable == 0)
+						{
+							if (goomba->GetState() != GOOMBA_STATE_DIE)
+							{
+								if (level == MARIO_LEVEL_RACOON && tailing == 1)
+								{
+									goomba->SetState(GOOMBA_STATE_DIE_DEFLECT);
+									goomba->vx = 0.05f * this->nx;
+								}
+								else if (level > MARIO_LEVEL_BIG)
+								{
+									level = MARIO_LEVEL_BIG;
+									ResetState();
+									StartUntouchable();
+								}
+								else if (level == MARIO_LEVEL_BIG)
+								{
+									level = MARIO_LEVEL_SMALL;
+									ResetState();
+									CMario::ToSmall(this->y);
+									StartUntouchable();
+								}
+								else
+									SetState(MARIO_STATE_DIE);
+							}
+						}
+					}
+				}
+				if (dynamic_cast<CFlyGoomba*>(e->obj)) // if e->obj is Goomba 
+				{
+					CFlyGoomba* goomba = dynamic_cast<CFlyGoomba*>(e->obj);
+
+					// jump on top >> kill Goomba and deflect a bit 
+					if (e->ny < 0)
+					{
+						if (goomba->GetState() == FLYGOOMBA_STATE_FLYING)
+						{
+							goomba->SetState(FLYGOOMBA_STATE_WALKING);
+							vy = -MARIO_JUMP_DEFLECT_SPEED;
+						}
+						else if (goomba->GetState() == FLYGOOMBA_STATE_WALKING)
+						{
+							goomba->SetState(FLYGOOMBA_STATE_DIE);
+							vy = -MARIO_JUMP_DEFLECT_SPEED;
+						}
+					}
+					else
+					{
+						if (untouchable == 0)
+						{
+							if (goomba->GetState() != FLYGOOMBA_STATE_DIE)
+							{
+								if (level == MARIO_LEVEL_RACOON && tailing == 1)
+								{
+									goomba->SetState(FLYGOOMBA_STATE_DIE_DEFLECT);
+									goomba->vx = 0.05f * this->nx;
+								}
+								else if (level > MARIO_LEVEL_BIG)
+								{
+									level = MARIO_LEVEL_BIG;
+									ResetState();
+									StartUntouchable();
+								}
+								else if (level == MARIO_LEVEL_BIG)
+								{
+									level = MARIO_LEVEL_SMALL;
+									ResetState();
+									CMario::ToSmall(this->y);
+									StartUntouchable();
+								}
+								else
+									SetState(MARIO_STATE_DIE);
+							}
+						}
+					}
+				}if (dynamic_cast<CKoopas*>(e->obj)) // if e->obj is Koopas 
+				{
+					CKoopas* koopas = dynamic_cast<CKoopas*>(e->obj);
+
+					// jump on top >> kill Koopas and deflect a bit 
+					if (e->ny < 0)
+					{
+						if ((koopas->GetState() == KOOPAS_STATE_DIE || koopas->GetState() == KOOPAS_STATE_DIE_DEFLECT) && koopas->vx == 0) {
+							if (this->nx > 0)  // direction of koopas spin when being stomped 
+								koopas->vx = KOOPAS_SPIN_SPEED;
+							else
+								koopas->vx = -KOOPAS_SPIN_SPEED;
+							vy = -MARIO_JUMP_DEFLECT_SPEED;
+						}
+						else if ((koopas->GetState() == KOOPAS_STATE_DIE || koopas->GetState() == KOOPAS_STATE_DIE_DEFLECT) && koopas->vx != 0) {
+							vy = -MARIO_JUMP_DEFLECT_SPEED;
+							koopas->vx = 0;		// being stomped when spining then still
+						}
+						else
+						{
+							koopas->SetState(KOOPAS_STATE_DIE);
+							vy = -MARIO_JUMP_DEFLECT_SPEED;
+						}
+					}
+					else
+					{
+						if (untouchable == 0)
+						{
+							if (koopas->vx != 0)
+							{
+								if (level == MARIO_LEVEL_RACOON && tailing == 1)
+									koopas->SetState(KOOPAS_STATE_DIE_DEFLECT);
+								else if (level > MARIO_LEVEL_BIG)
+								{
+									level = MARIO_LEVEL_BIG;
+									ResetState();
+									StartUntouchable();
+								}
+								else if (level == MARIO_LEVEL_BIG)
+								{
+									level = MARIO_LEVEL_SMALL;
+									ResetState();
+									CMario::ToSmall(this->y);
+									StartUntouchable();
+								}
+								else
+									SetState(MARIO_STATE_DIE);
+							}
+							else {
+								if (canHold == 0)								// Kicking an object
+								{
+									if (this->nx > 0)
+										koopas->vx = KOOPAS_SPIN_SPEED;
+									else
+										koopas->vx = -KOOPAS_SPIN_SPEED;
+									StartKicking();
+								}
+								else
+								{
+									this->SetState(MARIO_STATE_HOLD);				// Holding an object
+									obj = koopas;
+									koopas->isHolded = 1;
+								}
+
+							}
+						}
+					}
+				}  // if Koopas
+				else if (dynamic_cast<CFlyKoopas*>(e->obj)) // if e->obj is Koopas 
+				{
+					CFlyKoopas* koopas = dynamic_cast<CFlyKoopas*>(e->obj);
+
+					// jump on top >> kill Koopas and deflect a bit 
+					if (e->ny < 0)
+					{
+						if (koopas->GetState() == FLYKOOPAS_STATE_FLYING)
+						{
+							koopas->SetState(FLYKOOPAS_STATE_WALKING);
+							vy = -MARIO_JUMP_DEFLECT_SPEED;
+						}
+						else if ((koopas->GetState() == KOOPAS_STATE_DIE || koopas->GetState() == KOOPAS_STATE_DIE_DEFLECT) && koopas->vx == 0) {
+							if (this->nx > 0)  // direction of koopas spin when being stomped 
+								koopas->vx = KOOPAS_SPIN_SPEED;
+							else
+								koopas->vx = -KOOPAS_SPIN_SPEED;
+							vy = -MARIO_JUMP_DEFLECT_SPEED;
+						}
+						else if ((koopas->GetState() == KOOPAS_STATE_DIE || koopas->GetState() == KOOPAS_STATE_DIE_DEFLECT) && koopas->vx != 0) {
+							vy = -MARIO_JUMP_DEFLECT_SPEED;
+							koopas->vx = 0;		// being stomped when spining then still
+						}
+						else
+						{
+							koopas->SetState(KOOPAS_STATE_DIE);
+							vy = -MARIO_JUMP_DEFLECT_SPEED;
+						}
+					}
+					else
+					{
+						if (untouchable == 0)
+						{
+							if (koopas->vx != 0)
+							{
+								if (level == MARIO_LEVEL_RACOON && tailing == 1)
+									koopas->SetState(KOOPAS_STATE_DIE_DEFLECT);
+								else if (level > MARIO_LEVEL_BIG)
+								{
+									level = MARIO_LEVEL_BIG;
+									ResetState();
+									StartUntouchable();
+								}
+								else if (level == MARIO_LEVEL_BIG)
+								{
+									level = MARIO_LEVEL_SMALL;
+									ResetState();
+									CMario::ToSmall(this->y);
+									StartUntouchable();
+								}
+								else
+									SetState(MARIO_STATE_DIE);
+							}
+							else {
+								if (canHold == 0)								// Kicking an object
+								{
+									if (this->nx > 0)
+										koopas->vx = KOOPAS_SPIN_SPEED;
+									else
+										koopas->vx = -KOOPAS_SPIN_SPEED;
+									StartKicking();
+								}
+								else
+								{
+									this->SetState(MARIO_STATE_HOLD);				// Holding an object
+									obj = koopas;
+									koopas->isHolded = 1;
+								}
+
+							}
+						}
+					}
+				}  // if Koopas
+				else if (dynamic_cast<CPlant*>(e->obj))
+				{
+					CPlant* plant = dynamic_cast<CPlant*>(e->obj);
+					if (untouchable == 0) {
+						if (!plant->isUnderPipe)
+						{
+							if (level > MARIO_LEVEL_BIG)
+							{
+								level = MARIO_LEVEL_BIG;
+								ResetState();
+								StartUntouchable();
+							}
+							else if (level == MARIO_LEVEL_BIG)
+							{
+								level = MARIO_LEVEL_SMALL;
+								ResetState();
+								CMario::ToSmall(this->y);
+								StartUntouchable();
+							}
+							else
+								SetState(MARIO_STATE_DIE);
+						}
+					}
+				}  // if Plant
+				else if (dynamic_cast<CPlantFireBall*>(e->obj))
+				{
+					CPlantFireBall* fireball = dynamic_cast<CPlantFireBall*>(e->obj);
+					if (untouchable == 0) {
+						if (level > MARIO_LEVEL_BIG)
+						{
+							level = MARIO_LEVEL_BIG;
+							ResetState();
+							StartUntouchable();
+						}
+						else if (level == MARIO_LEVEL_BIG)
+						{
+							level = MARIO_LEVEL_SMALL;
+							ResetState();
+							CMario::ToSmall(this->y);
+							StartUntouchable();
+						}
+						else
+							SetState(MARIO_STATE_DIE);
+					}
+				}  // if Plant
+				else if (dynamic_cast<CPiranhaPlant*>(e->obj))
+				{
+					CPiranhaPlant* plant = dynamic_cast<CPiranhaPlant*>(e->obj);
+					if (untouchable == 0) {
+						if (!plant->isUnderPipe)
+						{
+							if (level > MARIO_LEVEL_BIG)
+							{
+								level = MARIO_LEVEL_BIG;
+								ResetState();
+								StartUntouchable();
+							}
+							else if (level == MARIO_LEVEL_BIG)
+							{
+								level = MARIO_LEVEL_SMALL;
+								ResetState();
+								CMario::ToSmall(this->y);
+								StartUntouchable();
+
+							}
+							else
+								SetState(MARIO_STATE_DIE);
+						}
+					}
+				} // if Plant
+				else if (dynamic_cast<CBrick*>(e->obj))
+				{
+					CBrick* brick = dynamic_cast<CBrick*>(e->obj);
+					if (e->ny < 0) // jump on top brick then can jumping again
+					{
+						isFlying = 0;
+						falling = 0;		//	racoon mario cant fall slowly
+					}
+				}
+				else if (dynamic_cast<CSwitch*>(e->obj))
+				{
+					CSwitch* sw = dynamic_cast<CSwitch*>(e->obj);
+					if (e->ny < 0)
+					{
+						if (KeyDownPressed)
+						{
+							StartSwitching(sw->toX, sw->toY);
+							teleport = 1;
+							switchType = 0;
+						}
+					}
+					else if (e->ny > 0)
+					{
+						if (KeyUpPressed)
+						{
+							StartSwitching(sw->toX, sw->toY);
+							teleport = 1;
+							switchType = 1;
+						}
+					}
+
+				}
+				else if (dynamic_cast<CMushRoom*>(e->obj))
+				{
+					CMushRoom* mushroom = dynamic_cast<CMushRoom*>(e->obj);
+					mushroom->isFinish = 1;
+
+					vy = temp;							//Mario went through the mushroom
+					x -= min_tx * dx + nx * 0.4f;
+					y -= min_ty * dy + ny * 0.4f;
+
+					if (level < MARIO_LEVEL_BIG)
+					{
+						CMario::ToBig(y);
+						level = MARIO_LEVEL_BIG;
+						StartTransform();
+					}
+				}
+				else if (dynamic_cast<CLeaf*>(e->obj))
+				{
+					CLeaf* leaf = dynamic_cast<CLeaf*>(e->obj);
+					leaf->isFinish = 1;
+					vy = temp;							//Mario went through the mushroom
+					x -= min_tx * dx + nx * 0.4f;
+					y -= min_ty * dy + ny * 0.4f;
+					if (level == MARIO_LEVEL_SMALL)
+						CMario::ToBig(y);
+					level = MARIO_LEVEL_RACOON;
+				}
+				else if (dynamic_cast<CQBrick*>(e->obj))		//question brick
+				{
+					CQBrick* qbrick = dynamic_cast<CQBrick*>(e->obj);
+					if (e->ny < 0) // jump on top brick then can jumping again
+					{
+						isFlying = 0;
+						falling = 0;		//	racoon mario cant fall slowly
+					}
+					else if (e->ny > 0)
+					{
+						if (qbrick->GetState() != BRICK_STATE_EMP)
+						{
+							qbrick->StartRinging();
+							qbrick->trigger = 1;
+							qbrick->SetState(BRICK_STATE_EMP);
+						}
+					}
+				}
+				else if (dynamic_cast<CUpsideBrick*>(e->obj))
+				{
+					CUpsideBrick* Upsidebrick = dynamic_cast<CUpsideBrick*>(e->obj);		// Upside brick
+
+					if (this->level >= MARIO_LEVEL_BIG)
+					{
+						if (this->state == MARIO_STATE_DUCK)
+						{
+							if (e->ny > 0 || this->y + MARIO_BIG_DUCK_BBOX_HEIGHT > Upsidebrick->y)
+							{
+								vy = temp;							//If wrong side then go through
+								x -= min_tx * dx + nx * 0.4f;
+								y -= min_ty * dy + ny * 0.4f;
+								x += dx;
+								y += dy;
+							}
+							else {
+								isFlying = 0; // jump on top brick then can jumping again
+							}
+						}
+						else if (this->state != MARIO_STATE_DUCK)
+						{
+							if (e->ny > 0 || this->y + MARIO_BIG_BBOX_HEIGHT > Upsidebrick->y)
+							{
+								vy = temp;							//If wrong side then go through
+								x -= min_tx * dx + nx * 0.4f;
+								y -= min_ty * dy + ny * 0.4f;
+								x += dx;
+								y += dy;
+							}
+							else {
+								falling = 0;	//	racoon mario cant fall slowly
+								isFlying = 0;	 // jump on top brick then can jumping again
+							}
+						}
+					}
+					else if (this->level >= MARIO_LEVEL_SMALL)
+					{
+						if (e->ny > 0 || this->y + MARIO_SMALL_BBOX_HEIGHT > Upsidebrick->y)
+						{
+							vy = temp;							//If wrong side then go through
+							x -= min_tx * dx + nx * 0.4f;
+							y -= min_ty * dy + ny * 0.4f;
+							x += dx;
+							y += dy;
+						}
+						else {
+							isFlying = 0;	 // jump on top brick then can jumping again
+						}
+					}
+
+
+				}
+				else if (dynamic_cast<CCoin*>(e->obj)) // if e->obj is Coin 
+				{
+					CCoin* coin = dynamic_cast<CCoin*>(e->obj);
+					coin->isFinish = 1;					// Make coin disappear
+					vy = temp;							//Mario went through the coin
+					x -= min_tx * dx + nx * 0.4f;
+					y -= min_ty * dy + ny * 0.4f;
+				}
+				else if (dynamic_cast<CPortal*>(e->obj))
+				{
+					CPortal* p = dynamic_cast<CPortal*>(e->obj);
+					CGame::GetInstance()->SwitchScene(p->GetSceneId());
+				}
 			}
 
 		}
+		if (obj != NULL)	// set position of obj when being holded
+		{
+			if (nx > 0)
+			{
+				if (level == MARIO_LEVEL_SMALL)
+				{
+					obj->x = x + 12;
+					obj->y = y - 4;
+				}
+				else if (level == MARIO_LEVEL_RACOON)
+				{
+					obj->x = x + 19;
+					obj->y = y + 7;
+				}
+				else
+				{
+					obj->x = x + 12;
+					obj->y = y + 7;
+				}
+			}
+			else
+			{
+				if (level == MARIO_LEVEL_SMALL)
+				{
+					obj->x = x - 13;
+					obj->y = y - 4;
+				}
+				else if (level == MARIO_LEVEL_RACOON)
+				{
+					obj->x = x - 14;
+					obj->y = y + 7;
+				}
+				else
+				{
+					obj->x = x - 13;
+					obj->y = y + 7;
+				}
+
+			}
+		}
+
+
+		// clean up collision events
+		for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
+
+		if (vx > 0 && x > 2812) x = 2812;
+		if (vx < 0 && x < 3) x = 3;
+
+
+		//DebugOut(L"\tv = %f\n", vy);
 	}
-
-
-	// clean up collision events
-	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
-
-	if (vx > 0 && x > 2812) x = 2812;
-	if (vx < 0 && x < 3) x = 3;
-
-
-	//DebugOut(L"\tv = %f\n", vy);
 }
 
 void CMario::Render()
@@ -727,6 +775,17 @@ void CMario::Render()
 			else
 				ani = MARIO_ANI_RACOON_KICK_RIGHT;
 		}
+	}
+	else if (switching)
+	{
+		if (level == MARIO_LEVEL_BIG)
+			ani = MARIO_ANI_TELE_BIG;
+		else if (level == MARIO_LEVEL_SMALL)
+			ani = MARIO_ANI_TELE_SMALL;
+		else if (level == MARIO_LEVEL_FIRE)
+			ani = MARIO_ANI_TELE_FIRE;
+		else
+			ani = MARIO_ANI_TELE_RACOON;
 	}
 	else
 		if (level == MARIO_LEVEL_BIG)
@@ -1180,7 +1239,7 @@ void CMario::GetBoundingBox(float& left, float& top, float& right, float& bottom
 		if (this->nx > 0)
 		{
 			left = x + MARIO_RACOON_BBOX_WIDTH - MARIO_BIG_BBOX_WIDTH;
-			top = y + MARIO_RACOON_BBOX_WIDTH - MARIO_BIG_BBOX_WIDTH;
+			top = y;
 			right = left + MARIO_BIG_BBOX_WIDTH;
 		}
 		else {

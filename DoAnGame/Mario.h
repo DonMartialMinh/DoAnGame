@@ -16,11 +16,11 @@
 #include "PlantFireBall.h"
 #include "MushRoom.h"
 #include "Leaf.h"
+#include "Switch.h"
 
 
 #define MARIO_WALKING_SPEED		0.13f 
 #define MARIO_RUNNING_SPEED		0.2f 
-//0.1f
 #define MARIO_JUMP_SPEED_Y		0.52f
 #define MARIO_JUMP_DEFLECT_SPEED 0.3f
 #define MARIO_GRAVITY			0.002f
@@ -161,6 +161,11 @@
 #define MARIO_ANI_TRANSFORM_RIGHT			105
 #define MARIO_ANI_TRANSFORM_LEFT			106
 
+#define MARIO_ANI_TELE_SMALL				107
+#define MARIO_ANI_TELE_BIG					108
+#define MARIO_ANI_TELE_FIRE					109
+#define MARIO_ANI_TELE_RACOON				110
+
 
 #define MARIO_ANI_DIE				8
 
@@ -189,6 +194,7 @@
 #define MARIO_SLIDING_TIME	1000
 #define MARIO_THROWING_TIME	300
 #define MARIO_TRANSFORM_TIME	500
+#define MARIO_SWITCHING_TIME	800
 
 class CMario : public CGameObject
 {
@@ -206,6 +212,7 @@ class CMario : public CGameObject
 	DWORD slide_start;
 	DWORD throw_start;
 	DWORD trans_start;
+	DWORD switch_start;
 	float start_x;			// initial position of Mario at scene
 	float start_y;
 
@@ -225,6 +232,14 @@ public:
 	int sliding = 0;
 	int throwing = 0;
 	int transform = 0;
+	int switching = 0;
+	int teleport = 0;
+	int KeyUpPressed = 0;
+	int KeyDownPressed = 0;
+	int switchType = 0; // 0 down 1 up
+
+	float toX = 0;
+	float toY = 0;
 	CMario(float x = 0.0f, float y = 0.0f);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects = NULL);
 	virtual void Render();
@@ -241,6 +256,7 @@ public:
 	void StartSliding() { if(slide_start == 0) slide_start = DWORD(GetTickCount64()); }
 	void StartThrowing() { throwing = 1; throw_start = DWORD(GetTickCount64()); }
 	void StartTransform() { transform = 1; trans_start = DWORD(GetTickCount64()); }
+	void StartSwitching(float toX, float toY) { switching = 1; switch_start = DWORD(GetTickCount64()); this->toX = toX; this->toY = toY; }
 
 	void ResetState()
 	{

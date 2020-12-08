@@ -16,7 +16,7 @@
 #include "FlyKoopas.h"
 #include "Plant.h"
 #include "PiranhaPlant.h"
-
+#include "Switch.h"
 
 
 class CPlayScene : public CScene

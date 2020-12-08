@@ -137,7 +137,7 @@ int Run()
 {
 	MSG msg;
 	int done = 0;
-	DWORD frameStart = GetTickCount();
+	DWORD frameStart = DWORD(GetTickCount64());
 	DWORD tickPerFrame = 1000 / MAX_FRAME_RATE;
 
 	while (!done)
@@ -150,7 +150,7 @@ int Run()
 			DispatchMessage(&msg);
 		}
 
-		DWORD now = GetTickCount();
+		DWORD now = DWORD(GetTickCount64());
 
 		// dt: the time between (beginning of last frame) and now
 		// this frame: the frame we are about to render

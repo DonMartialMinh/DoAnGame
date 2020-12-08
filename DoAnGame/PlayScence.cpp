@@ -42,6 +42,7 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 #define OBJECT_TYPE_FLYKOOPAS 10
 #define OBJECT_TYPE_PLANT 11
 #define OBJECT_TYPE_PIRANHAPLANT 12
+#define OBJECT_TYPE_SWITCH 13
 #define OBJECT_TYPE_PORTAL	50
 
 #define MAX_SCENE_LINE 1024
@@ -145,8 +146,16 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	float y = float(atof(tokens[2].c_str()));
 	int ani_set_id = atoi(tokens[3].c_str());
 	int object_setting = 0;
+	float xSwitch = 0;
+	float ySwitch = 0;
+
 	if (tokens.size() == 5)
 		object_setting = atoi(tokens[4].c_str());
+	else if (tokens.size() == 6)
+	{
+		xSwitch = float(atof(tokens[4].c_str()));
+		ySwitch = float(atof(tokens[5].c_str()));
+	}
 
 	CAnimationSets* animation_sets = CAnimationSets::GetInstance();
 
@@ -190,6 +199,9 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_PIRANHAPLANT:
 		obj = new CPiranhaPlant(player, y); 
 		plant.push_back((CPiranhaPlant*)obj);
+		break;
+	case OBJECT_TYPE_SWITCH:
+		obj = new CSwitch(xSwitch, ySwitch);
 		break;
 	case OBJECT_TYPE_PORTAL:
 	{
@@ -508,9 +520,19 @@ void CPlayScenceKeyHandler::KeyState(BYTE* states)
 	}
 	else if (game->IsKeyDown(DIK_DOWN))
 	{
+		mario->KeyDownPressed = 1;
 		if (mario->getLevel() != MARIO_LEVEL_SMALL)
 			mario->SetState(MARIO_STATE_DUCK);
 	}
+	else if (game->IsKeyDown(DIK_UP))
+	{
+		mario->KeyUpPressed = 1;
+	}
 	else
-		mario->SetState(MARIO_STATE_IDLE);
+	{
+		mario->KeyUpPressed = 0;
+		mario->KeyDownPressed = 0;
+		mario->SetState(MARIO_STATE_IDLE);	
+	}
+
 }

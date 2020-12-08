@@ -58,8 +58,8 @@ void CFireBall::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny, rdx, rdy);
 
-		if (rdx != 0 && rdx != dx)
-			x += nx * abs(rdx);
+		//if (rdx != 0 && rdx != dx)
+		//	x += nx * abs(rdx);
 
 		x += min_tx * dx + nx * 0.4f;
 		y += min_ty * dy + ny * 0.4f;

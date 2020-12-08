@@ -166,6 +166,7 @@
     <ClCompile Include="QBrick.cpp" />
     <ClCompile Include="Scence.cpp" />
     <ClCompile Include="Sprites.cpp" />
+    <ClCompile Include="Switch.cpp" />
     <ClCompile Include="Textures.cpp" />
     <ClCompile Include="UpsideBrick.cpp" />
     <ClCompile Include="UpsideBrick.h" />
@@ -195,6 +196,7 @@
     <ClInclude Include="QBrick.h" />
     <ClInclude Include="Scence.h" />
     <ClInclude Include="Sprites.h" />
+    <ClInclude Include="Switch.h" />
     <ClInclude Include="Textures.h" />
     <ClInclude Include="Utils.h" />
   </ItemGroup>
