@@ -67,7 +67,7 @@ CGameObject* CQBrick::ShowItem()
 		{
 			int ani_set_id = 18;
 			CAnimationSets* animation_sets = CAnimationSets::GetInstance();
-			obj = new CMushRoom(player->nx);
+			obj = new CMushRoom(player->nx, 0);
 			obj->SetPosition(this->x, this->y);
 			LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
 			obj->SetAnimationSet(ani_set);
@@ -81,6 +81,15 @@ CGameObject* CQBrick::ShowItem()
 			LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
 			obj->SetAnimationSet(ani_set);
 		}
+	}
+	else if (setting == 2)
+	{
+		int ani_set_id = 18;
+		CAnimationSets* animation_sets = CAnimationSets::GetInstance();
+		obj = new CMushRoom(player->nx, 1);
+		obj->SetPosition(this->x, this->y);
+		LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
+		obj->SetAnimationSet(ani_set);
 	}
 	return obj;
 }

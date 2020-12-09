@@ -1,8 +1,9 @@
 #include "MushRoom.h"
 #include "Utils.h"
 
-CMushRoom::CMushRoom(int nx)
+CMushRoom::CMushRoom(int nx, int color)
 {
+	this->color = color;
 	StartRising();
 	vx = MUSHROOM_MOVING_SPEED * nx;
 }
@@ -21,7 +22,10 @@ void CMushRoom::Render()
 {
 	if (isFinish)
 		return;
-	animation_set->at(0)->Render(x, y);
+	int ani = MUSHROOM_ANI_RED;
+	if (color == 1)
+		ani = MUSHROOM_ANI_GREEN;	
+	animation_set->at(ani)->Render(x, y);
 	RenderBoundingBox();
 }
 
