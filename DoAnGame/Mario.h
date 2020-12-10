@@ -19,6 +19,7 @@
 #include "Leaf.h"
 #include "Switch.h"
 #include "BrokenBrick.h"
+#include "PButton.h"
 
 
 #define MARIO_WALKING_SPEED		0.13f 

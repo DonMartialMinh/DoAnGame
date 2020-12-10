@@ -1,10 +1,18 @@
 #include "BrokenBrick.h"
 
+CBrokenBrick::CBrokenBrick()
+{
+	SetState(BROKENBRICK_STATE_BRICK);
+}
+
 void CBrokenBrick::Render()
 {
 	if (isFinish)
 		return;
-	animation_set->at(0)->Render(x, y);
+	int ani = BROKENBRICK_ANI_BRICK;
+	if (state == BROKENBRICK_STATE_COIN)
+		ani = BROKENBRICK_ANI_COIN;
+	animation_set->at(ani)->Render(x, y);
 	//RenderBoundingBox();
 }
 
@@ -16,6 +24,11 @@ void CBrokenBrick::GetBoundingBox(float& l, float& t, float& r, float& b)
 	t = y;
 	r = x + BRICK_BBOX_WIDTH;
 	b = y + BRICK_BBOX_HEIGHT;
+}
+
+void CBrokenBrick::SetState(int state)
+{
+	CGameObject::SetState(state);
 }
 
 vector<CGameObject*>CBrokenBrick::Broken()

@@ -23,7 +23,6 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	CGame* game = CGame::GetInstance();
 	float scrh = float(game->GetScreenHeight());
-	DebugOut(L"scrh = %f", scrh);
 	if (this->y < scrh && this->y > scrh - 32.0f)	// mario out of map then die
 	{
 		SetState(MARIO_STATE_DIE);	
@@ -567,15 +566,51 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				else if (dynamic_cast<CBrokenBrick*>(e->obj))		//Broken brick
 				{
 					CBrokenBrick* bbrick = dynamic_cast<CBrokenBrick*>(e->obj);
-					if (e->ny < 0) // jump on top brick then can jumping again
+					if (bbrick->GetState() == BROKENBRICK_STATE_BRICK)
+					{
+						if (e->ny < 0) // jump on top brick then can jumping again
+						{
+							isFlying = 0;
+							falling = 0;		//	racoon mario cant fall slowly
+						}
+						else if (e->ny > 0)
+						{
+							bbrick->trigger = 1;
+							bbrick->isFinish = 1;
+						}
+					}
+					else
+					{
+						bbrick->isFinish = 1;					// Make coin disappear
+						vy = temp;							//Mario went through the coin
+						x -= min_tx * dx + nx * 0.4f;
+						y -= min_ty * dy + ny * 0.4f;
+
+						if (flying)
+						{
+							x += dx;
+							y += dy;
+						}
+					}
+
+				}
+				else if (dynamic_cast<CPButton*>(e->obj))		//P Button
+				{
+					CPButton* button = dynamic_cast<CPButton*>(e->obj);
+					if (e->ny < 0) // jump on top button then can jumping again
 					{
 						isFlying = 0;
 						falling = 0;		//	racoon mario cant fall slowly
+						if (button->GetState() == BUTTON_STATE_BUTTON)
+						{
+							button->trigger = 1;
+							button->SetState(BUTTON_STATE_STOMPED);
+						}
 					}
 					else if (e->ny > 0)
 					{
-							bbrick->trigger = 1;
-							bbrick->isFinish = 1;
+						if (button->GetState() == BUTTON_STATE_BRICK)
+							button->SetState(BUTTON_STATE_BUTTON);
 					}
 				}
 				else if (dynamic_cast<CUpsideBrick*>(e->obj))
@@ -639,7 +674,11 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					x -= min_tx * dx + nx * 0.4f;
 					y -= min_ty * dy + ny * 0.4f;
 					x += dx;
-					//y += dy;
+					if (flying)
+					{
+						x += dx;
+						y += dy;
+					}
 				}
 				else if (dynamic_cast<CPortal*>(e->obj))
 				{

@@ -105,6 +105,9 @@
     <ClCompile Include="Fragment.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="PButton.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -189,6 +192,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Fragment.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PButton.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

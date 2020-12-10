@@ -44,6 +44,7 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 #define OBJECT_TYPE_PIRANHAPLANT 12
 #define OBJECT_TYPE_SWITCH 13
 #define OBJECT_TYPE_BROKENBRICK 14
+#define OBJECT_TYPE_PBUTTON 15
 #define OBJECT_TYPE_PORTAL	50
 
 #define MAX_SCENE_LINE 1024
@@ -208,6 +209,10 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj = new CBrokenBrick();
 		bbrick.push_back((CBrokenBrick*)obj);
 		break;
+	case OBJECT_TYPE_PBUTTON:
+		obj = new CPButton();
+		button = (CPButton*)obj;
+		break;
 	case OBJECT_TYPE_PORTAL:
 	{
 		float r = float(atof(tokens[4].c_str()));
@@ -325,7 +330,13 @@ void CPlayScene::Update(DWORD dt)
 			vector<CGameObject*> temp = bbrick[i]->Broken();
 			objects.insert(objects.end(), temp.begin(), temp.end());
 		}
+
+		if (button->trigger > 0)
+		{												// Turn broken block into coin
+			bbrick[i]->SetState(BROKENBRICK_STATE_COIN);
+		}
 	}
+
 
 	for (size_t i = 0; i < objects.size(); i++)
 	{

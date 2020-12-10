@@ -430,6 +430,11 @@ fly left
 70009	239	126	255	158	100
 70010	222	126	238	158	100	
 
+# P BUTTON
+80001	156	144	172	160	60
+80002	178	144	194	160	60
+80003	200	153	216	160	60
+
 # ani_id	sprite1_id	time1	sprite2_id	time2	...
 [ANIMATIONS]
 # ==== MARIO =========
@@ -703,6 +708,13 @@ fly left
 711	20018	100
 712	20019	100
 
+#COIN
+715	20011	100
+
+# P BUTTON
+750	80001	100	80002	100
+751	80003	100
+
 # ==== KOOPAS  =========
 #walk left
 801	50001	100	50002	100
@@ -840,7 +852,7 @@ fly left
 6	605
 7	606
 9	608
-10	609
+10	609	715
 #TRANS BRICK
 11	611
 
@@ -971,9 +983,12 @@ fly left
 # fragment 
 106	607
 
+# P BUTTON
+107	609	750	751
+
 [OBJECTS]
 # type	x	y	ani_set_id	extra_settings per object type
-# type: 0 = Mario , 1 = Brick, 2 = Goomba, 3 = Koopas, 4 = Environment, 5 = UpsideBrick, 6 = Coin, 7 = QBrick, 8 = FireBall, 9 = FlyGoomba, 10 = FlyKoopas, 11 = Plant, 12 PiranhaPlant, 13 Switch, 14 BrokenBrick
+# type: 0 = Mario , 1 = Brick, 2 = Goomba, 3 = Koopas, 4 = Environment, 5 = UpsideBrick, 6 = Coin, 7 = QBrick, 8 = FireBall, 9 = FlyGoomba, 10 = FlyKoopas, 11 = Plant, 12 PiranhaPlant, 13 Switch, 14 BrokenBrick, 15 PButton
 
 
 
@@ -2273,13 +2288,12 @@ fly left
 14	2032	138	10
 14	2048	138	10
 
-14	2048	122	10
-
 14	2112	170	10
 14	2128	170	10
 14	2112	154	10
 
-
+#P BUTTON
+15	2048	122	107
 
 #TRANS BRICK
 5	256	138	11
