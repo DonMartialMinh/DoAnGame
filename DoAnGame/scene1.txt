@@ -13,6 +13,7 @@
 100	textures\enemies-3.png	163	73	164
 110	textures\enemies-3reflect.png	163	73	164
 120	textures\misc-2reflect.png	166	185	255
+130	textures\fragment.png	224	163	216
 
 # id	left	top	right	bottom	texture_id
 [SPRITES]
@@ -270,6 +271,9 @@ fly left
 20004	1	18	17	34	40
 20005	18	18	34	34	40
 20006	35	18	51	34	40
+
+#Fragment 
+20007	0	0	9	10	130
 
 #BRICK3
 20008	324	171	340	187	20
@@ -652,6 +656,8 @@ fly left
 605	20005	100
 606	20006	100
 
+607	20007	100
+
 608	20008	100
 
 609	20009	100
@@ -962,9 +968,12 @@ fly left
 104	619
 105	600
 
+# fragment 
+106	607
+
 [OBJECTS]
 # type	x	y	ani_set_id	extra_settings per object type
-# type: 0 = Mario , 1 = Brick, 2 = Goomba, 3 = Koopas, 4 = Environment, 5 = UpsideBrick, 6 = Coin, 7 = QBrick, 8 = FireBall, 9 = FlyGoomba, 10 = FlyKoopas, 11 = Plant, 12 PiranhaPlant, 13 Switch
+# type: 0 = Mario , 1 = Brick, 2 = Goomba, 3 = Koopas, 4 = Environment, 5 = UpsideBrick, 6 = Coin, 7 = QBrick, 8 = FireBall, 9 = FlyGoomba, 10 = FlyKoopas, 11 = Plant, 12 PiranhaPlant, 13 Switch, 14 BrokenBrick
 
 
 
@@ -2245,30 +2254,30 @@ fly left
 1	2288	74	9
 
 #BRICK4
-1	1968	170 	10
-1	1984	170	10
-1	2000	170	10
-1	2016	170	10
-1	2032	170	10
-1	2048	170	10
-1	2064	170	10
+14	1968	170 	10
+14	1984	170	10
+14	2000	170	10
+14	2016	170	10
+14	2032	170	10
+14	2048	170	10
+14	2064	170	10
 
-1	1984	154	10
-1	2000	154	10
-1	2016	154	10
-1	2032	154	10
-1	2048	154	10
+14	1984	154	10
+14	2000	154	10
+14	2016	154	10
+14	2032	154	10
+14	2048	154	10
 
-1	2000	138	10
-1	2016	138	10
-1	2032	138	10
-1	2048	138	10
+14	2000	138	10
+14	2016	138	10
+14	2032	138	10
+14	2048	138	10
 
-1	2048	122	10
+14	2048	122	10
 
-1	2112	170	10
-1	2128	170	10
-1	2112	154	10
+14	2112	170	10
+14	2128	170	10
+14	2112	154	10
 
 
 
@@ -2853,6 +2862,7 @@ fly left
 # KOOPAS
 3	642	120	39
 3	760	130	39
+3	1920	130	39
 
 # FLYKOOPAS
 #10	780	130 	15

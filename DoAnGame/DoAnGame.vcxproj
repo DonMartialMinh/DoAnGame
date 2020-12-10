@@ -144,11 +144,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Animations.cpp" />
+    <ClCompile Include="BrokenBrick.cpp" />
     <ClCompile Include="Coin.cpp" />
     <ClCompile Include="Environment.cpp" />
     <ClCompile Include="FireBall.cpp" />
     <ClCompile Include="FlyGoomba.cpp" />
     <ClCompile Include="FlyKoopas.cpp" />
+    <ClCompile Include="Fragment.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="Goomba.cpp" />
@@ -174,11 +176,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animations.h" />
+    <ClInclude Include="BrokenBrick.h" />
     <ClInclude Include="Coin.h" />
     <ClInclude Include="Environment.h" />
     <ClInclude Include="FireBall.h" />
     <ClInclude Include="FlyGoomba.h" />
     <ClInclude Include="FlyKoopas.h" />
+    <ClInclude Include="Fragment.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="Goomba.h" />

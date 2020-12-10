@@ -5,15 +5,16 @@
 #include "QBrick.h"
 #include "FlyGoomba.h"
 #include "FlyKoopas.h"
+#include "BrokenBrick.h"
 
 #define KOOPAS_WALKING_SPEED 0.05f;
 #define KOOPAS_SPIN_SPEED 0.22f
 #define KOOPAS_GRAVITY		0.001f
 #define KOOPAS_DIE_DEFLECT_SPEED 0.3f
 
-#define KOOPAS_BBOX_WIDTH 16
+#define KOOPAS_BBOX_WIDTH 15
 #define KOOPAS_BBOX_HEIGHT 26
-#define KOOPAS_BBOX_HEIGHT_DIE 16
+#define KOOPAS_BBOX_HEIGHT_DIE 15
 
 #define KOOPAS_STATE_WALKING 100
 #define KOOPAS_STATE_DIE 200

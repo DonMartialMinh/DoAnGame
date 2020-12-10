@@ -21,6 +21,15 @@ CMario::CMario(float x, float y) : CGameObject()
 
 void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
+	CGame* game = CGame::GetInstance();
+	float scrh = float(game->GetScreenHeight());
+	DebugOut(L"scrh = %f", scrh);
+	if (this->y < scrh && this->y > scrh - 32.0f)	// mario out of map then die
+	{
+		SetState(MARIO_STATE_DIE);	
+		return;
+	}
+
 	// Calculate dx, dy 
 	CGameObject::Update(dt, coObjects);
 
@@ -555,6 +564,20 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						}
 					}
 				}
+				else if (dynamic_cast<CBrokenBrick*>(e->obj))		//Broken brick
+				{
+					CBrokenBrick* bbrick = dynamic_cast<CBrokenBrick*>(e->obj);
+					if (e->ny < 0) // jump on top brick then can jumping again
+					{
+						isFlying = 0;
+						falling = 0;		//	racoon mario cant fall slowly
+					}
+					else if (e->ny > 0)
+					{
+							bbrick->trigger = 1;
+							bbrick->isFinish = 1;
+					}
+				}
 				else if (dynamic_cast<CUpsideBrick*>(e->obj))
 				{
 					CUpsideBrick* Upsidebrick = dynamic_cast<CUpsideBrick*>(e->obj);		// Upside brick
@@ -615,6 +638,8 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					vy = temp;							//Mario went through the coin
 					x -= min_tx * dx + nx * 0.4f;
 					y -= min_ty * dy + ny * 0.4f;
+					x += dx;
+					//y += dy;
 				}
 				else if (dynamic_cast<CPortal*>(e->obj))
 				{

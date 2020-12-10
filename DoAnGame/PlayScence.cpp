@@ -43,6 +43,7 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 #define OBJECT_TYPE_PLANT 11
 #define OBJECT_TYPE_PIRANHAPLANT 12
 #define OBJECT_TYPE_SWITCH 13
+#define OBJECT_TYPE_BROKENBRICK 14
 #define OBJECT_TYPE_PORTAL	50
 
 #define MAX_SCENE_LINE 1024
@@ -203,6 +204,10 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_SWITCH:
 		obj = new CSwitch(xSwitch, ySwitch);
 		break;
+	case OBJECT_TYPE_BROKENBRICK:
+		obj = new CBrokenBrick();
+		bbrick.push_back((CBrokenBrick*)obj);
+		break;
 	case OBJECT_TYPE_PORTAL:
 	{
 		float r = float(atof(tokens[4].c_str()));
@@ -309,6 +314,16 @@ void CPlayScene::Update(DWORD dt)
 		{
 			qbrick[i]->trigger -= 1;
 			objects.push_back(qbrick[i]->ShowItem());
+		}
+	}
+
+	for (int i = 0; i < int(bbrick.size()); i++)
+	{
+		if (bbrick[i]->trigger > 0)						// Draw fragment
+		{
+			bbrick[i]->trigger -= 1;
+			vector<CGameObject*> temp = bbrick[i]->Broken();
+			objects.insert(objects.end(), temp.begin(), temp.end());
 		}
 	}
 

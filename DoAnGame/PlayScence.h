@@ -17,6 +17,7 @@
 #include "Plant.h"
 #include "PiranhaPlant.h"
 #include "Switch.h"
+#include "BrokenBrick.h"
 
 
 class CPlayScene : public CScene
@@ -25,6 +26,7 @@ protected:
 	CMario* player;					// A play scene has to have player, right? 
 	vector<CPiranhaPlant*> plant;
 	vector<CQBrick*> qbrick;
+	vector<CBrokenBrick*> bbrick;
 	vector<LPGAMEOBJECT> objects;
 
 	void _ParseSection_TEXTURES(string line);

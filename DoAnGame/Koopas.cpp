@@ -177,15 +177,22 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				}
 				if (abs(nx) > 0.0001f)
 					vx = -vx;
-				if (abs(ny) > 0.0001f)
-					vy = -vy;
+			}
+			else if (dynamic_cast<CBrokenBrick*>(e->obj))		//question brick
+			{
+				CBrokenBrick* bbrick = dynamic_cast<CBrokenBrick*>(e->obj);
+				if (e->nx != 0 && ((state == KOOPAS_STATE_DIE || state == KOOPAS_STATE_DIE_DEFLECT) && vx != 0))
+				{
+					bbrick->trigger = 1;
+					bbrick->isFinish = 1;
+				}
+				if (abs(nx) > 0.0001f)
+					vx = -vx;
 			}
 			else 
 			{
 				if (abs(nx) > 0.0001f)
 					vx = -vx;
-				if (abs(ny) > 0.0001f)
-					vy = -vy;
 			}
 		}
 	}

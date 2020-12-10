@@ -1,5 +1,6 @@
 #pragma once
 #include "GameObject.h"
+#include "Game.h"
 #include "FireBall.h"
 #include "Goomba.h"
 #include "Koopas.h"
@@ -17,6 +18,7 @@
 #include "MushRoom.h"
 #include "Leaf.h"
 #include "Switch.h"
+#include "BrokenBrick.h"
 
 
 #define MARIO_WALKING_SPEED		0.13f 
