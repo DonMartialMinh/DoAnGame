@@ -123,7 +123,7 @@ void CGoomba::Render()
 		ani = GOOMBA_ANI_DIE_DEFLECT;
 
 	animation_set->at(ani)->Render(x, y);
-	RenderBoundingBox();
+	//RenderBoundingBox();
 }
 
 void CGoomba::SetState(int state)

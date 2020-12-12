@@ -48,7 +48,7 @@ void CPlantFireBall::Render()
 	int ani = PLANTFIREBALL_SPIN_RIGHT;
 	if (vx <= 0) ani = PLANTFIREBALL_SPIN_LEFT;
 	animation_set->at(ani)->Render(x, y);
-	RenderBoundingBox();
+	//RenderBoundingBox();
 }
 
 

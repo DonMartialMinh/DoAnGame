@@ -51,7 +51,7 @@ void CPiranhaPlant::Render()
 			ani = PIRANHAPLANT_ANI_TOPRIGHT;
 	}
 	animation_set->at(ani)->Render(x, y);
-	RenderBoundingBox();
+	//RenderBoundingBox();
 }
 
 void CPiranhaPlant::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)

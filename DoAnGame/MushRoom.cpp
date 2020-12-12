@@ -26,7 +26,7 @@ void CMushRoom::Render()
 	if (color == 1)
 		ani = MUSHROOM_ANI_GREEN;	
 	animation_set->at(ani)->Render(x, y);
-	RenderBoundingBox();
+	//RenderBoundingBox();
 }
 
 void CMushRoom::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)

@@ -9,7 +9,7 @@
 
 CMario::CMario(float x, float y) : CGameObject()
 {
-	level = MARIO_LEVEL_BIG;
+	level = MARIO_LEVEL_SMALL;
 	untouchable = 0;
 	SetState(MARIO_STATE_IDLE);
 
@@ -443,6 +443,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				else if (dynamic_cast<CPlantFireBall*>(e->obj))
 				{
 					CPlantFireBall* fireball = dynamic_cast<CPlantFireBall*>(e->obj);
+
 					if (untouchable == 0) {
 						if (level > MARIO_LEVEL_BIG)
 						{
@@ -459,6 +460,9 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						}
 						else
 							SetState(MARIO_STATE_DIE);
+						vy = temp;							//Mario went through the fireball
+						x -= min_tx * dx + nx * 0.4f;
+						y -= min_ty * dy + ny * 0.4f;
 					}
 				}  // if Plant
 				else if (dynamic_cast<CPiranhaPlant*>(e->obj))
@@ -522,28 +526,26 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				{
 					CMushRoom* mushroom = dynamic_cast<CMushRoom*>(e->obj);
 					mushroom->isFinish = 1;
-
-					vy = temp;							//Mario went through the mushroom
-					x -= min_tx * dx + nx * 0.4f;
-					y -= min_ty * dy + ny * 0.4f;
-
 					if (level < MARIO_LEVEL_BIG)
 					{
 						CMario::ToBig(y);
 						level = MARIO_LEVEL_BIG;
 						StartTransform();
 					}
+					vy = temp;							//Mario went through the mushroom
+					x -= min_tx * dx + nx * 0.4f;
+					y -= min_ty * dy + ny * 0.4f;
 				}
 				else if (dynamic_cast<CLeaf*>(e->obj))
 				{
 					CLeaf* leaf = dynamic_cast<CLeaf*>(e->obj);
 					leaf->isFinish = 1;
-					vy = temp;							//Mario went through the mushroom
-					x -= min_tx * dx + nx * 0.4f;
-					y -= min_ty * dy + ny * 0.4f;
 					if (level == MARIO_LEVEL_SMALL)
 						CMario::ToBig(y);
 					level = MARIO_LEVEL_RACOON;
+					vy = temp;							//Mario went through the mushroom
+					x -= min_tx * dx + nx * 0.4f;
+					y -= min_ty * dy + ny * 0.4f;
 				}
 				else if (dynamic_cast<CQBrick*>(e->obj))		//question brick
 				{

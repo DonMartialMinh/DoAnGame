@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="WorldMap1">
+      <UniqueIdentifier>{c0364878-171b-4794-baed-49b6b1993a65}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -108,6 +111,15 @@
     <ClCompile Include="PButton.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="WorldMapScene.cpp">
+      <Filter>WorldMap1</Filter>
+    </ClCompile>
+    <ClCompile Include="MiniMario.cpp">
+      <Filter>WorldMap1</Filter>
+    </ClCompile>
+    <ClCompile Include="Object.cpp">
+      <Filter>WorldMap1</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -196,6 +208,15 @@
     </ClInclude>
     <ClInclude Include="PButton.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="WorldMapScene.h">
+      <Filter>WorldMap1</Filter>
+    </ClInclude>
+    <ClInclude Include="MiniMario.h">
+      <Filter>WorldMap1</Filter>
+    </ClInclude>
+    <ClInclude Include="Object.h">
+      <Filter>WorldMap1</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

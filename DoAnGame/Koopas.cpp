@@ -183,8 +183,11 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				CBrokenBrick* bbrick = dynamic_cast<CBrokenBrick*>(e->obj);
 				if (e->nx != 0 && ((state == KOOPAS_STATE_DIE || state == KOOPAS_STATE_DIE_DEFLECT) && vx != 0))
 				{
-					bbrick->trigger = 1;
-					bbrick->isFinish = 1;
+					if (bbrick->GetState() == BROKENBRICK_STATE_BRICK)
+					{
+						bbrick->trigger = 1;
+						bbrick->isFinish = 1;
+					}
 				}
 				if (abs(nx) > 0.0001f)
 					vx = -vx;
@@ -223,7 +226,7 @@ void CKoopas::Render()
 	else if (vx > 0) ani = KOOPAS_ANI_WALKING_RIGHT;
 	else if (vx <= 0) ani = KOOPAS_ANI_WALKING_LEFT;
 	animation_set->at(ani)->Render(x, y);
-	RenderBoundingBox();
+	//RenderBoundingBox();
 }
 
 void CKoopas::SetState(int state)
