@@ -16,6 +16,9 @@
     <Filter Include="WorldMap1">
       <UniqueIdentifier>{c0364878-171b-4794-baed-49b6b1993a65}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Intro">
+      <UniqueIdentifier>{16fdc06b-5aec-4cda-a962-73aa3759b875}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -120,6 +123,9 @@
     <ClCompile Include="Object.cpp">
       <Filter>WorldMap1</Filter>
     </ClCompile>
+    <ClCompile Include="IntroScene.cpp">
+      <Filter>Intro</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -217,6 +223,9 @@
     </ClInclude>
     <ClInclude Include="Object.h">
       <Filter>WorldMap1</Filter>
+    </ClInclude>
+    <ClInclude Include="IntroScene.h">
+      <Filter>Intro</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

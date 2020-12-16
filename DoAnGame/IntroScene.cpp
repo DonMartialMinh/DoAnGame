@@ -1,7 +1,7 @@
 #include <iostream>
 #include <fstream>
 
-#include "WorldMapScene.h"
+#include "IntroScene.h"
 #include "Utils.h"
 #include "Textures.h"
 #include "Sprites.h"
@@ -11,11 +11,10 @@
 
 using namespace std;
 
-CWorldMapScene::CWorldMapScene(int id, LPCWSTR filePath) :
+CIntroScene::CIntroScene(int id, LPCWSTR filePath) :
 	CScene(id, filePath)
 {
-	player = NULL;
-	key_handler = new CWorldMapSceneKeyHandler(this);
+	key_handler = new CIntroSceneKeyHandler(this);
 }
 
 /*
@@ -30,14 +29,12 @@ CWorldMapScene::CWorldMapScene(int id, LPCWSTR filePath) :
 #define SCENE_SECTION_ANIMATION_SETS	5
 #define SCENE_SECTION_OBJECTS	6
 
-#define OBJECT_TYPE_MARIO	0
-#define OBJECT_TYPE_OBJECT	1
-#define OBJECT_TYPE_ENVIRONMENT 2
+#define OBJECT_TYPE_ENVIRONMENT 0
 
 #define MAX_SCENE_LINE 1024
 
 
-void CWorldMapScene::_ParseSection_TEXTURES(string line)
+void CIntroScene::_ParseSection_TEXTURES(string line)
 {
 	vector<string> tokens = split(line);
 
@@ -52,7 +49,7 @@ void CWorldMapScene::_ParseSection_TEXTURES(string line)
 	CTextures::GetInstance()->Add(texID, path.c_str(), D3DCOLOR_XRGB(R, G, B));
 }
 
-void CWorldMapScene::_ParseSection_SPRITES(string line)
+void CIntroScene::_ParseSection_SPRITES(string line)
 {
 	vector<string> tokens = split(line);
 
@@ -75,7 +72,7 @@ void CWorldMapScene::_ParseSection_SPRITES(string line)
 	CSprites::GetInstance()->Add(ID, l, t, r, b, tex);
 }
 
-void CWorldMapScene::_ParseSection_ANIMATIONS(string line)
+void CIntroScene::_ParseSection_ANIMATIONS(string line)
 {
 	vector<string> tokens = split(line);
 
@@ -96,7 +93,7 @@ void CWorldMapScene::_ParseSection_ANIMATIONS(string line)
 	CAnimations::GetInstance()->Add(ani_id, ani);
 }
 
-void CWorldMapScene::_ParseSection_ANIMATION_SETS(string line)
+void CIntroScene::_ParseSection_ANIMATION_SETS(string line)
 {
 	vector<string> tokens = split(line);
 
@@ -122,7 +119,7 @@ void CWorldMapScene::_ParseSection_ANIMATION_SETS(string line)
 /*
 	Parse a line in section [OBJECTS]
 */
-void CWorldMapScene::_ParseSection_OBJECTS(string line)
+void CIntroScene::_ParseSection_OBJECTS(string line)
 {
 	vector<string> tokens = split(line);
 
@@ -152,18 +149,6 @@ void CWorldMapScene::_ParseSection_OBJECTS(string line)
 
 	switch (object_type)
 	{
-	case OBJECT_TYPE_MARIO:
-		if (player != NULL)
-		{
-			DebugOut(L"[ERROR] MARIO object was created before!\n");
-			return;
-		}
-		obj = new CMiniMario(x, y);
-		player = (CMiniMario*)obj;
-		DebugOut(L"[INFO] Player object created!\n");
-		break;
-	case OBJECT_TYPE_OBJECT: obj = new CObject(); break;
-		break;
 	case OBJECT_TYPE_ENVIRONMENT: obj = new CEnvironment(); break;
 		break;
 	default:
@@ -180,7 +165,7 @@ void CWorldMapScene::_ParseSection_OBJECTS(string line)
 	objects.push_back(obj);
 }
 
-void CWorldMapScene::Load()
+void CIntroScene::Load()
 {
 	DebugOut(L"[INFO] Start loading scene resources from : %s \n", sceneFilePath);
 
@@ -232,7 +217,7 @@ void CWorldMapScene::Load()
 	DebugOut(L"[INFO] Done loading scene resources %s\n", sceneFilePath);
 }
 
-void CWorldMapScene::Update(DWORD dt)
+void CIntroScene::Update(DWORD dt)
 {
 	// We know that Mario is the first object in the list hence we won't add him into the colliable object list
 	// TO-DO: This is a "dirty" way, need a more organized way 
@@ -248,20 +233,10 @@ void CWorldMapScene::Update(DWORD dt)
 		objects[i]->Update(dt, &coObjects);
 	}
 
-	// skip the rest if scene was already unloaded (Mario::Update might trigger PlayScene::Unload)
-	if (player == NULL) return;
-
-	// Update camera to follow mario
-	float cx, cy;
-	float camx, camy;
-	player->GetPosition(cx, cy);
-	CGame* game = CGame::GetInstance();
-	game->GetCamPos(camx, camy);
-
 	CGame::GetInstance()->SetCamPos(0.0f, 0.0f); // set Cam when game start
 }
 
-void CWorldMapScene::Render()
+void CIntroScene::Render()
 {
 	for (int i = 0; i < int(objects.size()); i++)
 		objects[i]->Render();
@@ -270,72 +245,33 @@ void CWorldMapScene::Render()
 /*
 	Unload current scene
 */
-void CWorldMapScene::Unload()
+void CIntroScene::Unload()
 {
 	for (int i = 0; i < int(objects.size()); i++)
 		delete objects[i];
 
 	objects.clear();
-	player = NULL;
 
 	DebugOut(L"[INFO] Scene %s unloaded! \n", sceneFilePath);
 }
 
-void CWorldMapSceneKeyHandler::OnKeyDown(int KeyCode)
+void CIntroSceneKeyHandler::OnKeyDown(int KeyCode)
 {
 	//DebugOut(L"[INFO] KeyDown: %d\n", KeyCode);
-
-	CMiniMario* mario = ((CWorldMapScene*)scence)->GetPlayer();
 	switch (KeyCode)
 	{
-	case DIK_1:
-		mario->SetLevel(MINIMARIO_LEVEL_SMALL);
-		break;
-	case DIK_2:
-		mario->SetLevel(MINIMARIO_LEVEL_BIG);
-		break;
-	case DIK_3:
-		mario->SetLevel(MINIMARIO_LEVEL_FIRE);
-		break;
-	case DIK_4:
-		mario->SetLevel(MINIMARIO_LEVEL_RACOON);
-		break;
-	case DIK_Y:
-		CGame::GetInstance()->SwitchScene(2);
+	case DIK_X:
+		CGame::GetInstance()->SwitchScene(1);
 		break;
 	}
 }
 
-void CWorldMapSceneKeyHandler::OnKeyUp(int KeyCode)
+void CIntroSceneKeyHandler::OnKeyUp(int KeyCode)
 {
 
 }
 
-void CWorldMapSceneKeyHandler::KeyState(BYTE* states)
+void CIntroSceneKeyHandler::KeyState(BYTE* states)
 {
-	CGame* game = CGame::GetInstance();
-	CMiniMario* mario = ((CWorldMapScene*)scence)->GetPlayer();
-
-
-	if (game->IsKeyDown(DIK_RIGHT))
-	{
-		mario->SetState(MINIMARIO_STATE_WALKING_RIGHT);
-	}
-	else if (game->IsKeyDown(DIK_LEFT))
-	{
-		mario->SetState(MINIMARIO_STATE_WALKING_LEFT);
-	}
-	else if (game->IsKeyDown(DIK_DOWN))
-	{
-		mario->SetState(MINIMARIO_STATE_WALKING_DOWN);
-	}
-	else if (game->IsKeyDown(DIK_UP))
-	{
-		mario->SetState(MINIMARIO_STATE_WALKING_UP);
-	}
-	else
-	{
-		mario->SetState(MINIMARIO_STATE_IDLE);
-	}
 
 }

@@ -3,6 +3,6 @@ start	0
 #scene list
 [SCENES]
 
-0	worldmapscene.txt
-1	scene1.txt
-2	scene2.txt
+0	introscene.txt
+1	worldmapscene.txt
+2	scene1.txt
