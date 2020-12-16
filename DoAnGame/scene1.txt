@@ -14,6 +14,7 @@
 110	textures\enemies-3reflect.png	163	73	164
 120	textures\misc-2reflect.png	166	185	255
 130	textures\fragment.png	224	163	216
+140	textures\Board.png	0	0	255
 
 # id	left	top	right	bottom	texture_id
 [SPRITES]
@@ -435,6 +436,9 @@ fly left
 80002	178	144	194	160	60
 80003	200	153	216	160	60
 
+# Board
+90000	0	0	332	52	140
+
 # ani_id	sprite1_id	time1	sprite2_id	time2	...
 [ANIMATIONS]
 # ==== MARIO =========
@@ -838,6 +842,8 @@ fly left
 698	20098	100
 699	20099	100
 
+900	90000	100
+
 #
 # id	ani1	ani2	ani3
 #
@@ -986,9 +992,12 @@ fly left
 # P BUTTON
 107	609	750	751
 
+# board
+110	900
+
 [OBJECTS]
 # type	x	y	ani_set_id	extra_settings per object type
-# type: 0 = Mario , 1 = Brick, 2 = Goomba, 3 = Koopas, 4 = Environment, 5 = UpsideBrick, 6 = Coin, 7 = QBrick, 8 = FireBall, 9 = FlyGoomba, 10 = FlyKoopas, 11 = Plant, 12 PiranhaPlant, 13 Switch, 14 BrokenBrick, 15 PButton
+# type: 0 = Mario , 1 = Brick, 2 = Goomba, 3 = Koopas, 4 = Environment, 5 = UpsideBrick, 6 = Coin, 7 = QBrick, 8 = FireBall, 9 = FlyGoomba, 10 = FlyKoopas, 11 = Plant, 12 PiranhaPlant, 13 Switch, 14 BrokenBrick, 15 PButton, 16 board
 
 
 
@@ -2965,6 +2974,9 @@ fly left
 # SWITCH
 13	2285	-118	11	138	250
 13	365	265	11	2346	126
+
+#Board
+16	0	202	110
 
 
 

@@ -1,6 +1,5 @@
 #include <iostream>
 #include <fstream>
-
 #include "PlayScence.h"
 #include "Utils.h"
 #include "Textures.h"
@@ -45,6 +44,7 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 #define OBJECT_TYPE_SWITCH 13
 #define OBJECT_TYPE_BROKENBRICK 14
 #define OBJECT_TYPE_PBUTTON 15
+#define OBJECT_TYPE_BOARD 16
 #define OBJECT_TYPE_PORTAL	50
 
 #define MAX_SCENE_LINE 1024
@@ -213,6 +213,10 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj = new CPButton();
 		button = (CPButton*)obj;
 		break;
+	case OBJECT_TYPE_BOARD:
+		obj = new CBoard();
+		board = (CBoard*)obj;
+		break;
 	case OBJECT_TYPE_PORTAL:
 	{
 		float r = float(atof(tokens[4].c_str()));
@@ -358,7 +362,7 @@ void CPlayScene::Update(DWORD dt)
 
 	if (cx < game->GetScreenWidth() / 2)
 	{
-		if (cy < 0)
+		if (cy < 50.0f)
 		{
 			cy -= game->GetScreenHeight() / 2;
 			CGame::GetInstance()->SetCamPos(0.0f, round(cy));
@@ -373,7 +377,7 @@ void CPlayScene::Update(DWORD dt)
 	}
 	else if (cx > 2675.0f)
 	{
-		if (cy < 0)
+		if (cy < 50.0f)
 		{
 			cy -= game->GetScreenHeight() / 2;
 			CGame::GetInstance()->SetCamPos(2526.0f, round(cy));
@@ -383,7 +387,7 @@ void CPlayScene::Update(DWORD dt)
 	}
 	else
 	{
-		if (cy < 0)
+		if (cy < 50.0f )
 		{
 			cx -= game->GetScreenWidth() / 2;
 			cy -= game->GetScreenHeight() / 2;
@@ -402,6 +406,8 @@ void CPlayScene::Update(DWORD dt)
 			CGame::GetInstance()->SetCamPos(round(cx), 240.0f);
 		}
 	}
+
+	board->Update();		// Update Board follow mario
 }
 
 void CPlayScene::Render()

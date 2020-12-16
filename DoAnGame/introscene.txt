@@ -1,6 +1,6 @@
 # id	file_path	transparent_color_r	g	b
 [TEXTURES]
-0	textures\intro.png	0	0	255
+0	textures\intro.png	255	255	255
 10	textures\title.png	255	255	255
 
 # id	left	top	right	bottom	texture_id

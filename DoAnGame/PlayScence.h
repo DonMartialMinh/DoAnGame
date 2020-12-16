@@ -19,12 +19,14 @@
 #include "Switch.h"
 #include "BrokenBrick.h"
 #include "PButton.h"
+#include "Board.h"
 
 
 class CPlayScene : public CScene
 {
 protected:
 	CMario* player;					// A play scene has to have player, right? 
+	CBoard* board;
 	CPButton* button = NULL;
 	vector<CPiranhaPlant*> plant;
 	vector<CQBrick*> qbrick;
