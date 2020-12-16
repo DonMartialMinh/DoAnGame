@@ -59,10 +59,10 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		vy += MARIO_GRAVITY * dt;
 
 		if (falling)					// racoon falling 
-			vy = 0.035f;
+			vy = MARIO_RACOON_FALL_VY;
 
 		if (flying)						// racoon flying
-			vy = -0.05f;
+			vy = MARIO_RACOON_FLY_VY;
 
 		if (canHold == 0 && obj != NULL)	// if Mario release Object
 		{
@@ -110,32 +110,32 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			turning = 0;
 		}
 
-		if (GetTickCount64() - tail_start > MARIO_TAILING_TIME)
+		if (GetTickCount64() - tail_start > MARIO_TAILING_TIME)		// mario tail attack time
 		{
 			tail_start = 0;
 			tailing = 0;
 		}
 
-		if (GetTickCount64() - kick_start > MARIO_KICKING_TIME)
+		if (GetTickCount64() - kick_start > MARIO_KICKING_TIME)		// mario kick object time
 		{
 			kick_start = 0;
 			kicking = 0;
 		}
 
-		if (GetTickCount64() - slide_start > MARIO_SLIDING_TIME)
+		if (GetTickCount64() - slide_start > MARIO_SLIDING_TIME)	// mario slide time countdown
 		{
 			slide_start = 0;
 			if (canSlide == 1)
 				sliding = 1;
 		}
 
-		if (GetTickCount64() - throw_start > MARIO_THROWING_TIME)
+		if (GetTickCount64() - throw_start > MARIO_THROWING_TIME)	// fire mario throw fireball time
 		{
 			throw_start = 0;
 			throwing = 0;
 		}
 
-		if (GetTickCount64() - trans_start > MARIO_TRANSFORM_TIME)
+		if (GetTickCount64() - trans_start > MARIO_TRANSFORM_TIME)	// mario transfomr to other form time
 		{
 			trans_start = 0;
 			transform = 0;
@@ -187,7 +187,12 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				if (dynamic_cast<CGoomba*>(e->obj)) // if e->obj is Goomba 
 				{
 					CGoomba* goomba = dynamic_cast<CGoomba*>(e->obj);
-
+					if (e->ny > 0)
+					{
+						vy = temp;
+						x -= min_tx * dx + nx * 0.4f;
+						y -= min_ty * dy + ny * 0.4f;
+					}
 					// jump on top >> kill Goomba and deflect a bit 
 					if (e->ny < 0)
 					{
@@ -230,7 +235,12 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				if (dynamic_cast<CFlyGoomba*>(e->obj)) // if e->obj is Goomba 
 				{
 					CFlyGoomba* goomba = dynamic_cast<CFlyGoomba*>(e->obj);
-
+					if (e->ny > 0)
+					{
+						vy = temp;
+						x -= min_tx * dx + nx * 0.4f;
+						y -= min_ty * dy + ny * 0.4f;
+					}
 					// jump on top >> kill Goomba and deflect a bit 
 					if (e->ny < 0)
 					{
@@ -278,7 +288,12 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				}if (dynamic_cast<CKoopas*>(e->obj)) // if e->obj is Koopas 
 				{
 					CKoopas* koopas = dynamic_cast<CKoopas*>(e->obj);
-
+					if (e->ny > 0)
+					{
+						vy = temp;
+						x -= min_tx * dx + nx * 0.4f;
+						y -= min_ty * dy + ny * 0.4f;
+					}
 					// jump on top >> kill Koopas and deflect a bit 
 					if (e->ny < 0)
 					{
@@ -346,8 +361,14 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				else if (dynamic_cast<CFlyKoopas*>(e->obj)) // if e->obj is Koopas 
 				{
 					CFlyKoopas* koopas = dynamic_cast<CFlyKoopas*>(e->obj);
-
+					if (e->ny > 0)
+					{
+						vy = temp;							
+						x -= min_tx * dx + nx * 0.4f;
+						y -= min_ty * dy + ny * 0.4f;
+					}
 					// jump on top >> kill Koopas and deflect a bit 
+
 					if (e->ny < 0)
 					{
 						if (koopas->GetState() == FLYKOOPAS_STATE_FLYING)
@@ -564,6 +585,15 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 							qbrick->SetState(BRICK_STATE_EMP);
 						}
 					}
+					else if (e->nx != 0 && tailing)
+					{
+						if (qbrick->GetState() != BRICK_STATE_EMP)
+						{
+							qbrick->StartRinging();
+							qbrick->trigger = 1;
+							qbrick->SetState(BRICK_STATE_EMP);
+						}
+					}
 				}
 				else if (dynamic_cast<CBrokenBrick*>(e->obj))		//Broken brick
 				{
@@ -576,6 +606,11 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 							falling = 0;		//	racoon mario cant fall slowly
 						}
 						else if (e->ny > 0)
+						{
+							bbrick->trigger = 1;
+							bbrick->isFinish = 1;
+						}
+						else if (e->nx != 0 && tailing)
 						{
 							bbrick->trigger = 1;
 							bbrick->isFinish = 1;
@@ -1346,7 +1381,7 @@ int CMario::getLevel()
 
 CGameObject* CMario::NewFireBall()		// create fireball function
 {
-	int ani_set_id = 13;
+	int ani_set_id = MARIO_FIREBALL_ANI_SET_ID;
 	CAnimationSets* animation_sets = CAnimationSets::GetInstance();
 	CGameObject* obj = NULL;
 	obj = new CFireBall(this->nx);

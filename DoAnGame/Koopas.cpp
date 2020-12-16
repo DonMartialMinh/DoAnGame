@@ -109,6 +109,16 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					}
 				}
 			}
+			else if (dynamic_cast<CPlant*>(e->obj))					// obj is plant
+			{
+				CPlant* plant = dynamic_cast<CPlant*>(e->obj);
+				plant->isFinish = 1;
+			}
+			else if (dynamic_cast<CPiranhaPlant*>(e->obj))			 // obj is PiranhaPlant
+			{
+				CPiranhaPlant* plant = dynamic_cast<CPiranhaPlant*>(e->obj);
+				plant->isFinish = 1;
+			}
 			else if (dynamic_cast<CKoopas*>(e->obj))	// if e->obj is koopas
 			{
 				CKoopas* koopas = dynamic_cast<CKoopas*>(e->obj);
@@ -165,6 +175,8 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			}
 			else if (dynamic_cast<CQBrick*>(e->obj))		//question brick
 			{
+				if (abs(nx) > 0.0001f)
+					vx = -vx;
 				CQBrick* qbrick = dynamic_cast<CQBrick*>(e->obj);
 				if (e->nx != 0 &&((state == KOOPAS_STATE_DIE || state == KOOPAS_STATE_DIE_DEFLECT) && vx != 0))
 				{
@@ -175,11 +187,11 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						qbrick->StartRinging();
 					}
 				}
-				if (abs(nx) > 0.0001f)
-					vx = -vx;
 			}
 			else if (dynamic_cast<CBrokenBrick*>(e->obj))		//question brick
 			{
+				if (abs(nx) > 0.0001f)
+					vx = -vx;
 				CBrokenBrick* bbrick = dynamic_cast<CBrokenBrick*>(e->obj);
 				if (e->nx != 0 && ((state == KOOPAS_STATE_DIE || state == KOOPAS_STATE_DIE_DEFLECT) && vx != 0))
 				{
@@ -189,8 +201,7 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						bbrick->isFinish = 1;
 					}
 				}
-				if (abs(nx) > 0.0001f)
-					vx = -vx;
+
 			}
 			else 
 			{

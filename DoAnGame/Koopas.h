@@ -6,6 +6,8 @@
 #include "FlyGoomba.h"
 #include "FlyKoopas.h"
 #include "BrokenBrick.h"
+#include "Plant.h"
+#include "PiranhaPlant.h"
 
 #define KOOPAS_WALKING_SPEED 0.05f;
 #define KOOPAS_SPIN_SPEED 0.22f
