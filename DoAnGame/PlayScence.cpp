@@ -364,7 +364,7 @@ void CPlayScene::Update(DWORD dt)
 	{
 		if (cy < 50.0f)
 		{
-			cy -= game->GetScreenHeight() / 2;
+			cy -= 50.0f;
 			CGame::GetInstance()->SetCamPos(0.0f, round(cy));
 		}
 		else if (cy > 0 && cy < 240)
@@ -379,7 +379,7 @@ void CPlayScene::Update(DWORD dt)
 	{
 		if (cy < 50.0f)
 		{
-			cy -= game->GetScreenHeight() / 2;
+			cy -= 50.0f;
 			CGame::GetInstance()->SetCamPos(2526.0f, round(cy));
 		}
 		else
@@ -390,19 +390,19 @@ void CPlayScene::Update(DWORD dt)
 		if (cy < 50.0f )
 		{
 			cx -= game->GetScreenWidth() / 2;
-			cy -= game->GetScreenHeight() / 2;
+			cy -= 50.0f;
 			CGame::GetInstance()->SetCamPos(round(cx), round(cy));
 		}
 		else if (cy > 0 && cy < 240 )
 		{
 			cx -= game->GetScreenWidth() / 2;
-			cy -= game->GetScreenHeight() / 2;
+			cy -= 50.0f;
 			CGame::GetInstance()->SetCamPos(round(cx), 0.0f); // set Cam Focus
 		}
 		else if (cy > 240 && cy < 442)					// Cam in other screen
 		{
 			cx -= game->GetScreenWidth() / 2;
-			cy -= game->GetScreenHeight() / 2;
+			cy -= 50.0f;
 			CGame::GetInstance()->SetCamPos(round(cx), 240.0f);
 		}
 	}

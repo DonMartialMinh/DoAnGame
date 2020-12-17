@@ -29,7 +29,7 @@ void CLeaf::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	float scrh = float(game->GetScreenHeight());
 	game->GetCamPos(camx, camy);
 
-	if (x < camx || x > camx + scrw)						// delete fireball if out map
+	if (x < camx || x > camx + scrw)						// delete if out map
 		isFinish = 1;
 	if (y < camy || y > camy + scrh)
 		isFinish = 1;
