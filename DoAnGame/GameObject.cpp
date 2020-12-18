@@ -8,6 +8,28 @@
 #include "GameObject.h"
 #include "Sprites.h"
 
+#define OBJECT_TYPE_MARIO	0
+#define OBJECT_TYPE_BRICK	1
+#define OBJECT_TYPE_GOOMBA	2
+#define OBJECT_TYPE_KOOPAS	3
+#define OBJECT_TYPE_ENVIRONMENT 4
+#define OBJECT_TYPE_UPSIDEBRICK 5
+#define OBJECT_TYPE_COIN 6
+#define OBJECT_TYPE_QBRICK 7
+#define OBJECT_TYPE_FIREBALL 8
+#define OBJECT_TYPE_FLYGOOMBA 9
+#define OBJECT_TYPE_FLYKOOPAS 10
+#define OBJECT_TYPE_PLANT 11
+#define OBJECT_TYPE_PIRANHAPLANT 12
+#define OBJECT_TYPE_SWITCH 13
+#define OBJECT_TYPE_BROKENBRICK 14
+#define OBJECT_TYPE_PBUTTON 15
+#define OBJECT_TYPE_BOARD 16
+#define OBJECT_TYPE_PLANTFIREBALL	17
+#define OBJECT_TYPE_MUSHROOM		18
+#define OBJECT_TYPE_LEAF			19
+#define OBJECT_TYPE_PORTAL	50
+
 CGameObject::CGameObject()
 {
 	x = y = 0;
@@ -71,15 +93,40 @@ void CGameObject::CalcPotentialCollisions(
 	for (UINT i = 0; i < coObjects->size(); i++)
 	{
 		LPCOLLISIONEVENT e = SweptAABBEx(coObjects->at(i));
-		if (e->t > 0 && e->t <= 1.0f)
+		if (this->type == OBJECT_TYPE_MARIO)
 		{
-			if (coObjects->at(i)->type == 0 || coObjects->at(i)->type == 4)			// avoid collision with mario and environment
-				delete e;
-			else
+			if (e->t > 0 && e->t <= 1.0f)
+			{
 				coEvents.push_back(e);
-		} 
+			}
+			else
+				delete e;
+		}
+		else  if (this->type == OBJECT_TYPE_MUSHROOM)
+		{
+			if (e->t > 0 && e->t <= 1.0f)
+			{
+				if ((coObjects->at(i)->type == OBJECT_TYPE_BRICK) || (coObjects->at(i)->type == OBJECT_TYPE_QBRICK) || (coObjects->at(i)->type == OBJECT_TYPE_UPSIDEBRICK))			// avoid collision with mario and environment
+					coEvents.push_back(e);
+				else
+					delete e;
+			}
+			else
+				delete e;
+		}
 		else
-			delete e;
+		{
+			if (e->t > 0 && e->t <= 1.0f)
+			{
+				if ( (coObjects->at(i)->type == OBJECT_TYPE_PLANTFIREBALL) || (coObjects->at(i)->type == OBJECT_TYPE_LEAF) || (coObjects->at(i)->type == OBJECT_TYPE_MUSHROOM) || (coObjects->at(i)->type == OBJECT_TYPE_COIN))			// avoid collision with mario and environment
+					delete e;
+				else
+					coEvents.push_back(e);
+			}
+			else
+				delete e;
+		}
+
 	}
 
 	std::sort(coEvents.begin(), coEvents.end(), CCollisionEvent::compare);

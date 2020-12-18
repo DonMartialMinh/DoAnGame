@@ -45,6 +45,9 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 #define OBJECT_TYPE_BROKENBRICK 14
 #define OBJECT_TYPE_PBUTTON 15
 #define OBJECT_TYPE_BOARD 16
+#define OBJECT_TYPE_PLANTFIREBALL	17
+#define OBJECT_TYPE_MUSHROOM		18
+#define OBJECT_TYPE_LEAF			19
 #define OBJECT_TYPE_PORTAL	50
 
 #define MAX_SCENE_LINE 1024
@@ -172,25 +175,35 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 			return;
 		}
 		obj = new CMario(x, y);
-		obj->type = 0;
+		obj->type = OBJECT_TYPE_MARIO;
 		player = (CMario*)obj; 
 
 		DebugOut(L"[INFO] Player object created!\n");
 		break;
 	case OBJECT_TYPE_GOOMBA: 
 		obj = new CGoomba(); 
-		obj->type = 1;
 		break;
-	case OBJECT_TYPE_BRICK: obj = new CBrick(); break;
-	case OBJECT_TYPE_KOOPAS: obj = new CKoopas(); break;
+	case OBJECT_TYPE_BRICK: 
+		obj = new CBrick(); 
+		obj->type = OBJECT_TYPE_BRICK;
+		break;
+	case OBJECT_TYPE_KOOPAS: 
+		obj = new CKoopas(); break;
 	case OBJECT_TYPE_ENVIRONMENT: 
 		obj = new CEnvironment();
 		obj->type = 4;
 		break;
-	case OBJECT_TYPE_UPSIDEBRICK: obj = new CUpsideBrick(); break;
-	case OBJECT_TYPE_COIN:	obj = new CCoin(); break;
+	case OBJECT_TYPE_UPSIDEBRICK: 
+		obj = new CUpsideBrick(); 
+		obj->type = OBJECT_TYPE_UPSIDEBRICK;
+		break;
+	case OBJECT_TYPE_COIN:	
+		obj = new CCoin(); 
+		obj->type = OBJECT_TYPE_COIN;
+		break;
 	case OBJECT_TYPE_QBRICK: 
 		obj = new CQBrick(player, object_setting, y);
+		obj->type = OBJECT_TYPE_QBRICK;
 		qbrick.push_back((CQBrick*)obj);
 		break;
 	case OBJECT_TYPE_FLYGOOMBA: obj = new CFlyGoomba(); break;
@@ -297,9 +310,16 @@ void CPlayScene::Update(DWORD dt)
 	// TO-DO: This is a "dirty" way, need a more organized way 
 
 	vector<LPGAMEOBJECT> coObjects;
-	for (size_t i = 1; i < objects.size(); i++)
+	for (size_t i = 0; i < objects.size(); i++)
 	{
+		if (objects[i]->type == OBJECT_TYPE_MARIO)
+			continue;
 		coObjects.push_back(objects[i]);
+	}
+
+	for (size_t i = 0; i < objects.size(); i++)
+	{
+		objects[i]->Update(dt, &coObjects);
 	}
 
 	if (player->fireball > 0)						// Draw fireball
@@ -342,10 +362,7 @@ void CPlayScene::Update(DWORD dt)
 	}
 
 
-	for (size_t i = 0; i < objects.size(); i++)
-	{
-		objects[i]->Update(dt, &coObjects);
-	}
+
 
 	// skip the rest if scene was already unloaded (Mario::Update might trigger PlayScene::Unload)
 	if (player == NULL) return;
@@ -375,15 +392,15 @@ void CPlayScene::Update(DWORD dt)
 			CGame::GetInstance()->SetCamPos(0.0f, 240.0f);
 		}
 	}
-	else if (cx > 2675.0f)
+	else if (cx > 2661.0f)
 	{
 		if (cy < 50.0f)
 		{
 			cy -= 50.0f;
-			CGame::GetInstance()->SetCamPos(2526.0f, round(cy));
+			CGame::GetInstance()->SetCamPos(2508.0f, round(cy));
 		}
 		else
-			CGame::GetInstance()->SetCamPos(2526.0f, 0.0f); //set Cam when game end
+			CGame::GetInstance()->SetCamPos(2508.0f, 0.0f); //set Cam when game end
 	}
 	else
 	{

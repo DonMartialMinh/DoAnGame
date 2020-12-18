@@ -1,6 +1,9 @@
 #include "QBrick.h"
 #include "Utils.h"
 
+#define OBJECT_TYPE_MUSHROOM		18
+#define OBJECT_TYPE_LEAF			19
+
 CQBrick::CQBrick(CGameObject*player, int setting, float y)
 {
 	this->player = player;
@@ -68,6 +71,7 @@ CGameObject* CQBrick::ShowItem()
 			int ani_set_id = 18;
 			CAnimationSets* animation_sets = CAnimationSets::GetInstance();
 			obj = new CMushRoom(player->nx, 0);
+			obj->type = OBJECT_TYPE_MUSHROOM;
 			obj->SetPosition(this->x, this->y);
 			LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
 			obj->SetAnimationSet(ani_set);
@@ -77,6 +81,7 @@ CGameObject* CQBrick::ShowItem()
 			int ani_set_id = 19;
 			CAnimationSets* animation_sets = CAnimationSets::GetInstance();
 			obj = new CLeaf(this->x);
+			obj->type = OBJECT_TYPE_LEAF;
 			obj->SetPosition(this->x, this->y);
 			LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
 			obj->SetAnimationSet(ani_set);
@@ -87,6 +92,7 @@ CGameObject* CQBrick::ShowItem()
 		int ani_set_id = 18;
 		CAnimationSets* animation_sets = CAnimationSets::GetInstance();
 		obj = new CMushRoom(player->nx, 1);
+		obj->type = OBJECT_TYPE_MUSHROOM;
 		obj->SetPosition(this->x, this->y);
 		LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
 		obj->SetAnimationSet(ani_set);

@@ -1,6 +1,8 @@
 #include "PiranhaPlant.h"
 #include "Utils.h"
 
+#define OBJECT_TYPE_PLANTFIREBALL	17
+
 CPiranhaPlant::CPiranhaPlant(CGameObject* player, float y)
 {
 	this->player = player;
@@ -113,6 +115,7 @@ CGameObject* CPiranhaPlant::NewFireBall()		// create fireball function
 	CAnimationSets* animation_sets = CAnimationSets::GetInstance();
 	CGameObject* obj = NULL;
 	obj = new CPlantFireBall(this->nx, this->ny);
+	obj->type = OBJECT_TYPE_PLANTFIREBALL;
 	obj->SetPosition(this->x + PIRANHAPLANT_BBOX_WIDTH / 3, this->y);
 	LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
 	obj->SetAnimationSet(ani_set);
