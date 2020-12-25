@@ -8,7 +8,7 @@
 #define LEAF_FALL_RIGHT	0
 #define LEAF_FALL_LEFT	1
 #define LEAF_FALL_SPEED_VX	0.05f 
-#define LEAF_FALL_SPEED_VY	0.03f
+#define LEAF_FALL_SPEED_VY	0.02f
 
 #define LEAF_RISING_TIME 500
 

@@ -33,6 +33,7 @@ CWorldMapScene::CWorldMapScene(int id, LPCWSTR filePath) :
 #define OBJECT_TYPE_MARIO	0
 #define OBJECT_TYPE_OBJECT	1
 #define OBJECT_TYPE_ENVIRONMENT 2
+#define OBJECT_TYPE_BOARD 16
 
 #define MAX_SCENE_LINE 1024
 
@@ -165,6 +166,10 @@ void CWorldMapScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_OBJECT: obj = new CObject(); break;
 		break;
 	case OBJECT_TYPE_ENVIRONMENT: obj = new CEnvironment(); break;
+		break;
+	case OBJECT_TYPE_BOARD:
+		obj = new CBoard();
+		board = (CBoard*)obj;
 		break;
 	default:
 		DebugOut(L"[ERR] Invalid object type: %d\n", object_type);
@@ -300,7 +305,7 @@ void CWorldMapSceneKeyHandler::OnKeyDown(int KeyCode)
 	case DIK_4:
 		mario->SetLevel(MINIMARIO_LEVEL_RACOON);
 		break;
-	case DIK_Y:
+	case DIK_X:
 		CGame::GetInstance()->SwitchScene(2);
 		break;
 	}

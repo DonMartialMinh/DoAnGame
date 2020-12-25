@@ -6,12 +6,14 @@
 #include "MiniMario.h"
 #include "Object.h"
 #include "Environment.h"
+#include "Board.h"
 
 
 class CWorldMapScene : public CScene
 {
 protected:
 	CMiniMario* player;					// A play scene has to have player, right? 
+	CBoard* board;
 	vector<LPGAMEOBJECT> objects;
 
 	void _ParseSection_TEXTURES(string line);

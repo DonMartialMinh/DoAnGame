@@ -2,6 +2,7 @@
 [TEXTURES]
 0	textures\worldmap1.png	0	0	255
 10	textures\marioworldmap1.png	64	128	0
+140	textures\Board.png	0	0	255
 
 # id	left	top	right	bottom	texture_id
 [SPRITES]
@@ -69,6 +70,9 @@
 10044	86	51	102	66	0
 10045	103	51	119	66	0
 
+# Board
+90000	0	0	332	52	140
+
 # ani_id	sprite1_id	time1	sprite2_id	time2	...
 [ANIMATIONS]
 
@@ -118,6 +122,9 @@
 52	10054	100	10055	100
 53	10056	100	10057	100
 
+#BOARD
+
+900	90000	100
 #
 # id	ani1	ani2	ani3
 #
@@ -164,6 +171,9 @@
 43	43
 44	44
 45	45
+
+# board
+110	900
 
 [OBJECTS]
 # type	x	y	ani_set_id	extra_settings per object type
@@ -360,3 +370,6 @@
 1	264	151	1
 
 0	56	47	0
+
+#Board
+16	0	202	110

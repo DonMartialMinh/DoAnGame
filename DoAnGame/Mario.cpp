@@ -440,7 +440,11 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				else if (dynamic_cast<CPlant*>(e->obj))
 				{
 					CPlant* plant = dynamic_cast<CPlant*>(e->obj);
-					if (untouchable == 0) {
+					if (tailing)
+					{
+						plant->isFinish = 1;
+					}
+					else if (untouchable == 0) {
 						if (!plant->isUnderPipe)
 						{
 							if (level > MARIO_LEVEL_BIG)
@@ -464,7 +468,12 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				else if (dynamic_cast<CPlantFireBall*>(e->obj))
 				{
 					CPlantFireBall* fireball = dynamic_cast<CPlantFireBall*>(e->obj);
-
+					if (e->ny > 0)
+					{
+						vy = temp;
+						x -= min_tx * dx + nx * 0.4f;
+						y -= min_ty * dy + ny * 0.4f;
+					}
 					if (untouchable == 0) {
 						if (level > MARIO_LEVEL_BIG)
 						{
@@ -481,15 +490,16 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						}
 						else
 							SetState(MARIO_STATE_DIE);
-						vy = temp;							//Mario went through the fireball
-						x -= min_tx * dx + nx * 0.4f;
-						y -= min_ty * dy + ny * 0.4f;
 					}
 				}  // if Plant
 				else if (dynamic_cast<CPiranhaPlant*>(e->obj))
 				{
 					CPiranhaPlant* plant = dynamic_cast<CPiranhaPlant*>(e->obj);
-					if (untouchable == 0) {
+					if (tailing)
+					{
+						plant->isFinish = 1;
+					}
+					else if (untouchable == 0) {
 						if (!plant->isUnderPipe)
 						{
 							if (level > MARIO_LEVEL_BIG)

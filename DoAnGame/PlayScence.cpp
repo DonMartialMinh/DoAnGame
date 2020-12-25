@@ -182,16 +182,19 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		break;
 	case OBJECT_TYPE_GOOMBA: 
 		obj = new CGoomba(); 
+		obj->type = OBJECT_TYPE_GOOMBA;
 		break;
 	case OBJECT_TYPE_BRICK: 
 		obj = new CBrick(); 
 		obj->type = OBJECT_TYPE_BRICK;
 		break;
 	case OBJECT_TYPE_KOOPAS: 
-		obj = new CKoopas(); break;
+		obj = new CKoopas(); 
+		obj->type = OBJECT_TYPE_KOOPAS;
+		break;
 	case OBJECT_TYPE_ENVIRONMENT: 
 		obj = new CEnvironment();
-		obj->type = 4;
+		obj->type = OBJECT_TYPE_ENVIRONMENT;
 		break;
 	case OBJECT_TYPE_UPSIDEBRICK: 
 		obj = new CUpsideBrick(); 
@@ -206,10 +209,17 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj->type = OBJECT_TYPE_QBRICK;
 		qbrick.push_back((CQBrick*)obj);
 		break;
-	case OBJECT_TYPE_FLYGOOMBA: obj = new CFlyGoomba(); break;
-	case OBJECT_TYPE_FLYKOOPAS: obj = new CFlyKoopas(); break;
+	case OBJECT_TYPE_FLYGOOMBA: 
+		obj = new CFlyGoomba(); 
+		obj->type = OBJECT_TYPE_FLYGOOMBA;
+		break;
+	case OBJECT_TYPE_FLYKOOPAS: 
+		obj = new CFlyKoopas(); 
+		obj->type = OBJECT_TYPE_FLYKOOPAS;
+		break;
 	case OBJECT_TYPE_PLANT: 
 		obj = new CPlant(player, y); 
+		obj->type = OBJECT_TYPE_PLANT;
 		break;
 	case OBJECT_TYPE_PIRANHAPLANT:
 		obj = new CPiranhaPlant(player, y); 
