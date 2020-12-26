@@ -65,7 +65,7 @@ void CLeaf::Render()
 		return;
 	int ani = LEAF_FALL_RIGHT;
 	if (vx >= 0) ani = LEAF_FALL_LEFT;
-	animation_set->at(ani)->Render(x, y);
+	animation_set->at(ani)->Render(round(x), round(y));
 	//RenderBoundingBox();
 }
 

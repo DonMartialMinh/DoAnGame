@@ -12,7 +12,7 @@ void CBrokenBrick::Render()
 	int ani = BROKENBRICK_ANI_BRICK;
 	if (state == BROKENBRICK_STATE_COIN)
 		ani = BROKENBRICK_ANI_COIN;
-	animation_set->at(ani)->Render(x, y);
+	animation_set->at(ani)->Render(round(x), round(y));
 	//RenderBoundingBox();
 }
 

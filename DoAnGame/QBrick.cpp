@@ -39,7 +39,7 @@ void CQBrick::Render()
 	if (state == BRICK_STATE_EMP) {
 		ani = BRICK_ANI_EMP;
 	}
-	animation_set->at(ani)->Render(x, y);
+	animation_set->at(ani)->Render(round(x), round(y));
 	//RenderBoundingBox();
 }
 

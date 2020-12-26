@@ -68,6 +68,7 @@ void CFlyKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		// block every object first!
 		x += min_tx * dx + nx * 0.4f;
 		y += min_ty * dy + ny * 0.4f;
+		float temp = vy;
 		if (ny != 0)
 		{
 			if (state == FLYKOOPAS_STATE_FLYING)
@@ -75,7 +76,7 @@ void CFlyKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			else
 				vy = 0;
 		}
-		float temp = vy;
+
 		//if (nx != 0) vx = 0;
 
 
@@ -165,6 +166,7 @@ void CFlyKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						//If wrong side then go through
 						vy = temp;
 						x -= min_tx * dx + nx * 0.4f;
+						y -= min_ty * dx + ny * 0.4f;
 						x += dx;
 						y += dy;
 					}
@@ -176,6 +178,7 @@ void CFlyKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						//If wrong side then go through
 						vy = temp;
 						x -= min_tx * dx + nx * 0.4f;
+						y -= min_ty * dx + ny * 0.4f;
 						x += dx;
 						y += dy;
 					}
@@ -235,7 +238,7 @@ void CFlyKoopas::Render()
 	else if (vx <= 0 && state == FLYKOOPAS_STATE_FLYING) ani = FLYKOOPAS_ANI_FLY_LEFT;
 	else if (vx > 0) ani = FLYKOOPAS_ANI_WALKING_RIGHT;
 	else if (vx <= 0) ani = FLYKOOPAS_ANI_WALKING_LEFT;
-	animation_set->at(ani)->Render(x, y);
+	animation_set->at(ani)->Render(round(x), round(y));
 	//RenderBoundingBox();
 }
 

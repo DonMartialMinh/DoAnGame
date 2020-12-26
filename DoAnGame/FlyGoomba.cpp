@@ -160,7 +160,7 @@ void CFlyGoomba::Render()
 	else if (state == FLYGOOMBA_STATE_DIE_DEFLECT)
 		ani = FLYGOOMBA_ANI_DIE_DEFLECT;
 
-	animation_set->at(ani)->Render(x, y);
+	animation_set->at(ani)->Render(round(x), round(y));
 	//RenderBoundingBox();
 }
 

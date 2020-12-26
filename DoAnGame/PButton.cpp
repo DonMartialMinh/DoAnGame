@@ -14,7 +14,7 @@ void CPButton::Render()
 		ani = BUTTON_ANI_BUTTON;
 	else if (state == BUTTON_STATE_STOMPED)
 		ani = BUTTON_ANI_STOMPED;
-	animation_set->at(ani)->Render(x, y);
+	animation_set->at(ani)->Render(round(x), round(y));
 	//RenderBoundingBox();
 }
 

@@ -52,7 +52,7 @@ void CPiranhaPlant::Render()
 		else
 			ani = PIRANHAPLANT_ANI_TOPRIGHT;
 	}
-	animation_set->at(ani)->Render(x, y);
+	animation_set->at(ani)->Render(round(x), round(y));
 	//RenderBoundingBox();
 }
 

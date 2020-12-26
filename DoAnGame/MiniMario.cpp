@@ -87,7 +87,7 @@ void CMiniMario::Render()
 	else if (level == MINIMARIO_LEVEL_RACOON)
 		ani = MINIMARIO_ANI_RACOON;
 	int alpha = 255;
-	animation_set->at(ani)->Render(x, y, alpha);
+	animation_set->at(ani)->Render(round(x), round(y), alpha);
 	RenderBoundingBox();
 }
 

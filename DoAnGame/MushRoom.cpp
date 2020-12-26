@@ -25,7 +25,7 @@ void CMushRoom::Render()
 	int ani = MUSHROOM_ANI_RED;
 	if (color == 1)
 		ani = MUSHROOM_ANI_GREEN;	
-	animation_set->at(ani)->Render(x, y);
+	animation_set->at(ani)->Render(round(x), round(y));
 	//RenderBoundingBox();
 }
 

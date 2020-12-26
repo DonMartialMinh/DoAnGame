@@ -122,7 +122,7 @@ void CGoomba::Render()
 	else if (state == GOOMBA_STATE_DIE_DEFLECT)
 		ani = GOOMBA_ANI_DIE_DEFLECT;
 
-	animation_set->at(ani)->Render(x, y);
+	animation_set->at(ani)->Render(round(x), round(y));
 	//RenderBoundingBox();
 }
 

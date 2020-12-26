@@ -400,6 +400,6 @@ void CGame::SwitchScene(int scene_id)
 
 	current_scene = scene_id;
 	LPSCENE s = scenes[scene_id];
-	CGame::GetInstance()->SetKeyHandler(s->GetKeyEventHandler());
+	CGame::GetInstance()->SetKeyHandler(s->GetKeyEventHandler()); 
 	s->Load();
 }

@@ -52,6 +52,6 @@ void CCoin::Render()
 	int ani = COIN_ANI_COIN;
 	if (isSparkle == 1)
 		ani = COIN_ANI_SPARKLE;
-	animation_set->at(ani)->Render(x, y);
+	animation_set->at(ani)->Render(round(x), round(y));
 	//RenderBoundingBox();
 }
