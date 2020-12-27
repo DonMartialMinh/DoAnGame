@@ -1053,13 +1053,13 @@ fly left
 115	905
 
 #Game clear
-116	909	910	911
+116	600	909	910	911
 
 
 
 [OBJECTS]
 # type	x	y	ani_set_id	extra_settings per object type
-# type: 0 = Mario , 1 = Brick, 2 = Goomba, 3 = Koopas, 4 = Environment, 5 = UpsideBrick, 6 = Coin, 7 = QBrick, 8 = FireBall, 9 = FlyGoomba, 10 = FlyKoopas, 11 = Plant, 12 PiranhaPlant, 13 Switch, 14 BrokenBrick, 15 PButton, 16 board, 20 EndPointItem
+# type: 0 = Mario , 1 = Brick, 2 = Goomba, 3 = Koopas, 4 = Environment, 5 = UpsideBrick, 6 = Coin, 7 = QBrick, 8 = FireBall, 9 = FlyGoomba, 10 = FlyKoopas, 11 = Plant, 12 PiranhaPlant, 13 Switch, 14 BrokenBrick, 15 PButton, 16 board, 20 EndPointItem, 21 gameclearboard
 
 
 
@@ -2088,15 +2088,6 @@ fly left
 4	2240	58	58
 4	2240	50	57
 
-#Endpoint box
-
-4	2696	90	112
-4	2712	90	113
-4	2696	106	114
-4	2712	106	115
-
-20	2704	98	111
-
 
 
 # BRICK 
@@ -2409,6 +2400,19 @@ fly left
 5	1344	-86	11
 5	1360	-86	11
 5	1376	-86	11
+
+#GAME CLEAR BOARD
+
+21	2550	0	116
+
+#Endpoint box
+
+4	2696	90	112
+4	2712	90	113
+4	2696	106	114
+4	2712	106	115
+
+20	2704	98	111
 
 
 # SCREEN 2

@@ -154,6 +154,7 @@
     <ClCompile Include="FlyKoopas.cpp" />
     <ClCompile Include="Fragment.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="GameClearBoard.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="Goomba.cpp" />
     <ClCompile Include="IntroScene.cpp" />
@@ -193,6 +194,7 @@
     <ClInclude Include="FlyKoopas.h" />
     <ClInclude Include="Fragment.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="GameClearBoard.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="Goomba.h" />
     <ClInclude Include="IntroScene.h" />

@@ -47,22 +47,9 @@ void CEndPointItem::Render()
 	//RenderBoundingBox();
 }
 
-void CEndPointItem::random()
+void CEndPointItem::randomitem()
 {
 	srand(time(NULL));
-	/* generate secret number between 1 and 3: */
+	/* generate random item between 1 and 3: */
 	sparkling = rand() % 3 + 1;
-	DebugOut(L"sparkling = %d\n", sparkling);
-}
-
-CGameObject* CEndPointItem::ShowGameClear()		// create fireball function
-{
-	int ani_set_id = GAMECLEAR_ANI_SET_ID;
-	CAnimationSets* animation_sets = CAnimationSets::GetInstance();
-	CGameObject* obj = NULL;
-	obj = new CEnvironment();
-	obj->SetPosition(2550.0f, 0.0f);
-	LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
-	obj->SetAnimationSet(ani_set);
-	return obj;
 }

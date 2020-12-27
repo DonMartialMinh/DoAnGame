@@ -21,6 +21,7 @@
 #include "PButton.h"
 #include "Board.h"
 #include "EndPointItem.h"
+#include "GameClearBoard.h"
 
 
 class CPlayScene : public CScene
@@ -29,6 +30,7 @@ protected:
 	CMario* player;					// A play scene has to have player, right? 
 	CBoard* board;
 	CPButton* button = NULL;
+	CGameClearBoard* gameclearboard;
 	CEndPointItem* item;
 	vector<CPiranhaPlant*> plant;
 	vector<CQBrick*> qbrick;

@@ -736,8 +736,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					y -= min_ty * dy + ny * 0.4f;
 					x += dx;
 					y += dy;
-					item->random();
-					item->isShowGameClear = 1;
+					item->randomitem();
 				}
 				else if (dynamic_cast<CPortal*>(e->obj))
 				{

@@ -49,6 +49,7 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 #define OBJECT_TYPE_MUSHROOM		18
 #define OBJECT_TYPE_LEAF			19
 #define OBJECT_TYPE_ENDPOINTITEM	20
+#define OBJECT_TYPE_GAMECLEARBOARD	21
 #define OBJECT_TYPE_PORTAL	50
 
 #define MAX_SCENE_LINE 1024
@@ -245,6 +246,10 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj = new CEndPointItem();
 		item = (CEndPointItem*)obj;
 		break;
+	case OBJECT_TYPE_GAMECLEARBOARD:
+		obj = new CGameClearBoard();
+		gameclearboard = (CGameClearBoard*)obj;
+		break;
 	case OBJECT_TYPE_PORTAL:
 	{
 		float r = float(atof(tokens[4].c_str()));
@@ -332,9 +337,15 @@ void CPlayScene::Update(DWORD dt)
 		objects.push_back(player->NewFireBall());
 	}
 
-	if (item->isShowGameClear)
+	if (gameclearboard->GetState() == BOARD_STATE_EMPTY)
 	{
-		objects.push_back(item->ShowGameClear());
+		if (item->sparkling == 1)
+			gameclearboard->SetState(BOARD_STATE_STAR);
+		else if (item->sparkling == 2)
+			gameclearboard->SetState(BOARD_STATE_MUSHROOM);
+		else if (item->sparkling == 3)
+			gameclearboard->SetState(BOARD_STATE_FLOWER);
+		else;
 	}
 
 	for (int i = 0; i < int(plant.size()); i++)
@@ -363,11 +374,13 @@ void CPlayScene::Update(DWORD dt)
 			vector<CGameObject*> temp = bbrick[i]->Broken();
 			objects.insert(objects.end(), temp.begin(), temp.end());
 		}
+	}
 
-		if (button->trigger > 0)
-		{												// Turn broken block into coin
-			bbrick[i]->SetState(BROKENBRICK_STATE_COIN);
-		}
+	if (button->trigger > 0)
+	{
+		button->trigger -= 1;
+		for (int i = 0; i < int(bbrick.size()); i++)
+			bbrick[i]->SetState(BROKENBRICK_STATE_COIN); // turn brokenbrick into coin
 	}
 
 	for (size_t i = 0; i < objects.size(); i++)
