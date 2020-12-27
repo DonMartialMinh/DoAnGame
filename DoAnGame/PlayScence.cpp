@@ -153,15 +153,15 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	float y = float(atof(tokens[2].c_str()));
 	int ani_set_id = atoi(tokens[3].c_str());
 	int object_setting = 0;
-	float xSwitch = 0;
-	float ySwitch = 0;
+	float xSetting = 0;
+	float ySetting = 0;
 
 	if (tokens.size() == 5)
 		object_setting = atoi(tokens[4].c_str());
 	else if (tokens.size() == 6)
 	{
-		xSwitch = float(atof(tokens[4].c_str()));
-		ySwitch = float(atof(tokens[5].c_str()));
+		xSetting = float(atof(tokens[4].c_str()));
+		ySetting = float(atof(tokens[5].c_str()));
 	}
 
 	CAnimationSets* animation_sets = CAnimationSets::GetInstance();
@@ -191,7 +191,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj->type = OBJECT_TYPE_BRICK;
 		break;
 	case OBJECT_TYPE_KOOPAS: 
-		obj = new CKoopas(); 
+		obj = new CKoopas(xSetting, ySetting); 
 		obj->type = OBJECT_TYPE_KOOPAS;
 		break;
 	case OBJECT_TYPE_ENVIRONMENT: 
@@ -228,7 +228,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		plant.push_back((CPiranhaPlant*)obj);
 		break;
 	case OBJECT_TYPE_SWITCH:
-		obj = new CSwitch(xSwitch, ySwitch);
+		obj = new CSwitch(xSetting, ySetting);
 		break;
 	case OBJECT_TYPE_BROKENBRICK:
 		obj = new CBrokenBrick();
@@ -484,7 +484,8 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 	//DebugOut(L"[INFO] KeyDown: %d\n", KeyCode);
 
 	CMario* mario = ((CPlayScene*)scence)->GetPlayer();
-	if (mario->GetState() == MARIO_STATE_DIE) return;
+
+	if (mario->GetState() == MARIO_STATE_DIE || mario->GetState() == MARIO_STATE_ENDGAME) return;
 	switch (KeyCode)
 	{
 	case DIK_X:
@@ -552,7 +553,7 @@ void CPlayScenceKeyHandler::KeyState(BYTE* states)
 	CMario* mario = ((CPlayScene*)scence)->GetPlayer();
 
 	// disable control key when Mario die 
-	if (mario->GetState() == MARIO_STATE_DIE) return;
+	if (mario->GetState() == MARIO_STATE_DIE || mario->GetState() == MARIO_STATE_ENDGAME) return;
 
 	if (game->IsKeyDown(DIK_LSHIFT))
 	{

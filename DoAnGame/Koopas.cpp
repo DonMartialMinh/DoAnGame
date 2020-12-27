@@ -1,10 +1,14 @@
 #include "Koopas.h"
 #include "Brick.h"
 #include "UpsideBrick.h"
+#include "Utils.h"
 
-CKoopas::CKoopas()
+CKoopas::CKoopas(float max, float min)
 {
+	xMax = round(max);
+	xMin = round(min);
 	SetState(KOOPAS_STATE_WALKING);
+
 }
 
 void CKoopas::GetBoundingBox(float& left, float& top, float& right, float& bottom)
@@ -31,7 +35,6 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	game->GetCamPos(camx, camy);
 	if (y < camy || y > camy + scrh)		// out screen height then delete
 		return;
-
 
 	CGameObject::Update(dt);
 
@@ -222,9 +225,18 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	}
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
 
-	if (vx < 0 && x < 0) {
-		x = 0; vx = -vx;
+	if (state == KOOPAS_STATE_WALKING)
+	{
+		if (vx < 0 && x < xMax)
+		{
+			x = xMax; vx = -vx;
+		}
+		else if (vx > 0 && x > xMin)
+		{
+			x = xMin; vx = -vx;
+		}
 	}
+
 }
 
 

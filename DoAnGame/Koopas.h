@@ -42,6 +42,8 @@ class CKoopas : public CGameObject
 public:
 	int isHolded = 0;
 	int isFinish = 0;
-	CKoopas();
+	float xMax = 0;
+	float xMin = 0;
+	CKoopas(float max, float min);
 	virtual void SetState(int state);
 };

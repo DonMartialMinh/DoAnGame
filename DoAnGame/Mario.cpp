@@ -142,6 +142,12 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			transform = 0;
 		}
 
+		if (GetTickCount64() - transRacoon_start > MARIO_TRANSFORM_TIME)	// mario transfomr to RACOON form time
+		{
+			transRacoon_start = 0;
+			transformRacoon = 0;
+		}
+
 
 		if (vx == 0)
 		{
@@ -216,6 +222,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 								}
 								else if (level > MARIO_LEVEL_BIG)
 								{
+									StartTransform_Racoon();
 									level = MARIO_LEVEL_BIG;
 									ResetState();
 									StartUntouchable();
@@ -269,6 +276,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 								}
 								else if (level > MARIO_LEVEL_BIG)
 								{
+									StartTransform_Racoon();
 									level = MARIO_LEVEL_BIG;
 									ResetState();
 									StartUntouchable();
@@ -325,6 +333,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 									koopas->SetState(KOOPAS_STATE_DIE_DEFLECT);
 								else if (level > MARIO_LEVEL_BIG)
 								{
+									StartTransform_Racoon();
 									level = MARIO_LEVEL_BIG;
 									ResetState();
 									StartUntouchable();
@@ -404,6 +413,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 									koopas->SetState(KOOPAS_STATE_DIE_DEFLECT);
 								else if (level > MARIO_LEVEL_BIG)
 								{
+									StartTransform_Racoon();
 									level = MARIO_LEVEL_BIG;
 									ResetState();
 									StartUntouchable();
@@ -450,6 +460,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						{
 							if (level > MARIO_LEVEL_BIG)
 							{
+								StartTransform_Racoon();
 								level = MARIO_LEVEL_BIG;
 								ResetState();
 								StartUntouchable();
@@ -478,6 +489,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					if (untouchable == 0) {
 						if (level > MARIO_LEVEL_BIG)
 						{
+							StartTransform_Racoon();
 							level = MARIO_LEVEL_BIG;
 							ResetState();
 							StartUntouchable();
@@ -505,6 +517,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						{
 							if (level > MARIO_LEVEL_BIG)
 							{
+								StartTransform_Racoon();
 								level = MARIO_LEVEL_BIG;
 								ResetState();
 								StartUntouchable();
@@ -574,6 +587,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					leaf->isFinish = 1;
 					if (level == MARIO_LEVEL_SMALL)
 						CMario::ToBig(y);
+					StartTransform_Racoon();
 					level = MARIO_LEVEL_RACOON;
 					vy = temp;							//Mario went through the mushroom
 					x -= min_tx * dx + nx * 0.4f;
@@ -737,6 +751,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					x += dx;
 					y += dy;
 					item->randomitem();
+					SetState(MARIO_STATE_ENDGAME);
 				}
 				else if (dynamic_cast<CPortal*>(e->obj))
 				{
@@ -791,7 +806,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		// clean up collision events
 		for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
 
-		if (vx > 0 && x > 2812) x = 2812;
+		if (vx > 0 && x > 2812 && state != MARIO_STATE_ENDGAME) x = 2812;
 		if (vx < 0 && x < 3) x = 3;
 
 
@@ -856,6 +871,10 @@ void CMario::Render()
 			ani = MARIO_ANI_TRANSFORM_RIGHT;
 		else
 			ani = MARIO_ANI_TRANSFORM_LEFT;
+	}
+	else if (transformRacoon)
+	{
+		ani = MARIO_ANI_TRANSFORM_RACOON;
 	}
 	else if (throwing)
 	{
@@ -1257,7 +1276,7 @@ void CMario::Render()
 
 	int alpha = 255;
 	if (untouchable) alpha = 128;
-	animation_set->at(ani)->Render(round(x),round(y), alpha);
+	animation_set->at(ani)->Render(round(x),round(y));
 	RenderBoundingBox();
 }
 
@@ -1336,6 +1355,11 @@ void CMario::SetState(int state)
 		break;
 	case MARIO_RACOON_STATE_TAIL:
 		StartTailing();
+		break;
+	case MARIO_STATE_ENDGAME:
+		ResetState();
+		vx = MARIO_WALKING_SPEED;
+		nx = 1;
 		break;
 	case MARIO_STATE_DIE:
 		vy = -MARIO_DIE_DEFLECT_SPEED;

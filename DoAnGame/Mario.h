@@ -45,6 +45,7 @@
 #define MARIO_STATE_HOLD			1000
 #define MARIO_STATE_SLIDE			1100
 #define MARIO_FIRE_STATE_THROW		1200
+#define MARIO_STATE_ENDGAME			1300
 
 #define MARIO_ANI_BIG_IDLE_RIGHT			0
 #define MARIO_ANI_BIG_IDLE_LEFT				1
@@ -172,6 +173,8 @@
 #define MARIO_ANI_TELE_FIRE					109
 #define MARIO_ANI_TELE_RACOON				110
 
+#define MARIO_ANI_TRANSFORM_RACOON			111
+
 
 #define MARIO_ANI_DIE				8
 
@@ -220,6 +223,7 @@ class CMario : public CGameObject
 	DWORD slide_start;
 	DWORD throw_start;
 	DWORD trans_start;
+	DWORD transRacoon_start;
 	DWORD switch_start;
 	float start_x;			// initial position of Mario at scene
 	float start_y;
@@ -240,6 +244,7 @@ public:
 	int sliding = 0;
 	int throwing = 0;
 	int transform = 0;
+	int transformRacoon = 0;
 	int switching = 0;
 	int teleport = 0;
 	int KeyUpPressed = 0;
@@ -264,6 +269,7 @@ public:
 	void StartSliding() { if(slide_start == 0) slide_start = DWORD(GetTickCount64()); }
 	void StartThrowing() { throwing = 1; throw_start = DWORD(GetTickCount64()); }
 	void StartTransform() { transform = 1; trans_start = DWORD(GetTickCount64()); }
+	void StartTransform_Racoon() { transformRacoon = 1; transRacoon_start = DWORD(GetTickCount64()); }
 	void StartSwitching(float toX, float toY) { switching = 1; switch_start = DWORD(GetTickCount64()); this->toX = toX; this->toY = toY; }
 
 	void ResetState()
