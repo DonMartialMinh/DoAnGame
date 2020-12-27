@@ -118,7 +118,7 @@ void CGameObject::CalcPotentialCollisions(
 		{
 			if (e->t > 0 && e->t <= 1.0f)
 			{
-				if ( (coObjects->at(i)->type == OBJECT_TYPE_PLANTFIREBALL) || (coObjects->at(i)->type == OBJECT_TYPE_LEAF) || (coObjects->at(i)->type == OBJECT_TYPE_MUSHROOM) || (coObjects->at(i)->type == OBJECT_TYPE_COIN))			// avoid collision with mario and environment
+				if ( (coObjects->at(i)->type == OBJECT_TYPE_PLANTFIREBALL) || (coObjects->at(i)->type == OBJECT_TYPE_LEAF) || (coObjects->at(i)->type == OBJECT_TYPE_MUSHROOM) || (coObjects->at(i)->type == OBJECT_TYPE_COIN) || (coObjects->at(i)->type == OBJECT_TYPE_FIREBALL))			// avoid collision with mario and environment
 					delete e;
 				else
 					coEvents.push_back(e);

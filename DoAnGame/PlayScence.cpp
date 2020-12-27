@@ -320,17 +320,6 @@ void CPlayScene::Update(DWORD dt)
 	// TO-DO: This is a "dirty" way, need a more organized way 
 
 	vector<LPGAMEOBJECT> coObjects;
-	for (size_t i = 0; i < objects.size(); i++)
-	{
-		if (objects[i]->type == OBJECT_TYPE_MARIO)
-			continue;
-		coObjects.push_back(objects[i]);
-	}
-
-	for (size_t i = 0; i < objects.size(); i++)
-	{
-		objects[i]->Update(dt, &coObjects);
-	}
 
 	if (player->fireball > 0)						// Draw fireball
 	{
@@ -371,7 +360,17 @@ void CPlayScene::Update(DWORD dt)
 		}
 	}
 
+	for (size_t i = 0; i < objects.size(); i++)
+	{
+		if (objects[i]->type == OBJECT_TYPE_MARIO)
+			continue;
+		coObjects.push_back(objects[i]);
+	}
 
+	for (size_t i = 0; i < objects.size(); i++)
+	{
+		objects[i]->Update(dt, &coObjects);
+	}
 
 
 	// skip the rest if scene was already unloaded (Mario::Update might trigger PlayScene::Unload)

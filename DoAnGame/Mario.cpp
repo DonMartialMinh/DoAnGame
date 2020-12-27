@@ -5,6 +5,7 @@
 #include "Mario.h"
 #include "Game.h"
 
+#define OBJECT_TYPE_FIREBALL			8
 
 
 CMario::CMario(float x, float y) : CGameObject()
@@ -632,7 +633,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						vy = temp;							//Mario went through the coin
 						x -= min_tx * dx + nx * 0.4f;
 						y -= min_ty * dy + ny * 0.4f;
-
+						x += dx;
 						if (flying)
 						{
 							x += dx;
@@ -1395,6 +1396,7 @@ CGameObject* CMario::NewFireBall()		// create fireball function
 	CAnimationSets* animation_sets = CAnimationSets::GetInstance();
 	CGameObject* obj = NULL;
 	obj = new CFireBall(this->nx);
+	obj->type = OBJECT_TYPE_FIREBALL;
 	obj->SetPosition(this->x + MARIO_BIG_BBOX_WIDTH/2, this->y + MARIO_BIG_BBOX_HEIGHT/3);
 	LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
 	obj->SetAnimationSet(ani_set);
