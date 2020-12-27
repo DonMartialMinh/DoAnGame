@@ -48,6 +48,7 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 #define OBJECT_TYPE_PLANTFIREBALL	17
 #define OBJECT_TYPE_MUSHROOM		18
 #define OBJECT_TYPE_LEAF			19
+#define OBJECT_TYPE_ENDPOINTITEM	20
 #define OBJECT_TYPE_PORTAL	50
 
 #define MAX_SCENE_LINE 1024
@@ -240,6 +241,10 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj = new CBoard();
 		board = (CBoard*)obj;
 		break;
+	case OBJECT_TYPE_ENDPOINTITEM:
+		obj = new CEndPointItem();
+		item = (CEndPointItem*)obj;
+		break;
 	case OBJECT_TYPE_PORTAL:
 	{
 		float r = float(atof(tokens[4].c_str()));
@@ -325,6 +330,11 @@ void CPlayScene::Update(DWORD dt)
 	{
 		player->fireball -= 1;
 		objects.push_back(player->NewFireBall());
+	}
+
+	if (item->isShowGameClear)
+	{
+		objects.push_back(item->ShowGameClear());
 	}
 
 	for (int i = 0; i < int(plant.size()); i++)

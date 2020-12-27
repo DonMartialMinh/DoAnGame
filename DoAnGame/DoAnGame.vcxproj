@@ -147,6 +147,7 @@
     <ClCompile Include="Board.cpp" />
     <ClCompile Include="BrokenBrick.cpp" />
     <ClCompile Include="Coin.cpp" />
+    <ClCompile Include="EndPointItem.cpp" />
     <ClCompile Include="Environment.cpp" />
     <ClCompile Include="FireBall.cpp" />
     <ClCompile Include="FlyGoomba.cpp" />
@@ -185,6 +186,7 @@
     <ClInclude Include="Board.h" />
     <ClInclude Include="BrokenBrick.h" />
     <ClInclude Include="Coin.h" />
+    <ClInclude Include="EndPointItem.h" />
     <ClInclude Include="Environment.h" />
     <ClInclude Include="FireBall.h" />
     <ClInclude Include="FlyGoomba.h" />

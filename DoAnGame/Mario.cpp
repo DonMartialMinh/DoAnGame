@@ -728,6 +728,17 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						y += dy;
 					}
 				}
+				else if (dynamic_cast<CEndPointItem*>(e->obj)) // if e->obj is Coin 
+					{
+					CEndPointItem* item = dynamic_cast<CEndPointItem*>(e->obj);
+					vy = temp;							//Mario went through the coin
+					x -= min_tx * dx + nx * 0.4f;
+					y -= min_ty * dy + ny * 0.4f;
+					x += dx;
+					y += dy;
+					item->random();
+					item->isShowGameClear = 1;
+				}
 				else if (dynamic_cast<CPortal*>(e->obj))
 				{
 					CPortal* p = dynamic_cast<CPortal*>(e->obj);

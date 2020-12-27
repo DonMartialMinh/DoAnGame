@@ -20,6 +20,7 @@
 #include "Switch.h"
 #include "BrokenBrick.h"
 #include "PButton.h"
+#include "EndPointItem.h"
 
 
 #define MARIO_WALKING_SPEED		0.13f 

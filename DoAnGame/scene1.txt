@@ -15,6 +15,8 @@
 120	textures\misc-2reflect.png	166	185	255
 130	textures\fragment.png	224	163	216
 140	textures\Board.png	0	0	255
+150	textures\EndMap.png	0	183	239
+160	textures\GameClear.png	255	255	255
 
 # id	left	top	right	bottom	texture_id
 [SPRITES]
@@ -411,6 +413,18 @@ fly left
 #flower
 20102	154	120	170	136	20
 
+# sparkle star
+20120	297	373	313	389	150
+20121	344	374	360	390	150
+
+# sparkle mushroom
+20122	257	373	273	389	150
+20123	316	375	332	390	150
+
+#sparkle flower
+20124	277	374	293	390	150
+20125	329	375	345	391	150
+
 #endbox
 20105	137	86	153	102	20
 20106	154	86	170	102	20
@@ -449,6 +463,11 @@ fly left
 
 # Board
 90000	0	0	332	52	140
+
+#Game clear
+90001	0	0	248	73	160
+90002	0	151	248	224	160
+90003	0	74	248	148	160
 
 # ani_id	sprite1_id	time1	sprite2_id	time2	...
 [ANIMATIONS]
@@ -864,6 +883,17 @@ fly left
 904	20107	100
 905	20108	100
 
+#EndPoint sparkle
+
+906	20120	150	20121	150
+907	20122	150	20123	150
+908	20124	150	20125	150
+
+# game clear
+909	90001	100
+910	90002	100
+911	90003	100
+
 #
 # id	ani1	ani2	ani3
 #
@@ -1016,16 +1046,20 @@ fly left
 110	900
 
 #Endpoint Item
-111	901	
+111	901	906	907	908
 112	902
 113	903
 114	904
 115	905
 
+#Game clear
+116	909	910	911
+
+
 
 [OBJECTS]
 # type	x	y	ani_set_id	extra_settings per object type
-# type: 0 = Mario , 1 = Brick, 2 = Goomba, 3 = Koopas, 4 = Environment, 5 = UpsideBrick, 6 = Coin, 7 = QBrick, 8 = FireBall, 9 = FlyGoomba, 10 = FlyKoopas, 11 = Plant, 12 PiranhaPlant, 13 Switch, 14 BrokenBrick, 15 PButton, 16 board
+# type: 0 = Mario , 1 = Brick, 2 = Goomba, 3 = Koopas, 4 = Environment, 5 = UpsideBrick, 6 = Coin, 7 = QBrick, 8 = FireBall, 9 = FlyGoomba, 10 = FlyKoopas, 11 = Plant, 12 PiranhaPlant, 13 Switch, 14 BrokenBrick, 15 PButton, 16 board, 20 EndPointItem
 
 
 
@@ -2061,7 +2095,7 @@ fly left
 4	2696	106	114
 4	2712	106	115
 
-4	2704	98	111
+20	2704	98	111
 
 
 

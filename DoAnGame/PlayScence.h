@@ -20,6 +20,7 @@
 #include "BrokenBrick.h"
 #include "PButton.h"
 #include "Board.h"
+#include "EndPointItem.h"
 
 
 class CPlayScene : public CScene
@@ -28,6 +29,7 @@ protected:
 	CMario* player;					// A play scene has to have player, right? 
 	CBoard* board;
 	CPButton* button = NULL;
+	CEndPointItem* item;
 	vector<CPiranhaPlant*> plant;
 	vector<CQBrick*> qbrick;
 	vector<CBrokenBrick*> bbrick;
@@ -47,7 +49,7 @@ public:
 	virtual void Update(DWORD dt);
 	virtual void Render();
 	virtual void Unload();
-
+	void GameClear();
 	CMario* GetPlayer() { return player; }
 
 	//friend class CPlayScenceKeyHandler;
