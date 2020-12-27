@@ -23,6 +23,14 @@ void CFlyKoopas::GetBoundingBox(float& left, float& top, float& right, float& bo
 
 void CFlyKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
+	CGame* game = CGame::GetInstance();
+	float camx;
+	float camy;
+	float scrh = float(game->GetScreenHeight());
+	game->GetCamPos(camx, camy);
+	if (y < camy || y > camy + scrh)		// out screen height then delete
+		return;
+
 	CGameObject::Update(dt);
 
 	//
