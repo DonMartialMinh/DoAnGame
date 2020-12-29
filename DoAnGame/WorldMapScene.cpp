@@ -162,6 +162,9 @@ void CWorldMapScene::_ParseSection_OBJECTS(string line)
 		obj = new CMiniMario(x, y);
 		player = (CMiniMario*)obj;
 		DebugOut(L"[INFO] Player object created!\n");
+		DebugOut(L"[INFO] obj_type = %d\n", object_type);
+		DebugOut(L"[INFO] x = %f\n", x);
+		DebugOut(L"[INFO] y = %f\n", y);
 		break;
 	case OBJECT_TYPE_OBJECT: obj = new CObject(); break;
 		break;
