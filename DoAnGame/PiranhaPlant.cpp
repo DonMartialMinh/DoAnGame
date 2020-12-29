@@ -5,6 +5,7 @@
 
 CPiranhaPlant::CPiranhaPlant(CGameObject* player, float y)
 {
+	SetState(PIRANHAPLANT_STATE_NORMAL);
 	this->player = player;
 	min = y;
 	max = y - PIRANHAPLANT_BBOX_HEIGHT;
@@ -23,15 +24,17 @@ void CPiranhaPlant::GetBoundingBox(float& l, float& t, float& r, float& b)
 
 void CPiranhaPlant::Render()
 {
-	if (isFinish)
+	if (isFinish && dying)
 		return;
 	int ani = PIRANHAPLANT_ANI_BOTLEFT;
-	if (player->x < this->x && player->y >this->y)
+	if (state == PIRANHAPLANT_STATE_DIE)
+		ani = PIRANHAPLANT_ANI_DIE;
+	else if (player->x < this->x && player->y >this->y)
 	{
 		if (climax)
 			ani = PIRANHAPLANT_ANI_BOTLEFT_STILL;
 	}
-	if (player->x < this->x && player->y < this->y)
+	else if (player->x < this->x && player->y < this->y)
 	{
 		if (climax)
 			ani = PIRANHAPLANT_ANI_TOPLEFT_STILL;
@@ -58,9 +61,29 @@ void CPiranhaPlant::Render()
 
 void CPiranhaPlant::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-	if (isFinish)
+	if (isFinish && dying)
 		return;
 	CGameObject::Update(dt);
+
+
+	if (GetTickCount64() - rise_start > PIRANHAPLANT_RISING_TIME)
+	{
+		rise_start = 0;
+		rising = 0;
+		if (player->y >= this->y - 30 && player->x + 25 > this->x && player->x < this->x + 25);
+		else
+			StartRising();
+	}
+
+	if (isFinish)
+	{
+		if (GetTickCount64() - die_start > PIRANHAPLANT_DYING_TIME)
+		{
+			die_start = 0;
+			dying = 1;
+		}
+		rising = 0;
+	}
 
 	if (player->x < this->x)
 		nx = -1;
@@ -72,15 +95,6 @@ void CPiranhaPlant::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	else
 		ny = 1;
 
-
-	if (GetTickCount64() - rise_start > PIRANHAPLANT_RISING_TIME)
-	{
-		rise_start = 0;
-		rising = 0;
-		if (player->y >= this->y - 30 && player->x + 25 > this->x && player->x < this->x + 25);
-		else
-			StartRising();
-	}
 
 	if (rising)
 	{
@@ -107,6 +121,20 @@ void CPiranhaPlant::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		climax = 0;
 
 	//DebugOut(L"\tclimax = %f\n",climax);
+}
+
+void CPiranhaPlant::SetState(int state)
+{
+	CGameObject::SetState(state);
+	switch (state)
+	{
+	case PIRANHAPLANT_STATE_DIE:
+		isFinish = 1;
+		StartDying();
+		break;
+	case PIRANHAPLANT_STATE_NORMAL:
+		break;
+	}
 }
 
 CGameObject* CPiranhaPlant::NewFireBall()		// create fireball function

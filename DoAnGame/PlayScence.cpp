@@ -331,6 +331,22 @@ void CPlayScene::Update(DWORD dt)
 
 	vector<LPGAMEOBJECT> coObjects;
 
+	if (player->transform || player->transformRacoon || player->GetState() == MARIO_STATE_DIE)	// frozen scene
+	{
+		for (size_t i = 0; i < objects.size(); i++)
+		{
+			if (objects[i]->type == OBJECT_TYPE_MARIO)
+				continue;
+			coObjects.push_back(objects[i]);
+		}
+		for (size_t i = 0; i < objects.size(); i++)
+		{
+			if (objects[i]->type == OBJECT_TYPE_MARIO)
+				objects[i]->Update(dt, &coObjects);
+		}
+		return;
+	}
+
 	if (player->fireball > 0)						// Draw fireball
 	{
 		player->fireball -= 1;
@@ -485,7 +501,7 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 
 	CMario* mario = ((CPlayScene*)scence)->GetPlayer();
 
-	if (mario->GetState() == MARIO_STATE_DIE || mario->GetState() == MARIO_STATE_ENDGAME) return;
+	if (mario->GetState() == MARIO_STATE_DIE || mario->GetState() == MARIO_STATE_ENDGAME || mario->transform || mario->transformRacoon) return;
 	switch (KeyCode)
 	{
 	case DIK_X:
@@ -553,7 +569,7 @@ void CPlayScenceKeyHandler::KeyState(BYTE* states)
 	CMario* mario = ((CPlayScene*)scence)->GetPlayer();
 
 	// disable control key when Mario die 
-	if (mario->GetState() == MARIO_STATE_DIE || mario->GetState() == MARIO_STATE_ENDGAME) return;
+	if (mario->GetState() == MARIO_STATE_DIE || mario->GetState() == MARIO_STATE_ENDGAME || mario->transform || mario->transformRacoon) return;
 
 	if (game->IsKeyDown(DIK_LSHIFT))
 	{

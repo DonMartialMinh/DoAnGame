@@ -29,22 +29,16 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		SetState(MARIO_STATE_DIE);	
 		return;
 	}
+	
+	AnimationTime();	// Time for all animation of mario
+
+	if (transform || transformRacoon)
+		return;
 
 	// Calculate dx, dy 
 	CGameObject::Update(dt, coObjects);
 
-	if (GetTickCount64() - switch_start > MARIO_SWITCHING_TIME)
-	{
-		switch_start = 0;
-		switching = 0;
-		if (teleport != 0)
-		{
-			SetPosition(toX, toY);
-			ResetState();
-			teleport = 0;
-		}
 
-	}
 	if (switching)
 	{
 		if (switchType == 0)
@@ -87,66 +81,6 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			CalcPotentialCollisions(coObjects, coEvents);
 
 		// reset untouchable timer if untouchable time has passed
-		if (GetTickCount64() - untouchable_start > MARIO_UNTOUCHABLE_TIME)
-		{
-			untouchable_start = 0;
-			untouchable = 0;
-		}
-
-		if (GetTickCount64() - fall_start > MARIO_FALLING_TIME)		//racoon falling time
-		{
-			fall_start = 0;
-			falling = 0;
-		}
-
-		if (GetTickCount64() - fly_start > MARIO_FLYING_TIME)			//racoon flying time
-		{
-			fly_start = 0;
-			flying = 0;
-		}
-
-		if (GetTickCount64() - turn_start > MARIO_TURNING_TIME)		// mario turning time
-		{
-			turn_start = 0;
-			turning = 0;
-		}
-
-		if (GetTickCount64() - tail_start > MARIO_TAILING_TIME)		// mario tail attack time
-		{
-			tail_start = 0;
-			tailing = 0;
-		}
-
-		if (GetTickCount64() - kick_start > MARIO_KICKING_TIME)		// mario kick object time
-		{
-			kick_start = 0;
-			kicking = 0;
-		}
-
-		if (GetTickCount64() - slide_start > MARIO_SLIDING_TIME)	// mario slide time countdown
-		{
-			slide_start = 0;
-			if (canSlide == 1)
-				sliding = 1;
-		}
-
-		if (GetTickCount64() - throw_start > MARIO_THROWING_TIME)	// fire mario throw fireball time
-		{
-			throw_start = 0;
-			throwing = 0;
-		}
-
-		if (GetTickCount64() - trans_start > MARIO_TRANSFORM_TIME)	// mario transfomr to other form time
-		{
-			trans_start = 0;
-			transform = 0;
-		}
-
-		if (GetTickCount64() - transRacoon_start > MARIO_TRANSFORM_TIME)	// mario transfomr to RACOON form time
-		{
-			transRacoon_start = 0;
-			transformRacoon = 0;
-		}
 
 
 		if (vx == 0)
@@ -230,8 +164,8 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 								else if (level == MARIO_LEVEL_BIG)
 								{
 									level = MARIO_LEVEL_SMALL;
-									ResetState();
 									CMario::ToSmall(this->y);
+									ResetState();
 									StartUntouchable();
 								}
 								else
@@ -453,7 +387,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					CPlant* plant = dynamic_cast<CPlant*>(e->obj);
 					if (tailing)
 					{
-						plant->isFinish = 1;
+						plant->SetState(PLANT_STATE_DIE);
 					}
 					else if (untouchable == 0) {
 						if (!plant->isUnderPipe)
@@ -510,7 +444,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					CPiranhaPlant* plant = dynamic_cast<CPiranhaPlant*>(e->obj);
 					if (tailing)
 					{
-						plant->isFinish = 1;
+						plant->SetState(PIRANHAPLANT_STATE_DIE);
 					}
 					else if (untouchable == 0) {
 						if (!plant->isUnderPipe)
@@ -882,7 +816,7 @@ void CMario::Render()
 		{
 			if (isFlying)
 				ani = MARIO_ANI_FIRE_THROW2_RIGHT;
-			else 
+			else
 				ani = MARIO_ANI_FIRE_THROW_RIGHT;
 		}
 		else
@@ -930,6 +864,7 @@ void CMario::Render()
 			ani = MARIO_ANI_TELE_RACOON;
 	}
 	else
+	{
 		if (level == MARIO_LEVEL_BIG)
 		{
 			if (vx == 0)
@@ -942,9 +877,9 @@ void CMario::Render()
 					{
 						if (vy < 0.0)
 							ani = MARIO_ANI_BIG_JUMP_RIGHT;
-						else 
+						else
 							ani = MARIO_ANI_BIG_FALL_RIGHT;
-							
+
 					}
 					else if (isDucking)
 						ani = MARIO_ANI_BIG_DUCK_RIGHT;
@@ -959,7 +894,7 @@ void CMario::Render()
 					{
 						if (vy < 0.0)
 							ani = MARIO_ANI_BIG_JUMP_LEFT;
-						else 
+						else
 							ani = MARIO_ANI_BIG_FALL_LEFT;
 					}
 					else if (isDucking == 1)
@@ -983,7 +918,7 @@ void CMario::Render()
 				{
 					if (vy < 0.0)
 						ani = MARIO_ANI_BIG_JUMP_RIGHT;
-					else 
+					else
 						ani = MARIO_ANI_BIG_FALL_RIGHT;
 				}
 				else if (isDucking == 1)
@@ -1009,7 +944,7 @@ void CMario::Render()
 				{
 					if (vy < 0.0)
 						ani = MARIO_ANI_BIG_JUMP_LEFT;
-					else 
+					else
 						ani = MARIO_ANI_BIG_FALL_LEFT;
 				}
 				else if (isDucking == 1)
@@ -1203,7 +1138,7 @@ void CMario::Render()
 						if (vy < 0.0)
 							ani = MARIO_ANI_RACOON_JUMP_LEFT;
 						else
-								ani = MARIO_ANI_RACOON_FALL_LEFT;
+							ani = MARIO_ANI_RACOON_FALL_LEFT;
 
 					}
 					else if (isDucking == 1)
@@ -1273,10 +1208,21 @@ void CMario::Render()
 					ani = MARIO_ANI_RACOON_WALKING_LEFT;
 			}
 		}
+	}
+		
+	if (untouchable)
+	{
+		if (alpha == 200) 
+			alpha = 100;
+		else
+			alpha = 200;
+	}
+	else 
+	{
+		alpha = 255;
+	}
 
-	int alpha = 255;
-	if (untouchable) alpha = 128;
-	animation_set->at(ani)->Render(round(x),round(y));
+	animation_set->at(ani)->Render(round(x),round(y), alpha);
 	RenderBoundingBox();
 }
 
@@ -1422,6 +1368,82 @@ void CMario::Reset()
 int CMario::getLevel()
 {
 	return this->level;
+}
+
+void CMario::AnimationTime()
+{
+	if (GetTickCount64() - untouchable_start > MARIO_UNTOUCHABLE_TIME)
+	{
+		untouchable_start = 0;
+		untouchable = 0;
+	}
+
+	if (GetTickCount64() - fall_start > MARIO_FALLING_TIME)		//racoon falling time
+	{
+		fall_start = 0;
+		falling = 0;
+	}
+
+	if (GetTickCount64() - fly_start > MARIO_FLYING_TIME)			//racoon flying time
+	{
+		fly_start = 0;
+		flying = 0;
+	}
+
+	if (GetTickCount64() - turn_start > MARIO_TURNING_TIME)		// mario turning time
+	{
+		turn_start = 0;
+		turning = 0;
+	}
+
+	if (GetTickCount64() - tail_start > MARIO_TAILING_TIME)		// mario tail attack time
+	{
+		tail_start = 0;
+		tailing = 0;
+	}
+
+	if (GetTickCount64() - kick_start > MARIO_KICKING_TIME)		// mario kick object time
+	{
+		kick_start = 0;
+		kicking = 0;
+	}
+
+	if (GetTickCount64() - slide_start > MARIO_SLIDING_TIME)	// mario slide time countdown
+	{
+		slide_start = 0;
+		if (canSlide == 1)
+			sliding = 1;
+	}
+
+	if (GetTickCount64() - throw_start > MARIO_THROWING_TIME)	// fire mario throw fireball time
+	{
+		throw_start = 0;
+		throwing = 0;
+	}
+
+	if (GetTickCount64() - trans_start > MARIO_TRANSFORM_TIME)	// mario transfomr to other form time
+	{
+		trans_start = 0;
+		transform = 0;
+	}
+
+	if (GetTickCount64() - transRacoon_start > MARIO_TRANSFORM_TIME)	// mario transfomr to RACOON form time
+	{
+		transRacoon_start = 0;
+		transformRacoon = 0;
+	}
+	if (GetTickCount64() - switch_start > MARIO_SWITCHING_TIME)
+	{
+		switch_start = 0;
+		switching = 0;
+		if (teleport != 0)
+		{
+			SetPosition(toX, toY);
+			ResetState();
+			teleport = 0;
+		}
+
+	}
 }
 
 CGameObject* CMario::NewFireBall()		// create fireball function

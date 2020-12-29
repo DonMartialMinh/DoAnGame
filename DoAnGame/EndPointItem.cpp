@@ -29,7 +29,7 @@ void CEndPointItem::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		return;
 	CGameObject::Update(dt);
 	if (sparkling > 0)
-		this->y -= 1;	// Item accelerates
+		this->y -= 1.5;	// Item accelerates
 }
 
 void CEndPointItem::Render()

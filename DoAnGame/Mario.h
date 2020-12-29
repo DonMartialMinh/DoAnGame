@@ -212,7 +212,7 @@ class CMario : public CGameObject
 	//int level;
 	int untouchable;
 	int falling;
-
+	int alpha = 255;
 
 	DWORD untouchable_start;
 	DWORD fall_start;
@@ -271,7 +271,7 @@ public:
 	void StartTransform() { transform = 1; trans_start = DWORD(GetTickCount64()); }
 	void StartTransform_Racoon() { transformRacoon = 1; transRacoon_start = DWORD(GetTickCount64()); }
 	void StartSwitching(float toX, float toY) { switching = 1; switch_start = DWORD(GetTickCount64()); this->toX = toX; this->toY = toY; }
-
+	void AnimationTime();
 	void ResetState()
 	{
 		 isDucking = 0;

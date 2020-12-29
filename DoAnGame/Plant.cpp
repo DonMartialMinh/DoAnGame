@@ -3,6 +3,7 @@
 
 CPlant::CPlant(CGameObject*player, float y)
 {
+	SetState(PLANT_STATE_NORMAL);
 	this->player = player;
 	min = y;
 	max = y - PLANT_BBOX_HEIGHT;
@@ -21,15 +22,18 @@ void CPlant::GetBoundingBox(float& l, float& t, float& r, float& b)
 
 void CPlant::Render()
 {
-	if (isFinish)
+	if (isFinish && dying)
 		return;
-	animation_set->at(0)->Render(round(x), round(y));
+	int ani = 0;
+	if (state == PLANT_STATE_DIE)
+		ani = PLANT_ANI_DIE;
+	animation_set->at(ani)->Render(round(x), round(y));
 	//RenderBoundingBox();
 }
 
 void CPlant::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-	if (isFinish)
+	if (isFinish && dying)
 		return;
 	CGameObject::Update(dt);
 
@@ -40,6 +44,16 @@ void CPlant::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		if (player->y >= this->y - 30 && player->x + 25 > this->x && player->x < this->x + 25);
 		else 
 			StartRising();
+	}
+
+	if (isFinish)
+	{
+		if (GetTickCount64() - die_start > PLANT_DYING_TIME)
+		{
+			die_start = 0;
+			dying = 1;
+		}
+		rising = 0;
 	}
 
 	if (rising)
@@ -60,3 +74,16 @@ void CPlant::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	}
 }
 
+void CPlant::SetState(int state)
+{
+	CGameObject::SetState(state);
+	switch (state)
+	{
+	case PLANT_STATE_DIE:
+		isFinish = 1;
+		StartDying();
+		break;
+	case PLANT_STATE_NORMAL:
+		break;
+	}
+}
