@@ -520,9 +520,16 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					CLeaf* leaf = dynamic_cast<CLeaf*>(e->obj);
 					leaf->isFinish = 1;
 					if (level == MARIO_LEVEL_SMALL)
+					{
 						CMario::ToBig(y);
-					StartTransform_Racoon();
-					level = MARIO_LEVEL_RACOON;
+						level = MARIO_LEVEL_BIG;
+						StartTransform();
+					}
+					else if (level != MARIO_LEVEL_RACOON)
+					{
+						StartTransform_Racoon();
+						level = MARIO_LEVEL_RACOON;
+					}
 					vy = temp;							//Mario went through the mushroom
 					x -= min_tx * dx + nx * 0.4f;
 					y -= min_ty * dy + ny * 0.4f;

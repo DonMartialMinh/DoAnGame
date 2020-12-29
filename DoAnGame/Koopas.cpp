@@ -125,12 +125,12 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			else if (dynamic_cast<CPlant*>(e->obj))					// obj is plant
 			{
 				CPlant* plant = dynamic_cast<CPlant*>(e->obj);
-				plant->isFinish = 1;
+				plant->SetState(PLANT_STATE_DIE);
 			}
 			else if (dynamic_cast<CPiranhaPlant*>(e->obj))			 // obj is PiranhaPlant
 			{
 				CPiranhaPlant* plant = dynamic_cast<CPiranhaPlant*>(e->obj);
-				plant->isFinish = 1;
+				plant->SetState(PIRANHAPLANT_STATE_DIE);
 			}
 			else if (dynamic_cast<CKoopas*>(e->obj))	// if e->obj is koopas
 			{

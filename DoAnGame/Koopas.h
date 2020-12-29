@@ -9,7 +9,7 @@
 #include "Plant.h"
 #include "PiranhaPlant.h"
 
-#define KOOPAS_WALKING_SPEED 0.05f;
+#define KOOPAS_WALKING_SPEED 0.035f;
 #define KOOPAS_SPIN_SPEED 0.22f
 #define KOOPAS_GRAVITY		0.001f
 #define KOOPAS_DIE_DEFLECT_SPEED 0.3f

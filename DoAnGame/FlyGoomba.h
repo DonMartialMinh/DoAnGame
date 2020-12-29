@@ -3,8 +3,8 @@
 #include "Game.h"
 #include "UpsideBrick.h"
 
-#define FLYGOOMBA_WALKING_SPEED 0.05f;
-#define FLYGOOMBA_DIE_DEFLECT_SPEED	 0.3f
+#define FLYGOOMBA_WALKING_SPEED 0.035f;
+#define FLYGOOMBA_DIE_DEFLECT_SPEED	 0.25f
 
 #define FLYGOOMBA_BBOX_WIDTH 20
 #define FLYGOOMBA_BBOX_HEIGHT 23
