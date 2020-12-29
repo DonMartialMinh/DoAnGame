@@ -2,6 +2,8 @@
 #include "GameObject.h"
 #include "Game.h"
 
+#define BOARD_HEIGHT 52
+
 
 class CBoard : public CGameObject
 {

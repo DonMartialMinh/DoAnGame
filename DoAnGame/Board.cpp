@@ -17,8 +17,9 @@ void CBoard::Update()
 	float camx;
 	float camy;
 	game->GetCamPos(camx, camy);
+	float scrh = float(game->GetScreenHeight());
 	this->x = camx;
-	this->y = camy + 202.0f;
+	this->y = camy + scrh - BOARD_HEIGHT;
 
 
 }

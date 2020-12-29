@@ -13,7 +13,7 @@ class CWorldMapScene : public CScene
 {
 protected:
 	CMiniMario* player;					// A play scene has to have player, right? 
-	CBoard* board;
+	CBoard* board = NULL;
 	vector<LPGAMEOBJECT> objects;
 
 	void _ParseSection_TEXTURES(string line);

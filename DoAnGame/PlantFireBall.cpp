@@ -29,7 +29,7 @@ void CPlantFireBall::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	if (x < camx || x > camx + scrw)						// delete fireball if out map
 		isFinish = 1;
-	if (y < camy || y > camy + scrh)
+	if (y < camy || y > camy + scrh - BOARD_HEIGHT)
 		isFinish = 1;
 
 	if (isFinish)

@@ -14,6 +14,7 @@ using namespace std;
 CWorldMapScene::CWorldMapScene(int id, LPCWSTR filePath) :
 	CScene(id, filePath)
 {
+	board = NULL;
 	player = NULL;
 	key_handler = new CWorldMapSceneKeyHandler(this);
 }

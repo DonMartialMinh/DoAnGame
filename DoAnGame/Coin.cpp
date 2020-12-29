@@ -38,9 +38,9 @@ void CCoin::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		if (sparkling)
 		{
 			if (GetTickCount64() - sparkle_start >= COIN_SPARKLING_TIME / 2)
-				y += 5;
+				y += COIN_VY_DOWN;
 			else
-				y -= 5;
+				y -= COIN_VY_UP;
 		}
 	}
 }

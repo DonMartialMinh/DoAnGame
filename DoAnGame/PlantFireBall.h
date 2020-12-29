@@ -1,6 +1,7 @@
 #pragma once
 #include "GameObject.h"
 #include "Game.h"
+#include "Board.h"
 
 #define PLANTFIREBALL_BBOX_WIDTH  8
 #define PLANTFIREBALL_BBOX_HEIGHT 9

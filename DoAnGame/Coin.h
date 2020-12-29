@@ -9,6 +9,10 @@
 #define COIN_ANI_COIN 0
 #define COIN_ANI_SPARKLE 1
 
+#define COIN_VY_DOWN 3.0f
+#define COIN_VY_UP	5.0f
+
+
 class CCoin : public CGameObject
 {
 	DWORD sparkle_start;
