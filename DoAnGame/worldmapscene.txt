@@ -3,7 +3,7 @@
 0	textures\worldmap1.png	0	0	255
 10	textures\marioworldmap1.png	64	128	0
 20	textures\Black.png	255	255	255
-140	textures\WorldMapBoard.png	0	0	255
+140	textures\Board.png	0	0	255
 
 # id	left	top	right	bottom	texture_id
 [SPRITES]

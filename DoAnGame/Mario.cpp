@@ -36,6 +36,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		return;
 
 	// Calculate dx, dy 
+
 	CGameObject::Update(dt, coObjects);
 
 
@@ -48,7 +49,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	}
 	else
 	{
-		if (vy > 0.0f) isFlying = 1; // if falling then cant jump
+		if (vy > 0.04f) isFlying = 1; // if falling then cant jump
 
 		// Simple fall down
 		vy += MARIO_GRAVITY * dt;
@@ -514,6 +515,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					vy = temp;							//Mario went through the mushroom
 					x -= min_tx * dx + nx * 0.4f;
 					y -= min_ty * dy + ny * 0.4f;
+
 				}
 				else if (dynamic_cast<CLeaf*>(e->obj))
 				{
@@ -587,11 +589,11 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						bbrick->isFinish = 1;					// Make coin disappear
 						vy = temp;							//Mario went through the coin
 						x -= min_tx * dx + nx * 0.4f;
-						y -= min_ty * dy + ny * 0.4f;
+						//y -= min_ty * dy + ny * 0.4f;
 						x += dx;
 						if (flying)
 						{
-							x += dx;
+							//x += dx;
 							y += dy;
 						}
 					}
@@ -675,11 +677,11 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					coin->isFinish = 1;					// Make coin disappear
 					vy = temp;							//Mario went through the coin
 					x -= min_tx * dx + nx * 0.4f;
-					y -= min_ty * dy + ny * 0.4f;
+					//y -= min_ty * dy + ny * 0.4f;
 					x += dx;
 					if (flying)
 					{
-						x += dx;
+						//x += dx;
 						y += dy;
 					}
 				}
@@ -700,7 +702,6 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					CGame::GetInstance()->SwitchScene(p->GetSceneId());
 				}
 			}
-
 		}
 		if (obj != NULL)	// set position of obj when being holded
 		{
@@ -751,7 +752,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		if (vx < 0 && x < 3) x = 3;
 
 
-		//DebugOut(L"\tv = %f\n", vy);
+		DebugOut(L"\tv = %f\n", vy);
 	}
 }
 

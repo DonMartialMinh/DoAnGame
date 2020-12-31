@@ -102,7 +102,7 @@ void CGameObject::CalcPotentialCollisions(
 			else
 				delete e;
 		}
-		else  if (this->type == OBJECT_TYPE_MUSHROOM)
+		else  if (this->type == OBJECT_TYPE_MUSHROOM || this->type == OBJECT_TYPE_FLYGOOMBA)
 		{
 			if (e->t > 0 && e->t <= 1.0f)
 			{
