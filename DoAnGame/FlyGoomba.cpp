@@ -93,16 +93,7 @@ void CFlyGoomba::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		{
 			LPCOLLISIONEVENT e = coEventsResult[i];
 
-			if (dynamic_cast<CGoomba*>(e->obj))	// if e->obj is goomba 
-			{
-				CGoomba* goomba = dynamic_cast<CGoomba*>(e->obj);
-				if (e->nx)
-				{
-					vx = -vx;
-					goomba->vx = -goomba->vx;
-				}
-			}
-			else if (dynamic_cast<CUpsideBrick*>(e->obj))	// if e->obj is UpsideBrick 
+			if (dynamic_cast<CUpsideBrick*>(e->obj))	// if e->obj is UpsideBrick 
 			{
 				CUpsideBrick* Upsidebrick = dynamic_cast<CUpsideBrick*>(e->obj);
 				if (state == FLYGOOMBA_STATE_FLYING)

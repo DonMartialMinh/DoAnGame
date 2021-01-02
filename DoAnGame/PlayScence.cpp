@@ -226,29 +226,36 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_PIRANHAPLANT:
 		obj = new CPiranhaPlant(player, y); 
 		plant.push_back((CPiranhaPlant*)obj);
+		obj->type = OBJECT_TYPE_PIRANHAPLANT;
 		break;
 	case OBJECT_TYPE_SWITCH:
 		obj = new CSwitch(xSetting, ySetting);
+		obj->type = OBJECT_TYPE_SWITCH;
 		break;
 	case OBJECT_TYPE_BROKENBRICK:
 		obj = new CBrokenBrick();
 		bbrick.push_back((CBrokenBrick*)obj);
+		obj->type = OBJECT_TYPE_BROKENBRICK;
 		break;
 	case OBJECT_TYPE_PBUTTON:
 		obj = new CPButton();
 		button = (CPButton*)obj;
+		obj->type = OBJECT_TYPE_PBUTTON;
 		break;
 	case OBJECT_TYPE_BOARD:
 		obj = new CBoard();
 		board = (CBoard*)obj;
+		obj->type = OBJECT_TYPE_BOARD;
 		break;
 	case OBJECT_TYPE_ENDPOINTITEM:
 		obj = new CEndPointItem();
 		item = (CEndPointItem*)obj;
+		obj->type = OBJECT_TYPE_ENDPOINTITEM;
 		break;
 	case OBJECT_TYPE_GAMECLEARBOARD:
 		obj = new CGameClearBoard();
 		gameclearboard = (CGameClearBoard*)obj;
+		obj->type = OBJECT_TYPE_GAMECLEARBOARD;
 		break;
 	case OBJECT_TYPE_PORTAL:
 	{
@@ -347,7 +354,7 @@ void CPlayScene::Update(DWORD dt)
 		return;
 	}
 
-	if (player->fireball > 0)						// Draw fireball
+	if (player->fireball)						// Draw fireball
 	{
 		player->fireball -= 1;
 		objects.push_back(player->NewFireBall());
@@ -366,7 +373,7 @@ void CPlayScene::Update(DWORD dt)
 
 	for (int i = 0; i < int(plant.size()); i++)
 	{
-		if (plant[i]->fireball > 0)						// Draw fireball
+		if (plant[i]->fireball)						// Draw fireball
 		{
 			plant[i]->fireball -= 1;
 			objects.push_back(plant[i]->NewFireBall());
@@ -384,7 +391,7 @@ void CPlayScene::Update(DWORD dt)
 
 	for (int i = 0; i < int(bbrick.size()); i++)
 	{
-		if (bbrick[i]->trigger > 0)						// Draw fragment
+		if (bbrick[i]->trigger)						// Draw fragment
 		{
 			bbrick[i]->trigger -= 1;
 			vector<CGameObject*> temp = bbrick[i]->Broken();
@@ -392,7 +399,7 @@ void CPlayScene::Update(DWORD dt)
 		}
 	}
 
-	if (button->trigger > 0)
+	if (button->trigger)
 	{
 		button->trigger -= 1;
 		for (int i = 0; i < int(bbrick.size()); i++)
@@ -411,6 +418,7 @@ void CPlayScene::Update(DWORD dt)
 		objects[i]->Update(dt, &coObjects);
 	}
 
+	coObjects.clear();
 
 	// skip the rest if scene was already unloaded (Mario::Update might trigger PlayScene::Unload)
 	if (player == NULL) return;

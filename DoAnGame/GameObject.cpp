@@ -28,6 +28,8 @@
 #define OBJECT_TYPE_PLANTFIREBALL	17
 #define OBJECT_TYPE_MUSHROOM		18
 #define OBJECT_TYPE_LEAF			19
+#define OBJECT_TYPE_ENDPOINTITEM	20
+#define OBJECT_TYPE_GAMECLEARBOARD	21
 #define OBJECT_TYPE_PORTAL	50
 
 CGameObject::CGameObject()
@@ -102,7 +104,7 @@ void CGameObject::CalcPotentialCollisions(
 			else
 				delete e;
 		}
-		else  if (this->type == OBJECT_TYPE_MUSHROOM || this->type == OBJECT_TYPE_FLYGOOMBA)
+		else if (this->type == OBJECT_TYPE_MUSHROOM || this->type == OBJECT_TYPE_FLYGOOMBA || this->type == OBJECT_TYPE_GOOMBA)
 		{
 			if (e->t > 0 && e->t <= 1.0f)
 			{
@@ -118,7 +120,7 @@ void CGameObject::CalcPotentialCollisions(
 		{
 			if (e->t > 0 && e->t <= 1.0f)
 			{
-				if ( (coObjects->at(i)->type == OBJECT_TYPE_PLANTFIREBALL) || (coObjects->at(i)->type == OBJECT_TYPE_LEAF) || (coObjects->at(i)->type == OBJECT_TYPE_MUSHROOM) || (coObjects->at(i)->type == OBJECT_TYPE_COIN) || (coObjects->at(i)->type == OBJECT_TYPE_FIREBALL))			// avoid collision with mario and environment
+				if ( (coObjects->at(i)->type == OBJECT_TYPE_PLANTFIREBALL) || (coObjects->at(i)->type == OBJECT_TYPE_LEAF) || (coObjects->at(i)->type == OBJECT_TYPE_MUSHROOM) || (coObjects->at(i)->type == OBJECT_TYPE_COIN) || (coObjects->at(i)->type == OBJECT_TYPE_FIREBALL) || (coObjects->at(i)->type == OBJECT_TYPE_ENDPOINTITEM) || (coObjects->at(i)->type == OBJECT_TYPE_GAMECLEARBOARD) || (coObjects->at(i)->type == OBJECT_TYPE_BOARD))			// avoid collision with mario and environment
 					delete e;
 				else
 					coEvents.push_back(e);
@@ -138,7 +140,7 @@ void CGameObject::FilterCollision(
 	float& min_tx, float& min_ty,
 	float& nx, float& ny, float& rdx, float& rdy)
 {
-	if (this->type == 0)	// Mario
+	if (this->type == OBJECT_TYPE_MARIO)	// Mario
 	{
 		min_tx = 1.0f;
 		min_ty = 1.0f;

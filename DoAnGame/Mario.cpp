@@ -752,7 +752,8 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		if (vx < 0 && x < 3) x = 3;
 
 
-		DebugOut(L"\tv = %f\n", vy);
+		//DebugOut(L"\tv = %f\n", vy);
+
 	}
 }
 

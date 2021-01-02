@@ -34,7 +34,7 @@ void CEndPointItem::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 void CEndPointItem::Render()
 {
-	if (isFinish)		//delete coin 
+	if (isFinish)		//delete
 		return;
 	int ani = ITEM_ANI_ITEM;
 	if (sparkling == ITEM_ANI_STAR)
