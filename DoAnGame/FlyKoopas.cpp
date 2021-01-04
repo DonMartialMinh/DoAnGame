@@ -105,7 +105,6 @@ void CFlyKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					if (e->nx)
 					{
 						vx = -vx;
-						goomba->vx = -goomba->vx;
 					}
 				}
 			}
@@ -147,7 +146,6 @@ void CFlyKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				else if (state == FLYKOOPAS_STATE_WALKING)
 				{
 					vx = -vx;
-					koopas->vx = -koopas->vx;
 				}
 			}
 			else if (dynamic_cast<CFlyKoopas*>(e->obj))	// if e->obj is Flykoopas
@@ -161,7 +159,6 @@ void CFlyKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				else if (state == FLYKOOPAS_STATE_WALKING)
 				{
 					vx = -vx;
-					koopas->vx = -koopas->vx;
 				}
 			}
 			else if (dynamic_cast<CUpsideBrick*>(e->obj))	// if e->obj is UpsideBrick 

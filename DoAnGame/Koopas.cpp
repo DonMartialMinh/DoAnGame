@@ -80,7 +80,7 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 		// block every object first!
 		x += min_tx * dx + nx * 0.4f;
-		//y += min_ty * dy + ny * 0.4f;
+		y += min_ty * dy + ny * 0.4f;
 
 		float temp = vy;
 		//if (nx != 0) vx = 0;
@@ -102,7 +102,6 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				else
 				{
 					vx = -vx;
-					goomba->vx = -goomba->vx;
 				}
 			}
 			else if (dynamic_cast<CFlyGoomba*>(e->obj))	// if e->obj is goomba 
@@ -140,10 +139,9 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					koopas->SetState(KOOPAS_STATE_DIE_DEFLECT_OUT);
 					//koopas->vx = 0.05f * this->nx;
 				}
-				else if (state == KOOPAS_STATE_WALKING)
+				else 
 				{
 					vx = -vx;
-					koopas->vx = -koopas->vx;
 				}
 			}
 			else if (dynamic_cast<CFlyKoopas*>(e->obj))	// if e->obj is koopas
@@ -157,7 +155,6 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				else if (state == KOOPAS_STATE_WALKING)
 				{
 					vx = -vx;
-					koopas->vx = -koopas->vx;
 				}
 			}
 			else if (dynamic_cast<CUpsideBrick*>(e->obj))	// if e->obj is UpsideBrick 

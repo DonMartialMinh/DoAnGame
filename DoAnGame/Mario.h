@@ -23,9 +23,9 @@
 #include "EndPointItem.h"
 
 
-#define MARIO_WALKING_SPEED		0.1f 
+#define MARIO_WALKING_SPEED		0.12f 
 #define MARIO_RUNNING_SPEED		0.2f 
-#define MARIO_JUMP_SPEED_Y		0.38f
+#define MARIO_JUMP_SPEED_Y		0.37f
 #define MARIO_JUMP_DEFLECT_SPEED 0.2f
 #define MARIO_GRAVITY			0.001f
 #define MARIO_DIE_DEFLECT_SPEED	 0.4f
