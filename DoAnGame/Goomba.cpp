@@ -88,7 +88,7 @@ void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			if (dynamic_cast<CGoomba*>(e->obj))	// if e->obj is goomba 
 			{
 				CGoomba* goomba = dynamic_cast<CGoomba*>(e->obj);
-				if (e->nx)
+				if (abs(nx) > 0.0001f)
 				{
 					vx = -vx;
 					goomba->vx = -goomba->vx;

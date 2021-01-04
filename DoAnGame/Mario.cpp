@@ -612,11 +612,6 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 							button->SetState(BUTTON_STATE_STOMPED);
 						}
 					}
-					else if (e->ny > 0)
-					{
-						if (button->GetState() == BUTTON_STATE_BRICK)
-							button->SetState(BUTTON_STATE_BUTTON);
-					}
 				}
 				else if (dynamic_cast<CUpsideBrick*>(e->obj))
 				{

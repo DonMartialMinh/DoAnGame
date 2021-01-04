@@ -114,7 +114,7 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				}
 				else
 				{
-					if (e->nx)
+					if (abs(nx) > 0.0001f)
 					{
 						vx = -vx;
 						goomba->vx = -goomba->vx;

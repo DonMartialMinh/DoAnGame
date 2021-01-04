@@ -4,6 +4,7 @@
 #include "MushRoom.h"
 #include "Mario.h"
 #include "Leaf.h"
+#include "PButton.h"
 
 #define BRICK_BBOX_WIDTH  16
 #define BRICK_BBOX_HEIGHT 16

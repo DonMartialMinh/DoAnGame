@@ -237,11 +237,11 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		bbrick.push_back((CBrokenBrick*)obj);
 		obj->type = OBJECT_TYPE_BROKENBRICK;
 		break;
-	case OBJECT_TYPE_PBUTTON:
-		obj = new CPButton();
-		button = (CPButton*)obj;
-		obj->type = OBJECT_TYPE_PBUTTON;
-		break;
+	//case OBJECT_TYPE_PBUTTON:
+	//	obj = new CPButton();
+	//	button = (CPButton*)obj;
+	//	obj->type = OBJECT_TYPE_PBUTTON;
+	//	break;
 	case OBJECT_TYPE_BOARD:
 		obj = new CBoard();
 		board = (CBoard*)obj;
@@ -385,7 +385,13 @@ void CPlayScene::Update(DWORD dt)
 		if (qbrick[i]->trigger)						// show item
 		{
 			qbrick[i]->trigger -= 1;
-			objects.push_back(qbrick[i]->ShowItem());
+			CGameObject* obj = NULL;
+			obj = qbrick[i]->ShowItem();
+			objects.push_back(obj);
+			if (obj->type == OBJECT_TYPE_PBUTTON)
+			{
+				button = (CPButton*)obj;
+			}
 		}
 	}
 
@@ -399,11 +405,14 @@ void CPlayScene::Update(DWORD dt)
 		}
 	}
 
-	if (button->trigger)
+	if (button != NULL)
 	{
-		button->trigger -= 1;
-		for (int i = 0; i < int(bbrick.size()); i++)
-			bbrick[i]->SetState(BROKENBRICK_STATE_COIN); // turn brokenbrick into coin
+		if (button->trigger)
+		{
+			button->trigger -= 1;
+			for (int i = 0; i < int(bbrick.size()); i++)
+				bbrick[i]->SetState(BROKENBRICK_STATE_COIN); // turn brokenbrick into coin
+		}
 	}
 
 	for (size_t i = 0; i < objects.size(); i++)

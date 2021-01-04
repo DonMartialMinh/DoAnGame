@@ -3,16 +3,14 @@
 
 CPButton::CPButton()
 {
-	SetState(BUTTON_STATE_BRICK);
+	SetState(BUTTON_STATE_BUTTON);
 }
 
 
 void CPButton::Render()
 {
-	int ani = BUTTON_ANI_BRICK;
-	if (state == BUTTON_STATE_BUTTON) 
-		ani = BUTTON_ANI_BUTTON;
-	else if (state == BUTTON_STATE_STOMPED)
+	int ani = BUTTON_ANI_BUTTON;
+	if (state == BUTTON_STATE_STOMPED)
 		ani = BUTTON_ANI_STOMPED;
 	animation_set->at(ani)->Render(round(x), round(y));
 	//RenderBoundingBox();
