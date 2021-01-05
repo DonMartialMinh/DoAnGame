@@ -150,6 +150,9 @@
     <ClCompile Include="UpsideBrick.cpp">
       <Filter>Bricks</Filter>
     </ClCompile>
+    <ClCompile Include="Number.cpp">
+      <Filter>GameBoard</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -259,6 +262,9 @@
     </ClInclude>
     <ClInclude Include="QBrick.h">
       <Filter>Bricks</Filter>
+    </ClInclude>
+    <ClInclude Include="Number.h">
+      <Filter>GameBoard</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -9,6 +9,6 @@ class CBoard : public CGameObject
 {
 public:
 	virtual void Render();
-	virtual void Update();
+	virtual void Update(float camx, float camy);
 	virtual void GetBoundingBox(float& l, float& t, float& r, float& b);
 };

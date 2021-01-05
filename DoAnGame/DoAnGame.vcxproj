@@ -165,6 +165,7 @@
     <ClCompile Include="Brick.cpp" />
     <ClCompile Include="MiniMario.cpp" />
     <ClCompile Include="MushRoom.cpp" />
+    <ClCompile Include="Number.cpp" />
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="PButton.cpp" />
     <ClCompile Include="PiranhaPlant.cpp" />
@@ -205,6 +206,7 @@
     <ClInclude Include="Brick.h" />
     <ClInclude Include="MiniMario.h" />
     <ClInclude Include="MushRoom.h" />
+    <ClInclude Include="Number.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="PButton.h" />
     <ClInclude Include="PiranhaPlant.h" />

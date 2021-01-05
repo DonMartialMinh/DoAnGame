@@ -47,6 +47,12 @@ class CGame
 	void _ParseSection_SETTINGS(string line);
 	void _ParseSection_SCENES(string line);
 
+	// Game play
+	int score = 0;
+	int time = 0;
+	int live = 2;
+	int coin = 0;
+
 public:
 	void InitKeyboard();
 	void SetKeyHandler(LPKEYEVENTHANDLER handler) { keyHandler = handler; }
@@ -84,6 +90,21 @@ public:
 
 	void SetCamPos(float x, float y) { cam_x = x; cam_y = y; }
 	void GetCamPos(float &x, float &y) { x = cam_x; y = cam_y; }
+
+	void SetTime(int t) { time = t; }
+	int GetTime() { return time; }
+
+	void SetScore(int t) { score = t; }
+	void AddScore(int t) { score += t; }
+	int GetScore() { return score; }
+
+	void SetLive(int t) { live = t; }
+	int GetLive() { return live; }
+
+	void SetCoin(int t) { coin = t; }
+	int GetCoin() { return coin; }
+	void AddCoin() { coin += 1; }
+
 
 	static CGame* GetInstance();
 

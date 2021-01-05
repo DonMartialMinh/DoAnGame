@@ -22,6 +22,7 @@
 #include "Board.h"
 #include "EndPointItem.h"
 #include "GameClearBoard.h"
+#include "Number.h"
 
 
 class CPlayScene : public CScene
@@ -36,6 +37,12 @@ protected:
 	vector<CQBrick*> qbrick;
 	vector<CBrokenBrick*> bbrick;
 	vector<LPGAMEOBJECT> objects;
+
+	// game play
+	vector<CNumber*> numCoin;
+	vector<CNumber*> numTime;
+	vector<CNumber*> numScore;
+	vector<CNumber*> numLive;
 
 	void _ParseSection_TEXTURES(string line);
 	void _ParseSection_SPRITES(string line);
@@ -53,6 +60,7 @@ public:
 	virtual void Unload();
 	void GameClear();
 	CMario* GetPlayer() { return player; }
+	vector<int> getNum(int number);
 
 	//friend class CPlayScenceKeyHandler;
 };

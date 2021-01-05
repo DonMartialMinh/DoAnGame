@@ -9,9 +9,8 @@
 #define BUTTON_STATE_BUTTON 200
 #define BUTTON_STATE_STOMPED 300
 
-#define BUTTON_ANI_BRICK 0
-#define BUTTON_ANI_BUTTON 1
-#define BUTTON_ANI_STOMPED 2
+#define BUTTON_ANI_BUTTON 0
+#define BUTTON_ANI_STOMPED 1
 
 class CPButton : public CGameObject
 {

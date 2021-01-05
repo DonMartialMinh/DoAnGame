@@ -14,6 +14,9 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 {
 	player = NULL;
 	key_handler = new CPlayScenceKeyHandler(this);
+	CGame* game = CGame::GetInstance();
+	game->SetTime(300);
+
 }
 
 /*
@@ -50,6 +53,7 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 #define OBJECT_TYPE_LEAF			19
 #define OBJECT_TYPE_ENDPOINTITEM	20
 #define OBJECT_TYPE_GAMECLEARBOARD	21
+#define OBJECT_TYPE_NUMBER			22
 #define OBJECT_TYPE_PORTAL	50
 
 #define MAX_SCENE_LINE 1024
@@ -237,11 +241,6 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		bbrick.push_back((CBrokenBrick*)obj);
 		obj->type = OBJECT_TYPE_BROKENBRICK;
 		break;
-	//case OBJECT_TYPE_PBUTTON:
-	//	obj = new CPButton();
-	//	button = (CPButton*)obj;
-	//	obj->type = OBJECT_TYPE_PBUTTON;
-	//	break;
 	case OBJECT_TYPE_BOARD:
 		obj = new CBoard();
 		board = (CBoard*)obj;
@@ -256,6 +255,18 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj = new CGameClearBoard();
 		gameclearboard = (CGameClearBoard*)obj;
 		obj->type = OBJECT_TYPE_GAMECLEARBOARD;
+		break;
+	case OBJECT_TYPE_NUMBER:
+		obj = new CNumber();
+		if (object_setting == 0)
+			numCoin.push_back((CNumber*)obj);
+		else if (object_setting == 1)
+			numTime.push_back((CNumber*)obj);
+		else if (object_setting == 2)
+			numScore.push_back((CNumber*)obj);
+		else if (object_setting == 3)
+			numLive.push_back((CNumber*)obj);
+		obj->type = OBJECT_TYPE_NUMBER;
 		break;
 	case OBJECT_TYPE_PORTAL:
 	{
@@ -437,7 +448,6 @@ void CPlayScene::Update(DWORD dt)
 	float camx, camy;
 	player->GetPosition(cx, cy);
 	CGame* game = CGame::GetInstance();
-	game->GetCamPos(camx, camy);
 
 	if (player->GetState() == MARIO_STATE_DIE)
 		return;
@@ -489,7 +499,57 @@ void CPlayScene::Update(DWORD dt)
 		}
 	}
 
-	board->Update();		// Update Board follow mario
+	game->GetCamPos(camx, camy);
+	board->Update(camx, camy);		// Update Board follow mario
+	float xCoin = camx + 180.0f;
+	vector<int> temp;
+
+
+	// Update BoardInfo
+
+	temp = getNum(game->GetCoin());
+	for (int i = 0, j = 0; i < numCoin.size(); i++, j++)
+	{
+		if (j < temp.size())
+			numCoin[i]->Update(xCoin, board->y + 17, temp[j]);
+		else
+			numCoin[i]->Update(xCoin, board->y + 17, 0);
+		xCoin -= NUMBER_WIDTH;
+	}
+	temp.clear();
+	temp = getNum(game->GetTime());
+	float xTime = camx + 180.0f;
+	for (int i = numTime.size() - 1, j = 0; i >= 0; i--, j++)
+	{
+		if (j < temp.size())
+			numTime[i]->Update(xTime, board->y + 25, temp[j]);
+		else
+			numTime[i]->Update(xTime, board->y + 25, 0);
+		xTime -= NUMBER_WIDTH;
+	}
+	temp.clear();
+	temp = getNum(game->GetLive());
+	float xLive = camx + 77.0f;
+	for (int i = numLive.size() - 1, j = 0; i >= 0; i--, j++)
+	{
+		if (j < temp.size())
+			numLive[i]->Update(xLive, board->y + 25, temp[j]);
+		else
+			numLive[i]->Update(xLive, board->y + 25, 0);
+		xLive -= NUMBER_WIDTH;
+	}
+	temp.clear();
+	temp = getNum(game->GetScore());
+	float xScore = camx + 140.0f;
+	for (int i = 0, j = 0; i < numScore.size(); i++, j++)
+	{
+		if (j < temp.size())
+			numScore[i]->Update(xScore, board->y + 25, temp[j]);
+		else
+			numScore[i]->Update(xScore, board->y + 25, 0);
+		xScore -= NUMBER_WIDTH;
+	}
+	temp.clear();
 }
 
 void CPlayScene::Render()
@@ -650,4 +710,24 @@ void CPlayScenceKeyHandler::KeyState(BYTE* states)
 		mario->SetState(MARIO_STATE_IDLE);	
 	}
 
+}
+
+vector<int> CPlayScene::getNum(int number)
+{
+	vector<int> result;
+	int odd;
+	if (number == 0)
+	{
+		result.push_back(0);
+	}
+	else
+	{
+		while (number > 0)
+		{
+			odd = number % 10;
+			result.push_back(odd);
+			number = number / 10;
+		}
+	}
+	return result;
 }

@@ -1,5 +1,6 @@
 #include "QBrick.h"
 #include "Utils.h"
+#include "Game.h"
 
 #define OBJECT_TYPE_MUSHROOM		18
 #define OBJECT_TYPE_LEAF			19
@@ -54,9 +55,12 @@ void CQBrick::GetBoundingBox(float& l, float& t, float& r, float& b)
 
 CGameObject* CQBrick::ShowItem()
 {
+	CGame* game = CGame::GetInstance();
 	CGameObject* obj = NULL;
 	if (setting == 0)		// COIN
 	{
+		game->AddScore(100);
+		game->AddCoin();
 		int ani_set_id = 12;
 		int isSparkle = 1;
 		CAnimationSets* animation_sets = CAnimationSets::GetInstance();
