@@ -49,6 +49,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	}
 	else
 	{
+
 		if (vy > 0.04f) isFlying = 1; // if falling then cant jump
 
 		// Simple fall down
@@ -59,6 +60,34 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 		if (flying)						// racoon flying
 			vy = MARIO_RACOON_FLY_VY;
+
+
+		if (vx > MARIO_RUNNING_SPEED)
+			vx = MARIO_RUNNING_SPEED;
+		else if (vx < -MARIO_RUNNING_SPEED)
+			vx = -MARIO_RUNNING_SPEED;
+
+		if (!flying)
+		{
+			if (abs(vx) <= MARIO_WALKING_SPEED)
+				speedStack = 0;
+			else if (abs(vx) > MARIO_WALKING_SPEED && abs(vx) < MARIO_WALKING_SPEED + 0.01f)
+				speedStack = 1;
+			else if (abs(vx) > MARIO_WALKING_SPEED + 0.01f && abs(vx) < MARIO_WALKING_SPEED + 0.02f)
+				speedStack = 2;
+			else if (abs(vx) > MARIO_WALKING_SPEED + 0.02f && abs(vx) < MARIO_WALKING_SPEED + 0.03f)
+				speedStack = 3;
+			else if (abs(vx) > MARIO_WALKING_SPEED + 0.03f && abs(vx) < MARIO_WALKING_SPEED + 0.05f)
+				speedStack = 4;
+			else if (abs(vx) > MARIO_WALKING_SPEED + 0.05f && abs(vx) < MARIO_WALKING_SPEED + 0.07f)
+				speedStack = 4;
+			else if (abs(vx) > MARIO_WALKING_SPEED + 0.07f && abs(vx) < MARIO_WALKING_SPEED + 0.09f)
+				speedStack = 5;
+			else if (abs(vx) > MARIO_WALKING_SPEED + 0.09f && abs(vx) < MARIO_WALKING_SPEED + 0.11f)
+				speedStack = 6;
+			else if (abs(vx) == MARIO_RUNNING_SPEED)
+				speedStack = 7;
+		}
 
 		if (canHold == 0 && obj != NULL)	// if Mario release Object
 		{
@@ -86,7 +115,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 		if (vx == 0)
 		{
-			sliding = 0; canSlide = 0;
+			sliding = 0;
 		}
 
 
@@ -142,6 +171,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						{
 							goomba->SetState(GOOMBA_STATE_DIE);
 							vy = -MARIO_JUMP_DEFLECT_SPEED;
+							game->AddScore(100);
 						}
 					}
 					else
@@ -191,11 +221,13 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						{
 							goomba->SetState(FLYGOOMBA_STATE_WALKING);
 							vy = -MARIO_JUMP_DEFLECT_SPEED;
+							game->AddScore(100);
 						}
 						else if (goomba->GetState() == FLYGOOMBA_STATE_WALKING)
 						{
 							goomba->SetState(FLYGOOMBA_STATE_DIE);
 							vy = -MARIO_JUMP_DEFLECT_SPEED;
+							game->AddScore(200);
 						}
 					}
 					else
@@ -247,15 +279,18 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 							else
 								koopas->vx = -KOOPAS_SPIN_SPEED;
 							vy = -MARIO_JUMP_DEFLECT_SPEED;
+							game->AddScore(200);
 						}
 						else if ((koopas->GetState() == KOOPAS_STATE_DIE || koopas->GetState() == KOOPAS_STATE_DIE_DEFLECT) && koopas->vx != 0) {
 							vy = -MARIO_JUMP_DEFLECT_SPEED;
 							koopas->vx = 0;		// being stomped when spining then still
+							game->AddScore(100);
 						}
 						else
 						{
 							koopas->SetState(KOOPAS_STATE_DIE);
 							vy = -MARIO_JUMP_DEFLECT_SPEED;
+							game->AddScore(100);
 						}
 					}
 					else
@@ -320,6 +355,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						{
 							koopas->SetState(FLYKOOPAS_STATE_WALKING);
 							vy = -MARIO_JUMP_DEFLECT_SPEED;
+							game->AddScore(100);
 						}
 						else if ((koopas->GetState() == KOOPAS_STATE_DIE || koopas->GetState() == KOOPAS_STATE_DIE_DEFLECT) && koopas->vx == 0) {
 							if (this->nx > 0)  // direction of koopas spin when being stomped 
@@ -327,15 +363,18 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 							else
 								koopas->vx = -KOOPAS_SPIN_SPEED;
 							vy = -MARIO_JUMP_DEFLECT_SPEED;
+							game->AddScore(200);
 						}
 						else if ((koopas->GetState() == KOOPAS_STATE_DIE || koopas->GetState() == KOOPAS_STATE_DIE_DEFLECT) && koopas->vx != 0) {
 							vy = -MARIO_JUMP_DEFLECT_SPEED;
 							koopas->vx = 0;		// being stomped when spining then still
+							game->AddScore(100);
 						}
 						else
 						{
 							koopas->SetState(KOOPAS_STATE_DIE);
 							vy = -MARIO_JUMP_DEFLECT_SPEED;
+							game->AddScore(100);
 						}
 					}
 					else
@@ -506,16 +545,24 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				{
 					CMushRoom* mushroom = dynamic_cast<CMushRoom*>(e->obj);
 					mushroom->isFinish = 1;
-					if (level < MARIO_LEVEL_BIG)
+					if (mushroom->color == 0)
 					{
-						CMario::ToBig(y);
-						level = MARIO_LEVEL_BIG;
-						StartTransform();
+						if (level < MARIO_LEVEL_BIG)
+						{
+							CMario::ToBig(y);
+							level = MARIO_LEVEL_BIG;
+							StartTransform();
+						}
 					}
+					else
+					{
+						game->AddLive(1);
+					}
+
 					vy = temp;							//Mario went through the mushroom
 					x -= min_tx * dx + nx * 0.4f;
 					y -= min_ty * dy + ny * 0.4f;
-
+					game->AddScore(1000);
 				}
 				else if (dynamic_cast<CLeaf*>(e->obj))
 				{
@@ -535,6 +582,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					vy = temp;							//Mario went through the mushroom
 					x -= min_tx * dx + nx * 0.4f;
 					y -= min_ty * dy + ny * 0.4f;
+					game->AddScore(1000);
 				}
 				else if (dynamic_cast<CQBrick*>(e->obj))		//question brick
 				{
@@ -596,6 +644,8 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 							//x += dx;
 							y += dy;
 						}
+						game->AddScore(100);
+						game->AddCoin();
 					}
 
 				}
@@ -679,6 +729,8 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						//x += dx;
 						y += dy;
 					}
+					game->AddScore(100);
+					game->AddCoin();
 				}
 				else if (dynamic_cast<CEndPointItem*>(e->obj)) // if e->obj is Coin 
 					{
@@ -747,7 +799,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		if (vx < 0 && x < 3) x = 3;
 
 
-		//DebugOut(L"\tv = %f\n", vy);
+		DebugOut(L"\tsliding = %f\n", sliding);
 
 	}
 }
@@ -911,7 +963,7 @@ void CMario::Render()
 			{
 				if (holding)
 					ani = MARIO_ANI_BIG_HOLD_WALK_RIGHT;
-				else if (sliding && canSlide)
+				else if (sliding)
 				{
 					if (isFlying)
 						ani = MARIO_ANI_BIG_FLY_RIGHT;
@@ -936,7 +988,7 @@ void CMario::Render()
 			{
 				if (holding)
 					ani = MARIO_ANI_BIG_HOLD_WALK_LEFT;
-				else if (sliding && canSlide)
+				else if (sliding )
 				{
 					if (isFlying)
 						ani = MARIO_ANI_BIG_FLY_LEFT;
@@ -987,7 +1039,7 @@ void CMario::Render()
 			{
 				if (holding)
 					ani = MARIO_ANI_SMALL_HOLD_WALK_RIGHT;
-				else if (sliding && canSlide)
+				else if (sliding )
 				{
 					if (isFlying)
 						ani = MARIO_ANI_SMALL_FLY_RIGHT;
@@ -1006,7 +1058,7 @@ void CMario::Render()
 			{
 				if (holding)
 					ani = MARIO_ANI_SMALL_HOLD_WALK_LEFT;
-				else if (sliding && canSlide)
+				else if (sliding)
 				{
 					if (isFlying)
 						ani = MARIO_ANI_SMALL_FLY_LEFT;
@@ -1065,7 +1117,7 @@ void CMario::Render()
 
 				if (holding)
 					ani = MARIO_ANI_FIRE_HOLD_WALK_RIGHT;
-				else if (sliding && canSlide)
+				else if (sliding )
 				{
 					if (isFlying)
 						ani = MARIO_ANI_FIRE_FLY_RIGHT;
@@ -1090,7 +1142,7 @@ void CMario::Render()
 			{
 				if (holding)
 					ani = MARIO_ANI_FIRE_HOLD_WALK_LEFT;
-				else if (sliding && canSlide)
+				else if (sliding)
 				{
 					if (isFlying)
 						ani = MARIO_ANI_FIRE_FLY_LEFT;
@@ -1155,7 +1207,7 @@ void CMario::Render()
 			{
 				if (holding)
 					ani = MARIO_ANI_RACOON_HOLD_WALK_RIGHT;
-				else if (sliding && canSlide)
+				else if (sliding )
 				{
 					if (isFlying)
 					{
@@ -1185,7 +1237,7 @@ void CMario::Render()
 			{
 				if (holding)
 					ani = MARIO_ANI_RACOON_HOLD_WALK_LEFT;
-				else if (sliding && canSlide)
+				else if (sliding)
 				{
 					if (isFlying)
 					{
@@ -1244,9 +1296,13 @@ void CMario::SetState(int state)
 				vx = MARIO_WALKING_SPEED / 2;
 			else if (isRunning == 0)
 				vx = MARIO_WALKING_SPEED;
-
 			else
-				vx = MARIO_RUNNING_SPEED;
+			{
+				if (vx < MARIO_WALKING_SPEED)
+					vx = MARIO_WALKING_SPEED;
+				if (vx < MARIO_RUNNING_SPEED)
+					vx += 0.001f;
+			}
 		}
 		nx = 1;
 		break;
@@ -1258,7 +1314,12 @@ void CMario::SetState(int state)
 			else if (isRunning == 0)
 				vx = -MARIO_WALKING_SPEED;
 			else
-				vx = -MARIO_RUNNING_SPEED;
+			{
+				if (vx > -MARIO_WALKING_SPEED)
+					vx = -MARIO_WALKING_SPEED;
+				if (vx > -MARIO_RUNNING_SPEED)
+					vx -= 0.001f;
+			}
 		}
 		nx = -1;
 		break;
@@ -1266,7 +1327,7 @@ void CMario::SetState(int state)
 		if (isFlying == 0 && isDucking == 0)
 		{
 			isFlying = 1;
-			if (sliding && canSlide)
+			if (sliding)
 				vy = -(MARIO_JUMP_SPEED_Y + 0.08f);		//vy when slide
 			else
 				vy = -MARIO_JUMP_SPEED_Y;
@@ -1287,8 +1348,8 @@ void CMario::SetState(int state)
 		holding = 1;
 		break;
 	case MARIO_STATE_SLIDE:
-		StartSliding();
-		canSlide = 1;
+		//StartSliding();
+		sliding = 1;
 		break;
 	case MARIO_FIRE_STATE_THROW:
 		StartThrowing();
@@ -1410,13 +1471,6 @@ void CMario::AnimationTime()
 	{
 		kick_start = 0;
 		kicking = 0;
-	}
-
-	if (GetTickCount64() - slide_start > MARIO_SLIDING_TIME)	// mario slide time countdown
-	{
-		slide_start = 0;
-		if (canSlide == 1)
-			sliding = 1;
 	}
 
 	if (GetTickCount64() - throw_start > MARIO_THROWING_TIME)	// fire mario throw fireball time

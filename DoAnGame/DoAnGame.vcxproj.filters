@@ -153,6 +153,9 @@
     <ClCompile Include="Number.cpp">
       <Filter>GameBoard</Filter>
     </ClCompile>
+    <ClCompile Include="SpeedBar.cpp">
+      <Filter>GameBoard</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -264,6 +267,9 @@
       <Filter>Bricks</Filter>
     </ClInclude>
     <ClInclude Include="Number.h">
+      <Filter>GameBoard</Filter>
+    </ClInclude>
+    <ClInclude Include="SpeedBar.h">
       <Filter>GameBoard</Filter>
     </ClInclude>
   </ItemGroup>

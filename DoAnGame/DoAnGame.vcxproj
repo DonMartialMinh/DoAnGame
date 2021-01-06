@@ -175,6 +175,7 @@
     <ClCompile Include="Portal.cpp" />
     <ClCompile Include="QBrick.cpp" />
     <ClCompile Include="Scence.cpp" />
+    <ClCompile Include="SpeedBar.cpp" />
     <ClCompile Include="Sprites.cpp" />
     <ClCompile Include="Switch.cpp" />
     <ClCompile Include="Textures.cpp" />
@@ -216,6 +217,7 @@
     <ClInclude Include="Portal.h" />
     <ClInclude Include="QBrick.h" />
     <ClInclude Include="Scence.h" />
+    <ClInclude Include="SpeedBar.h" />
     <ClInclude Include="Sprites.h" />
     <ClInclude Include="Switch.h" />
     <ClInclude Include="Textures.h" />

@@ -92,6 +92,7 @@ public:
 	void GetCamPos(float &x, float &y) { x = cam_x; y = cam_y; }
 
 	void SetTime(int t) { time = t; }
+	void SubTime() { time -= 1; }
 	int GetTime() { return time; }
 
 	void SetScore(int t) { score = t; }
@@ -99,6 +100,7 @@ public:
 	int GetScore() { return score; }
 
 	void SetLive(int t) { live = t; }
+	void AddLive(int t) { live += t; }
 	int GetLive() { return live; }
 
 	void SetCoin(int t) { coin = t; }

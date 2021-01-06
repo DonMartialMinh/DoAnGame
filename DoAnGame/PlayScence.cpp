@@ -24,36 +24,37 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 	See scene1.txt, scene2.txt for detail format specification
 */
 
-#define SCENE_SECTION_UNKNOWN -1
-#define SCENE_SECTION_TEXTURES 2
-#define SCENE_SECTION_SPRITES 3
-#define SCENE_SECTION_ANIMATIONS 4
+#define SCENE_SECTION_UNKNOWN			-1
+#define SCENE_SECTION_TEXTURES			2
+#define SCENE_SECTION_SPRITES			3
+#define SCENE_SECTION_ANIMATIONS		4
 #define SCENE_SECTION_ANIMATION_SETS	5
-#define SCENE_SECTION_OBJECTS	6
+#define SCENE_SECTION_OBJECTS			6
 
-#define OBJECT_TYPE_MARIO	0
-#define OBJECT_TYPE_BRICK	1
-#define OBJECT_TYPE_GOOMBA	2
-#define OBJECT_TYPE_KOOPAS	3
-#define OBJECT_TYPE_ENVIRONMENT 4
-#define OBJECT_TYPE_UPSIDEBRICK 5
-#define OBJECT_TYPE_COIN 6
-#define OBJECT_TYPE_QBRICK 7
-#define OBJECT_TYPE_FIREBALL 8
-#define OBJECT_TYPE_FLYGOOMBA 9
-#define OBJECT_TYPE_FLYKOOPAS 10
-#define OBJECT_TYPE_PLANT 11
-#define OBJECT_TYPE_PIRANHAPLANT 12
-#define OBJECT_TYPE_SWITCH 13
-#define OBJECT_TYPE_BROKENBRICK 14
-#define OBJECT_TYPE_PBUTTON 15
-#define OBJECT_TYPE_BOARD 16
-#define OBJECT_TYPE_PLANTFIREBALL	17
-#define OBJECT_TYPE_MUSHROOM		18
-#define OBJECT_TYPE_LEAF			19
-#define OBJECT_TYPE_ENDPOINTITEM	20
-#define OBJECT_TYPE_GAMECLEARBOARD	21
-#define OBJECT_TYPE_NUMBER			22
+#define OBJECT_TYPE_MARIO				0
+#define OBJECT_TYPE_BRICK				1
+#define OBJECT_TYPE_GOOMBA				2
+#define OBJECT_TYPE_KOOPAS				3
+#define OBJECT_TYPE_ENVIRONMENT			4
+#define OBJECT_TYPE_UPSIDEBRICK			5
+#define OBJECT_TYPE_COIN				6
+#define OBJECT_TYPE_QBRICK				7
+#define OBJECT_TYPE_FIREBALL			8
+#define OBJECT_TYPE_FLYGOOMBA			9
+#define OBJECT_TYPE_FLYKOOPAS			10
+#define OBJECT_TYPE_PLANT				11
+#define OBJECT_TYPE_PIRANHAPLANT		12
+#define OBJECT_TYPE_SWITCH				13
+#define OBJECT_TYPE_BROKENBRICK			14
+#define OBJECT_TYPE_PBUTTON				15
+#define OBJECT_TYPE_BOARD				16
+#define OBJECT_TYPE_PLANTFIREBALL		17
+#define OBJECT_TYPE_MUSHROOM			18
+#define OBJECT_TYPE_LEAF				19
+#define OBJECT_TYPE_ENDPOINTITEM		20
+#define OBJECT_TYPE_GAMECLEARBOARD		21
+#define OBJECT_TYPE_NUMBER				22
+#define OBJECT_TYPE_SPEEDBAR			23
 #define OBJECT_TYPE_PORTAL	50
 
 #define MAX_SCENE_LINE 1024
@@ -268,6 +269,11 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 			numLive.push_back((CNumber*)obj);
 		obj->type = OBJECT_TYPE_NUMBER;
 		break;
+	case OBJECT_TYPE_SPEEDBAR:
+		obj = new CSpeedBar();
+		speedBar = (CSpeedBar*)obj;
+		obj->type = OBJECT_TYPE_SPEEDBAR;
+		break;
 	case OBJECT_TYPE_PORTAL:
 	{
 		float r = float(atof(tokens[4].c_str()));
@@ -348,6 +354,7 @@ void CPlayScene::Update(DWORD dt)
 	// TO-DO: This is a "dirty" way, need a more organized way 
 
 	vector<LPGAMEOBJECT> coObjects;
+	CGame* game = CGame::GetInstance();
 
 	if (player->transform || player->transformRacoon || player->GetState() == MARIO_STATE_DIE)	// frozen scene
 	{
@@ -364,6 +371,9 @@ void CPlayScene::Update(DWORD dt)
 		}
 		return;
 	}
+
+	if (game->GetTime() < 0)
+		player->SetState(MARIO_STATE_DIE);
 
 	if (player->fireball)						// Draw fireball
 	{
@@ -447,7 +457,7 @@ void CPlayScene::Update(DWORD dt)
 	float cx, cy;
 	float camx, camy;
 	player->GetPosition(cx, cy);
-	CGame* game = CGame::GetInstance();
+
 
 	if (player->GetState() == MARIO_STATE_DIE)
 		return;
@@ -501,12 +511,20 @@ void CPlayScene::Update(DWORD dt)
 
 	game->GetCamPos(camx, camy);
 	board->Update(camx, camy);		// Update Board follow mario
-	float xCoin = camx + 180.0f;
-	vector<int> temp;
+
+
+	if (GetTickCount64() - Dtime > ONE_SEC)
+	{
+		Itime = 0;
+		Dtime = 0;
+		game->SubTime();
+		Timing();
+	}
 
 
 	// Update BoardInfo
-
+	float xCoin = camx + 180.0f;
+	vector<int> temp;
 	temp = getNum(game->GetCoin());
 	for (int i = 0, j = 0; i < numCoin.size(); i++, j++)
 	{
@@ -550,6 +568,8 @@ void CPlayScene::Update(DWORD dt)
 		xScore -= NUMBER_WIDTH;
 	}
 	temp.clear();
+	float xSpeedBar = camx + 92.0f;
+	speedBar->Update(xSpeedBar, board->y + 17, player->speedStack);
 }
 
 void CPlayScene::Render()
@@ -651,7 +671,7 @@ void CPlayScenceKeyHandler::KeyState(BYTE* states)
 	if (game->IsKeyDown(DIK_LSHIFT))
 	{
 		mario->isRunning = 1;
-		if (mario->GetVx() != 0 && mario->canSlide == 0)
+		if (abs(mario->GetVx()) >= MARIO_RUNNING_SPEED)
 		{
 			mario->SetState(MARIO_STATE_SLIDE);
 		}
@@ -659,7 +679,6 @@ void CPlayScenceKeyHandler::KeyState(BYTE* states)
 	}
 	else {
 		mario->isRunning = 0;
-		mario->canSlide = 0;
 		mario->sliding = 0;
 	}
 

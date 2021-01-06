@@ -23,6 +23,9 @@
 #include "EndPointItem.h"
 #include "GameClearBoard.h"
 #include "Number.h"
+#include "SpeedBar.h"
+
+#define ONE_SEC 1000
 
 
 class CPlayScene : public CScene
@@ -37,12 +40,14 @@ protected:
 	vector<CQBrick*> qbrick;
 	vector<CBrokenBrick*> bbrick;
 	vector<LPGAMEOBJECT> objects;
-
+	DWORD Dtime;
+	int Itime = 0;
 	// game play
 	vector<CNumber*> numCoin;
 	vector<CNumber*> numTime;
 	vector<CNumber*> numScore;
 	vector<CNumber*> numLive;
+	CSpeedBar* speedBar;
 
 	void _ParseSection_TEXTURES(string line);
 	void _ParseSection_SPRITES(string line);
@@ -58,10 +63,9 @@ public:
 	virtual void Update(DWORD dt);
 	virtual void Render();
 	virtual void Unload();
-	void GameClear();
 	CMario* GetPlayer() { return player; }
 	vector<int> getNum(int number);
-
+	void Timing() { Itime = 1; Dtime = DWORD(GetTickCount64()); }			// reduce gameplay time one sec
 	//friend class CPlayScenceKeyHandler;
 };
 

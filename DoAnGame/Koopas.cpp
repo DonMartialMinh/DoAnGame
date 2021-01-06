@@ -98,6 +98,7 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				{
 					goomba->SetState(GOOMBA_STATE_DIE_DEFLECT);
 					goomba->vx = 0.05f * this->nx;
+					game->AddScore(100);
 				}
 				else
 				{
@@ -111,6 +112,7 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				{
 					goomba->SetState(FLYGOOMBA_STATE_DIE_DEFLECT);
 					goomba->vx = 0.05f * this->nx;
+					game->AddScore(100);
 				}
 				else
 				{
@@ -125,11 +127,13 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			{
 				CPlant* plant = dynamic_cast<CPlant*>(e->obj);
 				plant->SetState(PLANT_STATE_DIE);
+				game->AddScore(100);
 			}
 			else if (dynamic_cast<CPiranhaPlant*>(e->obj))			 // obj is PiranhaPlant
 			{
 				CPiranhaPlant* plant = dynamic_cast<CPiranhaPlant*>(e->obj);
 				plant->SetState(PIRANHAPLANT_STATE_DIE);
+				game->AddScore(100);
 			}
 			else if (dynamic_cast<CKoopas*>(e->obj))	// if e->obj is koopas
 			{
@@ -138,6 +142,7 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				{
 					koopas->SetState(KOOPAS_STATE_DIE_DEFLECT_OUT);
 					//koopas->vx = 0.05f * this->nx;
+					game->AddScore(100);
 				}
 				else 
 				{
@@ -151,6 +156,7 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				{
 					koopas->SetState(FLYKOOPAS_STATE_DIE_DEFLECT_OUT);
 					//koopas->vx = 0.05f * this->nx;
+					game->AddScore(100);
 				}
 				else if (state == KOOPAS_STATE_WALKING)
 				{
@@ -256,7 +262,7 @@ void CKoopas::Render()
 	else if (vx > 0) ani = KOOPAS_ANI_WALKING_RIGHT;
 	else if (vx <= 0) ani = KOOPAS_ANI_WALKING_LEFT;
 	animation_set->at(ani)->Render(round(x), round(y));
-	//RenderBoundingBox();
+	RenderBoundingBox();
 }
 
 void CKoopas::SetState(int state)

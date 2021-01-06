@@ -18,8 +18,9 @@ class CMushRoom : public CGameObject
 {
 	DWORD rise_start;
 	int rising = 0;
-	int color = 0;	// 0 red, 1 green
+
 public:
+	int color = 0;	// 0 red, 1 green
 	int isFinish = 0;
 	virtual void Render();
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);

@@ -77,18 +77,21 @@ void CFireBall::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				CGoomba* goomba = dynamic_cast<CGoomba*>(e->obj);
 				goomba->SetState(GOOMBA_STATE_DIE_DEFLECT);
 				goomba->vx = 0.05f * this->nx;
+				game->AddScore(100);
 			}
 			else if (dynamic_cast<CPlant*>(e->obj))					// obj is plant
 			{
 				isFinish = 1;
 				CPlant* plant = dynamic_cast<CPlant*>(e->obj);
 				plant->SetState(PLANT_STATE_DIE);
+				game->AddScore(100);
 			}
 			else if (dynamic_cast<CPiranhaPlant*>(e->obj))			 // obj is PiranhaPlant
 			{
 				isFinish = 1;
 				CPiranhaPlant* plant = dynamic_cast<CPiranhaPlant*>(e->obj);
 				plant->SetState(PIRANHAPLANT_STATE_DIE);
+				game->AddScore(100);
 
 			}
 			else if (dynamic_cast<CFlyGoomba*>(e->obj))				// object is Flygoomba
@@ -97,6 +100,7 @@ void CFireBall::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				CFlyGoomba* goomba = dynamic_cast<CFlyGoomba*>(e->obj);
 				goomba->SetState(FLYGOOMBA_STATE_DIE_DEFLECT);
 				goomba->vx = 0.05f * this->nx;
+				game->AddScore(100);
 			}
 			else if (dynamic_cast<CKoopas*>(e->obj))				// object is koopas
 			{
@@ -104,6 +108,7 @@ void CFireBall::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				CKoopas* koopas = dynamic_cast<CKoopas*>(e->obj);
 				koopas->SetState(KOOPAS_STATE_DIE_DEFLECT_OUT);
 				koopas->vx = 0.05f * this->nx;
+				game->AddScore(100);
 			}
 			else if (dynamic_cast<CFlyKoopas*>(e->obj))				// object is Flykoopas
 			{
@@ -111,6 +116,7 @@ void CFireBall::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				CFlyKoopas* koopas = dynamic_cast<CFlyKoopas*>(e->obj);
 				koopas->SetState(FLYKOOPAS_STATE_DIE_DEFLECT_OUT);
 				koopas->vx = 0.05f * this->nx;
+				game->AddScore(100);
 			}
 			else if (dynamic_cast<CBrick*>(e->obj))				// object is Flykoopas
 			{

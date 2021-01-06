@@ -24,7 +24,7 @@
 
 
 #define MARIO_WALKING_SPEED		0.12f 
-#define MARIO_RUNNING_SPEED		0.2f 
+#define MARIO_RUNNING_SPEED		0.23f 
 #define MARIO_JUMP_SPEED_Y		0.37f
 #define MARIO_JUMP_DEFLECT_SPEED 0.2f
 #define MARIO_GRAVITY			0.001f
@@ -200,7 +200,6 @@
 #define MARIO_TURNING_TIME 200
 #define MARIO_TAILING_TIME 300
 #define MARIO_KICKING_TIME 200
-#define MARIO_SLIDING_TIME	1000
 #define MARIO_THROWING_TIME	300
 #define MARIO_TRANSFORM_TIME	800
 #define MARIO_SWITCHING_TIME	800
@@ -220,7 +219,6 @@ class CMario : public CGameObject
 	DWORD turn_start;
 	DWORD tail_start;
 	DWORD kick_start;
-	DWORD slide_start;
 	DWORD throw_start;
 	DWORD trans_start;
 	DWORD transRacoon_start;
@@ -240,7 +238,6 @@ public:
 	int kicking = 0;
 	int holding = 0;
 	int canHold = 0;
-	int canSlide = 0;
 	int sliding = 0;
 	int throwing = 0;
 	int transform = 0;
@@ -250,6 +247,7 @@ public:
 	int KeyUpPressed = 0;
 	int KeyDownPressed = 0;
 	int switchType = 0; // 0 down 1 up
+	int speedStack = 0;
 
 	float toX = 0;
 	float toY = 0;
@@ -266,7 +264,6 @@ public:
 	void StartTurning() { turning = 1; turn_start = DWORD(GetTickCount64()); }
 	void StartTailing() { tailing = 1; tail_start = DWORD(GetTickCount64()); }
 	void StartKicking() { kicking = 1; kick_start = DWORD(GetTickCount64()); }
-	void StartSliding() { if(slide_start == 0) slide_start = DWORD(GetTickCount64()); }
 	void StartThrowing() { throwing = 1; throw_start = DWORD(GetTickCount64()); }
 	void StartTransform() { transform = 1; trans_start = DWORD(GetTickCount64()); }
 	void StartTransform_Racoon() { transformRacoon = 1; transRacoon_start = DWORD(GetTickCount64()); }
@@ -281,7 +278,6 @@ public:
 		 kicking = 0;
 		 holding = 0;
 		 canHold = 0;
-		 canSlide = 0;
 		 sliding = 0;
 		 throwing = 0;
 	}
