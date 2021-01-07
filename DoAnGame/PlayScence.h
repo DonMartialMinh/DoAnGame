@@ -24,6 +24,8 @@
 #include "GameClearBoard.h"
 #include "Number.h"
 #include "SpeedBar.h"
+#include "Tail.h"
+#include "Item.h"
 
 #define ONE_SEC 1000
 
@@ -48,6 +50,7 @@ protected:
 	vector<CNumber*> numScore;
 	vector<CNumber*> numLive;
 	CSpeedBar* speedBar;
+	vector<CItem*> itemList;
 
 	void _ParseSection_TEXTURES(string line);
 	void _ParseSection_SPRITES(string line);

@@ -20,7 +20,6 @@ class CPlantFireBall : public CGameObject
 	virtual void GetBoundingBox(float& l, float& t, float& r, float& b);
 	virtual void Render();
 public:
-	int isFinish = 0;
 	CPlantFireBall(int nx, int ny);
 	void SetState(int state);
 };

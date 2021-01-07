@@ -156,6 +156,12 @@
     <ClCompile Include="SpeedBar.cpp">
       <Filter>GameBoard</Filter>
     </ClCompile>
+    <ClCompile Include="Tail.cpp">
+      <Filter>Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Item.cpp">
+      <Filter>GameBoard</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -270,6 +276,12 @@
       <Filter>GameBoard</Filter>
     </ClInclude>
     <ClInclude Include="SpeedBar.h">
+      <Filter>GameBoard</Filter>
+    </ClInclude>
+    <ClInclude Include="Tail.h">
+      <Filter>Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Item.h">
       <Filter>GameBoard</Filter>
     </ClInclude>
   </ItemGroup>

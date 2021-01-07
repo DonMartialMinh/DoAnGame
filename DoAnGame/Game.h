@@ -52,6 +52,7 @@ class CGame
 	int time = 0;
 	int live = 2;
 	int coin = 0;
+	vector<int> ItemList{ 0, 0, 0 };
 
 public:
 	void InitKeyboard();
@@ -106,6 +107,18 @@ public:
 	void SetCoin(int t) { coin = t; }
 	int GetCoin() { return coin; }
 	void AddCoin() { coin += 1; }
+
+	vector<int> GetItemList() { return ItemList; }
+	void PushItem(int item) {
+		for (int i = 0; i < ItemList.size(); i++)
+		{
+			if (ItemList[i] == 0)
+			{
+				ItemList[i] = item;
+				break;
+			}
+		}
+	}
 
 
 	static CGame* GetInstance();

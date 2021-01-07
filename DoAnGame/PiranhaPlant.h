@@ -32,7 +32,6 @@ class CPiranhaPlant : public CGameObject
 public:
 	int dying;
 	int isUnderPipe = 0;
-	int isFinish = 0;
 	int climax = 0;
 	int fireball = 0;
 	int ny = 1;

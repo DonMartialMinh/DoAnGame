@@ -21,7 +21,7 @@ class CEndPointItem : public CGameObject
 	virtual void Render();
 public:
 	int sparkling = 0;
-	int isFinish = 0;
 	CEndPointItem();
 	void randomitem();
+	int GetItem() { return sparkling; }
 };

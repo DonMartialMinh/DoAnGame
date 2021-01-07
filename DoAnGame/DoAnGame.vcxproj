@@ -158,6 +158,7 @@
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="Goomba.cpp" />
     <ClCompile Include="IntroScene.cpp" />
+    <ClCompile Include="Item.cpp" />
     <ClCompile Include="Koopas.cpp" />
     <ClCompile Include="Leaf.cpp" />
     <ClCompile Include="main.cpp" />
@@ -178,6 +179,7 @@
     <ClCompile Include="SpeedBar.cpp" />
     <ClCompile Include="Sprites.cpp" />
     <ClCompile Include="Switch.cpp" />
+    <ClCompile Include="Tail.cpp" />
     <ClCompile Include="Textures.cpp" />
     <ClCompile Include="UpsideBrick.cpp" />
     <ClCompile Include="UpsideBrick.h" />
@@ -200,6 +202,7 @@
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="Goomba.h" />
     <ClInclude Include="IntroScene.h" />
+    <ClInclude Include="Item.h" />
     <ClInclude Include="KeyEventHandler.h" />
     <ClInclude Include="Koopas.h" />
     <ClInclude Include="Leaf.h" />
@@ -220,6 +223,7 @@
     <ClInclude Include="SpeedBar.h" />
     <ClInclude Include="Sprites.h" />
     <ClInclude Include="Switch.h" />
+    <ClInclude Include="Tail.h" />
     <ClInclude Include="Textures.h" />
     <ClInclude Include="Utils.h" />
     <ClInclude Include="WorldMapScene.h" />

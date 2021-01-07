@@ -24,7 +24,6 @@ class CPlant : public CGameObject
 public:
 	int dying;
 	int isUnderPipe = 0;
-	int isFinish = 0;
 	DWORD die_start = NULL;				//time die animation
 	virtual void Render();
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);

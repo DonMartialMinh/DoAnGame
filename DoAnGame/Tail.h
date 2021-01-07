@@ -8,25 +8,21 @@
 #include "FlyKoopas.h"
 #include "Plant.h"
 #include "PiranhaPlant.h"
+#include "QBrick.h"
+#include "BrokenBrick.h"
 
-#define FIREBALL_BBOX_WIDTH  8
-#define FIREBALL_BBOX_HEIGHT 9
+#define TAIL_BBOX_WIDTH  8
+#define TAIL_BBOX_HEIGHT 9
 
-#define FIREBALL_SPIN_RIGHT		0
-#define FIREBALL_SPIN_LEFT		1
-#define FIREBALL_SPIN_SPEED		0.25f 
-#define FIREBALL_GRAVITY		0.001f
-#define FIREBALL_DEFLECT_SPEED  0.15f
-
-#define FIREBALL_STATE_SPIN		100
+#define TAIL_SPEED		0.25f 
 
 
-class CFireBall : public CGameObject
+class CTail : public CGameObject
 {
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void GetBoundingBox(float& l, float& t, float& r, float& b);
 	virtual void Render();
 public:
-	CFireBall(int nx);
-	void SetState(int state);
+	int maxX = 0;
+	CTail(int nx, float maxX);
 };

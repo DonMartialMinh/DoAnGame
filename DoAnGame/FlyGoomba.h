@@ -32,7 +32,6 @@ class CFlyGoomba : public CGameObject
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void Render();
-	int isFinish = 0;
 	DWORD die_start = NULL;				//time die animation
 public:
 	int dying;

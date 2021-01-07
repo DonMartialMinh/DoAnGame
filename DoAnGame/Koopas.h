@@ -41,7 +41,6 @@ class CKoopas : public CGameObject
 
 public:
 	int isHolded = 0;
-	int isFinish = 0;
 	float xMax = 0;
 	float xMin = 0;
 	CKoopas(float max, float min);

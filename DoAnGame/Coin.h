@@ -21,7 +21,6 @@ class CCoin : public CGameObject
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void Render();
 public:
-	int isFinish = 0;
 	int isSparkle = 0;
 	CCoin();
 	CCoin(int isSparkle);

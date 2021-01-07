@@ -21,7 +21,6 @@ class CMushRoom : public CGameObject
 
 public:
 	int color = 0;	// 0 red, 1 green
-	int isFinish = 0;
 	virtual void Render();
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void GetBoundingBox(float& l, float& t, float& r, float& b);

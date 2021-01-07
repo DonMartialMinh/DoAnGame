@@ -42,7 +42,6 @@ class CFlyKoopas : public CGameObject
 
 public:
 	int isHolded = 0;
-	int isFinish = 0;
 	CFlyKoopas();
 	virtual void SetState(int state);
 };

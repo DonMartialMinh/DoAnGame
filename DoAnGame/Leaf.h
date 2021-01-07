@@ -26,7 +26,6 @@ class CLeaf : public CGameObject
 	DWORD rise_start;
 	int rising = 0;
 public:
-	int isFinish = 0;
 	CLeaf(float x);
 	void StartRising() { rising = 1; rise_start = DWORD(GetTickCount64()); }
 	void SetState(int state);

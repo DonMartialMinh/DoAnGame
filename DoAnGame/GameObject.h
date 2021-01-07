@@ -45,6 +45,7 @@ class CGameObject
 {
 public:
 	int type = -1;
+	int isFinish = 0;
 	float x = 0;
 	float y = 0;
 

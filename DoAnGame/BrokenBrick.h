@@ -12,7 +12,6 @@
 class CBrokenBrick : public CGameObject
 {
 public:
-	int isFinish = 0;
 	int trigger = 0;
 	CBrokenBrick();
 	virtual void Render();

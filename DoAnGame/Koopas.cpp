@@ -262,7 +262,7 @@ void CKoopas::Render()
 	else if (vx > 0) ani = KOOPAS_ANI_WALKING_RIGHT;
 	else if (vx <= 0) ani = KOOPAS_ANI_WALKING_LEFT;
 	animation_set->at(ani)->Render(round(x), round(y));
-	RenderBoundingBox();
+	//RenderBoundingBox();
 }
 
 void CKoopas::SetState(int state)

@@ -21,6 +21,7 @@
 #include "BrokenBrick.h"
 #include "PButton.h"
 #include "EndPointItem.h"
+#include "Tail.h"
 
 
 #define MARIO_WALKING_SPEED		0.12f 
@@ -205,6 +206,7 @@
 #define MARIO_SWITCHING_TIME	800
 
 #define MARIO_FIREBALL_ANI_SET_ID 13
+#define MARIO_TAIL_ANI_SET_ID 11
 
 class CMario : public CGameObject
 {
@@ -229,6 +231,7 @@ class CMario : public CGameObject
 public:
 	CGameObject* obj = NULL;
 	int fireball = 0;
+	int tail = 0;
 	int flying;
 	int isFlying = 0;
 	int isDucking = 0;
@@ -255,6 +258,7 @@ public:
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects = NULL);
 	virtual void Render();
 	CGameObject* NewFireBall();
+	CGameObject* TailAttack();
 
 	void SetState(int state);
 	void SetLevel(int l) { level = l; }

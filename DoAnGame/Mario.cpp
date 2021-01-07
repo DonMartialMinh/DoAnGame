@@ -180,12 +180,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						{
 							if (goomba->GetState() != GOOMBA_STATE_DIE)
 							{
-								if (level == MARIO_LEVEL_RACOON && tailing == 1)
-								{
-									goomba->SetState(GOOMBA_STATE_DIE_DEFLECT);
-									goomba->vx = 0.05f * this->nx;
-								}
-								else if (level > MARIO_LEVEL_BIG)
+								if (level > MARIO_LEVEL_BIG)
 								{
 									StartTransform_Racoon();
 									level = MARIO_LEVEL_BIG;
@@ -236,12 +231,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						{
 							if (goomba->GetState() != FLYGOOMBA_STATE_DIE)
 							{
-								if (level == MARIO_LEVEL_RACOON && tailing == 1)
-								{
-									goomba->SetState(FLYGOOMBA_STATE_DIE_DEFLECT);
-									goomba->vx = 0.05f * this->nx;
-								}
-								else if (level > MARIO_LEVEL_BIG)
+								if (level > MARIO_LEVEL_BIG)
 								{
 									StartTransform_Racoon();
 									level = MARIO_LEVEL_BIG;
@@ -299,9 +289,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						{
 							if (koopas->vx != 0)
 							{
-								if (level == MARIO_LEVEL_RACOON && tailing == 1)
-									koopas->SetState(KOOPAS_STATE_DIE_DEFLECT);
-								else if (level > MARIO_LEVEL_BIG)
+								if (level > MARIO_LEVEL_BIG)
 								{
 									StartTransform_Racoon();
 									level = MARIO_LEVEL_BIG;
@@ -383,9 +371,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						{
 							if (koopas->vx != 0)
 							{
-								if (level == MARIO_LEVEL_RACOON && tailing == 1)
-									koopas->SetState(KOOPAS_STATE_DIE_DEFLECT);
-								else if (level > MARIO_LEVEL_BIG)
+								if (level > MARIO_LEVEL_BIG)
 								{
 									StartTransform_Racoon();
 									level = MARIO_LEVEL_BIG;
@@ -425,11 +411,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				else if (dynamic_cast<CPlant*>(e->obj))
 				{
 					CPlant* plant = dynamic_cast<CPlant*>(e->obj);
-					if (tailing)
-					{
-						plant->SetState(PLANT_STATE_DIE);
-					}
-					else if (untouchable == 0) {
+					if (untouchable == 0) {
 						if (!plant->isUnderPipe)
 						{
 							if (level > MARIO_LEVEL_BIG)
@@ -482,11 +464,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				else if (dynamic_cast<CPiranhaPlant*>(e->obj))
 				{
 					CPiranhaPlant* plant = dynamic_cast<CPiranhaPlant*>(e->obj);
-					if (tailing)
-					{
-						plant->SetState(PIRANHAPLANT_STATE_DIE);
-					}
-					else if (untouchable == 0) {
+					if (untouchable == 0) {
 						if (!plant->isUnderPipe)
 						{
 							if (level > MARIO_LEVEL_BIG)
@@ -601,15 +579,6 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 							qbrick->SetState(BRICK_STATE_EMP);
 						}
 					}
-					else if (e->nx != 0 && tailing)
-					{
-						if (qbrick->GetState() != BRICK_STATE_EMP)
-						{
-							qbrick->StartRinging();
-							qbrick->trigger = 1;
-							qbrick->SetState(BRICK_STATE_EMP);
-						}
-					}
 				}
 				else if (dynamic_cast<CBrokenBrick*>(e->obj))		//Broken brick
 				{
@@ -622,11 +591,6 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 							falling = 0;		//	racoon mario cant fall slowly
 						}
 						else if (e->ny > 0)
-						{
-							bbrick->trigger = 1;
-							bbrick->isFinish = 1;
-						}
-						else if (e->nx != 0 && tailing)
 						{
 							bbrick->trigger = 1;
 							bbrick->isFinish = 1;
@@ -741,6 +705,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					x += dx;
 					y += dy;
 					item->randomitem();
+					game->PushItem(item->GetItem());
 					SetState(MARIO_STATE_ENDGAME);
 				}
 				else if (dynamic_cast<CPortal*>(e->obj))
@@ -799,7 +764,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		if (vx < 0 && x < 3) x = 3;
 
 
-		DebugOut(L"\tsliding = %f\n", sliding);
+		//DebugOut(L"\tsliding = %f\n", sliding);
 
 	}
 }
@@ -1279,7 +1244,7 @@ void CMario::Render()
 	}
 
 	animation_set->at(ani)->Render(round(x),round(y), alpha);
-	RenderBoundingBox();
+	//RenderBoundingBox();
 }
 
 void CMario::SetState(int state)
@@ -1300,7 +1265,7 @@ void CMario::SetState(int state)
 			{
 				if (vx < MARIO_WALKING_SPEED)
 					vx = MARIO_WALKING_SPEED;
-				if (vx < MARIO_RUNNING_SPEED)
+				if (vx < MARIO_RUNNING_SPEED && isFlying == 0)
 					vx += 0.001f;
 			}
 		}
@@ -1317,7 +1282,7 @@ void CMario::SetState(int state)
 			{
 				if (vx > -MARIO_WALKING_SPEED)
 					vx = -MARIO_WALKING_SPEED;
-				if (vx > -MARIO_RUNNING_SPEED)
+				if (vx > -MARIO_RUNNING_SPEED && isFlying == 0)
 					vx -= 0.001f;
 			}
 		}
@@ -1366,6 +1331,7 @@ void CMario::SetState(int state)
 		break;
 	case MARIO_RACOON_STATE_TAIL:
 		StartTailing();
+		this->tail += 1;
 		break;
 	case MARIO_STATE_ENDGAME:
 		ResetState();
@@ -1517,3 +1483,20 @@ CGameObject* CMario::NewFireBall()		// create fireball function
 	return obj;
 }
 
+CGameObject* CMario::TailAttack()		// create fireball function
+{
+	int ani_set_id = MARIO_TAIL_ANI_SET_ID;
+	CAnimationSets* animation_sets = CAnimationSets::GetInstance();
+	CGameObject* obj = NULL;
+	float maxRange;
+	if (this->nx == 1)
+		maxRange = this->x + 25.0f;
+	else
+		maxRange = this->x - 10.0f;
+	obj = new CTail(this->nx, maxRange);
+	obj->type = OBJECT_TYPE_FIREBALL;
+	obj->SetPosition(this->x + MARIO_BIG_BBOX_WIDTH / 2, this->y + MARIO_BIG_BBOX_HEIGHT / 2);
+	LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
+	obj->SetAnimationSet(ani_set);
+	return obj;
+}

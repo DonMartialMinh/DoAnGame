@@ -55,6 +55,7 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 #define OBJECT_TYPE_GAMECLEARBOARD		21
 #define OBJECT_TYPE_NUMBER				22
 #define OBJECT_TYPE_SPEEDBAR			23
+#define OBJECT_TYPE_ITEM				24
 #define OBJECT_TYPE_PORTAL	50
 
 #define MAX_SCENE_LINE 1024
@@ -274,6 +275,11 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		speedBar = (CSpeedBar*)obj;
 		obj->type = OBJECT_TYPE_SPEEDBAR;
 		break;
+	case OBJECT_TYPE_ITEM:
+		obj = new CItem();
+		itemList.push_back((CItem*)obj);
+		obj->type = OBJECT_TYPE_ITEM;
+		break;
 	case OBJECT_TYPE_PORTAL:
 	{
 		float r = float(atof(tokens[4].c_str()));
@@ -360,7 +366,7 @@ void CPlayScene::Update(DWORD dt)
 	{
 		for (size_t i = 0; i < objects.size(); i++)
 		{
-			if (objects[i]->type == OBJECT_TYPE_MARIO)
+			if (objects[i]->type == OBJECT_TYPE_MARIO || objects[i]->isFinish)
 				continue;
 			coObjects.push_back(objects[i]);
 		}
@@ -379,6 +385,12 @@ void CPlayScene::Update(DWORD dt)
 	{
 		player->fireball -= 1;
 		objects.push_back(player->NewFireBall());
+	}
+
+	if (player->tail)						// Tail Attack
+	{
+		player->tail -= 1;
+		objects.push_back(player->TailAttack());
 	}
 
 	if (gameclearboard->GetState() == BOARD_STATE_EMPTY)
@@ -438,7 +450,7 @@ void CPlayScene::Update(DWORD dt)
 
 	for (size_t i = 0; i < objects.size(); i++)
 	{
-		if (objects[i]->type == OBJECT_TYPE_MARIO)
+		if (objects[i]->type == OBJECT_TYPE_MARIO || objects[i]->isFinish)
 			continue;
 		coObjects.push_back(objects[i]);
 	}
@@ -567,9 +579,19 @@ void CPlayScene::Update(DWORD dt)
 			numScore[i]->Update(xScore, board->y + 25, 0);
 		xScore -= NUMBER_WIDTH;
 	}
-	temp.clear();
+
 	float xSpeedBar = camx + 92.0f;
 	speedBar->Update(xSpeedBar, board->y + 17, player->speedStack);
+
+	temp.clear();
+	temp = game->GetItemList();
+	float xItemList = camx + 207.0f;
+	for (int i = 0; i < itemList.size(); i++)
+	{
+		itemList[i]->SetState(temp[i]);
+		itemList[i]->SetPosition(xItemList, board->y + 16);
+		xItemList += 24.0f;
+	}
 }
 
 void CPlayScene::Render()
