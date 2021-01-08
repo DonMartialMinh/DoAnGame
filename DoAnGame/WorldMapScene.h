@@ -11,6 +11,8 @@
 #include "SpeedBar.h"
 #include "Item.h"
 
+#define ONE_SECS 1000
+
 
 class CWorldMapScene : public CScene
 {
@@ -26,6 +28,8 @@ protected:
 	vector<CNumber*> numLive;
 	CSpeedBar* speedBar;
 	vector<CItem*> itemList;
+	DWORD TimeWaitToScene;
+	int isWaiting;
 
 	void _ParseSection_TEXTURES(string line);
 	void _ParseSection_SPRITES(string line);
@@ -42,6 +46,7 @@ public:
 	virtual void Render();
 	virtual void Unload();
 	vector<int> getNum(int number);
+	void TimeWaitToLoad();
 
 	CMiniMario* GetPlayer() { return player; }
 

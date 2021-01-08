@@ -1,6 +1,7 @@
 #pragma once
 #include "GameObject.h"
 #include "Game.h"
+#include "Board.h"
 
 #define LEAF_BBOX_WIDTH  16
 #define LEAF_BBOX_HEIGHT 14

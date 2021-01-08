@@ -19,6 +19,8 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 	Dtime = NULL;
 	board = NULL;
 	button = NULL;
+	isWaiting = 1;
+	TimeWaitToScene = DWORD(GetTickCount64());
 	key_handler = new CPlayScenceKeyHandler(this);
 
 
@@ -261,7 +263,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_GAMECLEARBOARD:
 		obj = new CGameClearBoard();
 		gameclearboard = (CGameClearBoard*)obj;
-		obj->type = OBJECT_TYPE_GAMECLEARBOARD;
+		obj->type = OBJECT_TYPE_BOARD;
 		break;
 	case OBJECT_TYPE_NUMBER:
 		obj = new CNumber();
@@ -273,17 +275,17 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 			numScore.push_back((CNumber*)obj);
 		else if (object_setting == 3)
 			numLive.push_back((CNumber*)obj);
-		obj->type = OBJECT_TYPE_NUMBER;
+		obj->type = OBJECT_TYPE_BOARD;
 		break;
 	case OBJECT_TYPE_SPEEDBAR:
 		obj = new CSpeedBar();
 		speedBar = (CSpeedBar*)obj;
-		obj->type = OBJECT_TYPE_SPEEDBAR;
+		obj->type = OBJECT_TYPE_BOARD;
 		break;
 	case OBJECT_TYPE_ITEM:
 		obj = new CItem();
 		itemList.push_back((CItem*)obj);
-		obj->type = OBJECT_TYPE_ITEM;
+		obj->type = OBJECT_TYPE_BOARD;
 		break;
 	case OBJECT_TYPE_PORTAL:
 	{
@@ -355,7 +357,7 @@ void CPlayScene::Load()
 	f.close();
 
 	//CTextures::GetInstance()->Add(ID_TEX_BBOX, L"textures\\bbox.png", D3DCOLOR_XRGB(237, 28, 36));
-	CTextures::GetInstance()->Add(ID_TEX_BBOX, L"textures\\bbox.png", D3DCOLOR_XRGB(255, 255, 255));
+	//CTextures::GetInstance()->Add(ID_TEX_BBOX, L"textures\\bbox.png", D3DCOLOR_XRGB(255, 255, 255));
 
 	DebugOut(L"[INFO] Done loading scene resources %s\n", sceneFilePath);
 }
@@ -372,7 +374,7 @@ void CPlayScene::Update(DWORD dt)
 	{
 		for (size_t i = 0; i < objects.size(); i++)
 		{
-			if (objects[i]->type == OBJECT_TYPE_MARIO || objects[i]->isFinish)
+			if (objects[i]->type == OBJECT_TYPE_MARIO || objects[i]->isFinish || objects[i]->type == OBJECT_TYPE_ENVIRONMENT || objects[i]->type == OBJECT_TYPE_BOARD)
 				continue;
 			coObjects.push_back(objects[i]);
 		}
@@ -456,13 +458,15 @@ void CPlayScene::Update(DWORD dt)
 
 	for (size_t i = 0; i < objects.size(); i++)
 	{
-		if (objects[i]->type == OBJECT_TYPE_MARIO || objects[i]->isFinish)
+		if (objects[i]->type == OBJECT_TYPE_MARIO || objects[i]->isFinish || objects[i]->type == OBJECT_TYPE_ENVIRONMENT || objects[i]->type == OBJECT_TYPE_BOARD)
 			continue;
 		coObjects.push_back(objects[i]);
 	}
 
 	for (size_t i = 0; i < objects.size(); i++)
 	{
+		if (objects[i]->type == OBJECT_TYPE_ENVIRONMENT)
+			continue;
 		objects[i]->Update(dt, &coObjects);
 	}
 
@@ -471,137 +475,24 @@ void CPlayScene::Update(DWORD dt)
 	// skip the rest if scene was already unloaded (Mario::Update might trigger PlayScene::Unload)
 	if (player == NULL) return;
 
-	// Update camera to follow mario
-	float cx, cy;
-	float camx, camy;
-	player->GetPosition(cx, cy);
-
-
 	if (player->GetState() == MARIO_STATE_DIE)
 		return;
 
-	if (cx < game->GetScreenWidth() / 2)
-	{
-		if (cy < 50.0f)
-		{
-			cy -= 50.0f;
-			CGame::GetInstance()->SetCamPos(0.0f, round(cy));
-		}
-		else if (cy > 0 && cy < 240)
-			CGame::GetInstance()->SetCamPos(0.0f, 0.0f); // set Cam when game start
-		else if (cy > 240 && cy < 442)					// Cam in other screen
-		{
-			cy -= game->GetScreenHeight() / 2;
-			CGame::GetInstance()->SetCamPos(0.0f, 240.0f);
-		}
-	}
-	else if (cx > 2661.0f)
-	{
-		if (cy < 50.0f)
-		{
-			cy -= 50.0f;
-			CGame::GetInstance()->SetCamPos(2508.0f, round(cy));
-		}
-		else
-			CGame::GetInstance()->SetCamPos(2508.0f, 0.0f); //set Cam when game end
-	}
-	else
-	{
-		if (cy < 50.0f )
-		{
-			cx -= game->GetScreenWidth() / 2;
-			cy -= 50.0f;
-			CGame::GetInstance()->SetCamPos(round(cx), round(cy));
-		}
-		else if (cy > 0 && cy < 240 )
-		{
-			cx -= game->GetScreenWidth() / 2;
-			cy -= 50.0f;
-			CGame::GetInstance()->SetCamPos(round(cx), 0.0f); // set Cam Focus
-		}
-		else if (cy > 240 && cy < 442)					// Cam in other screen
-		{
-			cx -= game->GetScreenWidth() / 2;
-			cy -= 50.0f;
-			CGame::GetInstance()->SetCamPos(round(cx), 240.0f);
-		}
-	}
 
+	float cx, cy;
+	float camx, camy;
+	player->GetPosition(cx, cy);
+	UpdateCamera(cx, cy);			// Update camera
 	game->GetCamPos(camx, camy);
 	board->Update(camx, camy);		// Update Board follow mario
-
-
-	if (GetTickCount64() - Dtime > ONE_SEC)
-	{
-		Itime = 0;
-		Dtime = 0;
-		game->SubTime();
-		Timing();
-	}
-
-
-	// Update BoardInfo
-	float xCoin = camx + 180.0f;
-	vector<int> temp;
-	temp = getNum(game->GetCoin());
-	for (int i = 0, j = 0; i < int(numCoin.size()); i++, j++)
-	{
-		if (j < int(temp.size()))
-			numCoin[i]->Update(xCoin, board->y + 17, temp[j]);
-		else
-			numCoin[i]->Update(xCoin, board->y + 17, 0);
-		xCoin -= NUMBER_WIDTH;
-	}
-	temp.clear();
-	temp = getNum(game->GetTime());
-	float xTime = camx + 180.0f;
-	for (int i = numTime.size() - 1, j = 0; i >= 0; i--, j++)
-	{
-		if (j < int(temp.size()))
-			numTime[i]->Update(xTime, board->y + 25, temp[j]);
-		else
-			numTime[i]->Update(xTime, board->y + 25, 0);
-		xTime -= NUMBER_WIDTH;
-	}
-	temp.clear();
-	temp = getNum(game->GetLive());
-	float xLive = camx + 77.0f;
-	for (int i = numLive.size() - 1, j = 0; i >= 0; i--, j++)
-	{
-		if (j < int(temp.size()))
-			numLive[i]->Update(xLive, board->y + 25, temp[j]);
-		else
-			numLive[i]->Update(xLive, board->y + 25, 0);
-		xLive -= NUMBER_WIDTH;
-	}
-	temp.clear();
-	temp = getNum(game->GetScore());
-	float xScore = camx + 140.0f;
-	for (int i = 0, j = 0; i < int(numScore.size()); i++, j++)
-	{
-		if (j < int(temp.size()))
-			numScore[i]->Update(xScore, board->y + 25, temp[j]);
-		else
-			numScore[i]->Update(xScore, board->y + 25, 0);
-		xScore -= NUMBER_WIDTH;
-	}
-
-	float xSpeedBar = camx + 92.0f;
-	speedBar->Update(xSpeedBar, board->y + 17, player->speedStack);
-
-	temp.clear();
-	temp = game->GetItemList();
-	float xItemList = camx + 207.0f;
-	for (int i = 0; i < int(itemList.size()); i++)
-	{
-		itemList[i]->SetState(temp[i]);
-		itemList[i]->SetPosition(xItemList, board->y + 16);
-		xItemList += 24.0f;
-	}
+	TimeLapse();					// reduce time 1 sec
+	UpdateBoardInfo(camx);			// Update BoardInfo
 }
 
 void CPlayScene::Render()
 {
+	if (isWaiting)
+		return;
 	for (int i = 0; i < int(objects.size()); i++)
 		objects[i]->Render();
 }
@@ -790,4 +681,135 @@ vector<int> CPlayScene::getNum(int number)
 		}
 	}
 	return result;
+}
+
+void CPlayScene::UpdateBoardInfo(float camx)
+{
+	CGame* game = CGame::GetInstance();
+	float xCoin = camx + 180.0f;
+	vector<int> temp;
+	temp = getNum(game->GetCoin());
+	for (int i = 0, j = 0; i < int(numCoin.size()); i++, j++)
+	{
+		if (j < int(temp.size()))
+			numCoin[i]->Update(xCoin, board->y + 17, temp[j]);
+		else
+			numCoin[i]->Update(xCoin, board->y + 17, 0);
+		xCoin -= NUMBER_WIDTH;
+	}
+	temp.clear();
+	temp = getNum(game->GetTime());
+	float xTime = camx + 180.0f;
+	for (int i = numTime.size() - 1, j = 0; i >= 0; i--, j++)
+	{
+		if (j < int(temp.size()))
+			numTime[i]->Update(xTime, board->y + 25, temp[j]);
+		else
+			numTime[i]->Update(xTime, board->y + 25, 0);
+		xTime -= NUMBER_WIDTH;
+	}
+	temp.clear();
+	temp = getNum(game->GetLive());
+	float xLive = camx + 77.0f;
+	for (int i = numLive.size() - 1, j = 0; i >= 0; i--, j++)
+	{
+		if (j < int(temp.size()))
+			numLive[i]->Update(xLive, board->y + 25, temp[j]);
+		else
+			numLive[i]->Update(xLive, board->y + 25, 0);
+		xLive -= NUMBER_WIDTH;
+	}
+	temp.clear();
+	temp = getNum(game->GetScore());
+	float xScore = camx + 140.0f;
+	for (int i = 0, j = 0; i < int(numScore.size()); i++, j++)
+	{
+		if (j < int(temp.size()))
+			numScore[i]->Update(xScore, board->y + 25, temp[j]);
+		else
+			numScore[i]->Update(xScore, board->y + 25, 0);
+		xScore -= NUMBER_WIDTH;
+	}
+
+	float xSpeedBar = camx + 92.0f;
+	speedBar->Update(xSpeedBar, board->y + 17, player->speedStack);
+
+	temp.clear();
+	temp = game->GetItemList();
+	float xItemList = camx + 207.0f;
+	for (int i = 0; i < int(itemList.size()); i++)
+	{
+		itemList[i]->SetState(temp[i]);
+		itemList[i]->SetPosition(xItemList, board->y + 16);
+		xItemList += 24.0f;
+	}
+}
+
+void CPlayScene::TimeLapse()
+{
+	CGame* game = CGame::GetInstance();
+	if (GetTickCount64() - Dtime > ONE_SEC)
+	{
+		Itime = 0;
+		Dtime = 0;
+		game->SubTime();
+		Timing();
+	}
+
+	if (GetTickCount64() - TimeWaitToScene > ONE_SEC * 3 )
+	{
+		TimeWaitToScene = 0;
+		isWaiting = 0;
+	}
+}
+
+void CPlayScene::UpdateCamera(float cx, float cy)
+{
+	CGame* game = CGame::GetInstance();
+	if (cx < game->GetScreenWidth() / 2)
+	{
+		if (cy < 50.0f)
+		{
+			cy -= 50.0f;
+			CGame::GetInstance()->SetCamPos(0.0f, round(cy));
+		}
+		else if (cy > 0 && cy < 240)
+			CGame::GetInstance()->SetCamPos(0.0f, 0.0f); // set Cam when game start
+		else if (cy > 240 && cy < 442)					// Cam in other screen
+		{
+			cy -= game->GetScreenHeight() / 2;
+			CGame::GetInstance()->SetCamPos(0.0f, 240.0f);
+		}
+	}
+	else if (cx > 2661.0f)
+	{
+		if (cy < 50.0f)
+		{
+			cy -= 50.0f;
+			CGame::GetInstance()->SetCamPos(2508.0f, round(cy));
+		}
+		else
+			CGame::GetInstance()->SetCamPos(2508.0f, 0.0f); //set Cam when game end
+	}
+	else
+	{
+		if (cy < 50.0f)
+		{
+			cx -= game->GetScreenWidth() / 2;
+			cy -= 50.0f;
+			CGame::GetInstance()->SetCamPos(round(cx), round(cy));
+		}
+		else if (cy > 0 && cy < 240)
+		{
+			cx -= game->GetScreenWidth() / 2;
+			cy -= 50.0f;
+			CGame::GetInstance()->SetCamPos(round(cx), 0.0f); // set Cam Focus
+		}
+		else if (cy > 240 && cy < 442)					// Cam in other screen
+		{
+			cx -= game->GetScreenWidth() / 2;
+			cy -= 50.0f;
+			CGame::GetInstance()->SetCamPos(round(cx), 240.0f);
+		}
+	}
 }

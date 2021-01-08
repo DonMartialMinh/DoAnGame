@@ -21,6 +21,8 @@ CWorldMapScene::CWorldMapScene(int id, LPCWSTR filePath) :
 	numScore.clear();
 	numTime.clear();
 	itemList.clear();
+	isWaiting = 1;
+	TimeWaitToScene = DWORD(GetTickCount64());
 	key_handler = new CWorldMapSceneKeyHandler(this);
 }
 
@@ -296,6 +298,8 @@ void CWorldMapScene::Update(DWORD dt)
 	// skip the rest if scene was already unloaded (Mario::Update might trigger PlayScene::Unload)
 	if (player == NULL) return;
 
+	TimeWaitToLoad();
+
 	float xCoin =  180.0f;
 	vector<int> temp;
 	temp = getNum(game->GetCoin());
@@ -366,6 +370,8 @@ void CWorldMapScene::Update(DWORD dt)
 
 void CWorldMapScene::Render()
 {
+	if (isWaiting)
+		return;
 	for (int i = 0; i < int(objects.size()); i++)
 		objects[i]->Render();
 }
@@ -469,4 +475,13 @@ vector<int> CWorldMapScene::getNum(int number)
 		}
 	}
 	return result;
+}
+
+void CWorldMapScene::TimeWaitToLoad()
+{
+	if (GetTickCount64() - TimeWaitToScene > ONE_SECS * 1)
+	{
+		TimeWaitToScene = 0;
+		isWaiting = 0;
+	}
 }

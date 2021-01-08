@@ -212,7 +212,7 @@ void CIntroScene::Load()
 
 	f.close();
 
-	CTextures::GetInstance()->Add(ID_TEX_BBOX, L"textures\\bbox.png", D3DCOLOR_XRGB(237, 28, 36));
+	//CTextures::GetInstance()->Add(ID_TEX_BBOX, L"textures\\bbox.png", D3DCOLOR_XRGB(237, 28, 36));
 
 	DebugOut(L"[INFO] Done loading scene resources %s\n", sceneFilePath);
 }

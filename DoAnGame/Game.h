@@ -102,12 +102,19 @@ public:
 
 	void SetLive(int t) { live = t; }
 	void AddLive(int t) { live += t; }
+	void SubLive() { live -= 1; }
 	int GetLive() { return live; }
 
 	void SetCoin(int t) { coin = t; }
 	int GetCoin() { return coin; }
-	void AddCoin() { coin += 1; }
-
+	void AddCoin() { 
+		coin += 1; 
+		if (coin == 100)	// 100 coin then add 1 live
+		{
+			AddLive(1);
+			SetCoin(0);
+		}
+	}
 	vector<int> GetItemList() { return ItemList; }
 	void PushItem(int item) {
 		for (int i = 0; i < int(ItemList.size()); i++)

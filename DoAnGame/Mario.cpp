@@ -26,7 +26,10 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	float scrh = float(game->GetScreenHeight());
 	if (this->y < scrh - 20.0f  && this->y > scrh - 52.0f)	// mario out of map then die
 	{
-		SetState(MARIO_STATE_DIE);	
+		SetState(MARIO_STATE_DIE);
+		CGame::GetInstance()->SwitchScene(1);
+		game->SetTime(0);
+		game->SubLive();
 		return;
 	}
 
