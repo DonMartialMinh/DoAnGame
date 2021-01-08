@@ -29,16 +29,20 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		SetState(MARIO_STATE_DIE);	
 		return;
 	}
-	
+
 	AnimationTime();	// Time for all animation of mario
 
 	if (transform || transformRacoon)
 		return;
 
+
+
 	// Calculate dx, dy 
 
 	CGameObject::Update(dt, coObjects);
+	vy += MARIO_GRAVITY * dt;
 
+	if (vy > 0.04f) isFlying = 1; // if falling then cant jump
 
 	if (switching)
 	{
@@ -49,11 +53,6 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	}
 	else
 	{
-
-		if (vy > 0.04f) isFlying = 1; // if falling then cant jump
-
-		// Simple fall down
-		vy += MARIO_GRAVITY * dt;
 
 		if (falling)					// racoon falling 
 			vy = MARIO_RACOON_FALL_VY;
@@ -111,7 +110,6 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			CalcPotentialCollisions(coObjects, coEvents);
 
 		// reset untouchable timer if untouchable time has passed
-
 
 		if (vx == 0)
 		{
@@ -712,6 +710,8 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				{
 					CPortal* p = dynamic_cast<CPortal*>(e->obj);
 					CGame::GetInstance()->SwitchScene(p->GetSceneId());
+					game->SetTime(0);
+					obj = NULL;
 				}
 			}
 		}

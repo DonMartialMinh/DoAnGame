@@ -1,3 +1,4 @@
+#pragma once
 #include "UpsideBrick.h"
 
 void CUpsideBrick::Render()

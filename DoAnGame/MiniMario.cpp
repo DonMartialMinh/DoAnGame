@@ -88,7 +88,7 @@ void CMiniMario::Render()
 		ani = MINIMARIO_ANI_RACOON;
 	int alpha = 255;
 	animation_set->at(ani)->Render(round(x), round(y), alpha);
-	RenderBoundingBox();
+	//RenderBoundingBox();
 }
 
 void CMiniMario::SetState(int state)

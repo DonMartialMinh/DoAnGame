@@ -7,6 +7,9 @@
 #include "Object.h"
 #include "Environment.h"
 #include "Board.h"
+#include "Number.h"
+#include "SpeedBar.h"
+#include "Item.h"
 
 
 class CWorldMapScene : public CScene
@@ -15,6 +18,14 @@ protected:
 	CMiniMario* player;					// A play scene has to have player, right? 
 	CBoard* board = NULL;
 	vector<LPGAMEOBJECT> objects;
+
+	// game play
+	vector<CNumber*> numCoin;
+	vector<CNumber*> numTime;
+	vector<CNumber*> numScore;
+	vector<CNumber*> numLive;
+	CSpeedBar* speedBar;
+	vector<CItem*> itemList;
 
 	void _ParseSection_TEXTURES(string line);
 	void _ParseSection_SPRITES(string line);
@@ -30,6 +41,7 @@ public:
 	virtual void Update(DWORD dt);
 	virtual void Render();
 	virtual void Unload();
+	vector<int> getNum(int number);
 
 	CMiniMario* GetPlayer() { return player; }
 

@@ -55,8 +55,6 @@ void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	if (state != GOOMBA_STATE_DIE && state != GOOMBA_STATE_DIE_DEFLECT)
 		CalcPotentialCollisions(coObjects, coEvents);
 
-
-
 	if (coEvents.size() == 0)
 	{
 		x += dx;
@@ -72,12 +70,10 @@ void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		// todo: this is a very ugly designed function!!!!
 		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny, rdx, rdy);
 
-/*		if (rdx != 0 && rdx!=dx)
-			x += nx*abs(rdx);*/ 
 
 		// block every object first!
 		x += min_tx * dx + nx * 0.4f;
-		y += min_ty * dy + ny * 0.4f;
+		//y += min_ty * dy + ny * 0.4f;
 
 		if (ny != 0) vy = 0;
 

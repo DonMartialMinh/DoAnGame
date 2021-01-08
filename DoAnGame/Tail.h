@@ -23,6 +23,6 @@ class CTail : public CGameObject
 	virtual void GetBoundingBox(float& l, float& t, float& r, float& b);
 	virtual void Render();
 public:
-	int maxX = 0;
+	float maxX = 0.0f;
 	CTail(int nx, float maxX);
 };

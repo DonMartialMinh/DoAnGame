@@ -35,9 +35,9 @@ class CPlayScene : public CScene
 protected:
 	CMario* player;					// A play scene has to have player, right? 
 	CBoard* board;
-	CPButton* button = NULL;
-	CGameClearBoard* gameclearboard;
-	CEndPointItem* item;
+	CPButton* button ;
+	CGameClearBoard* gameclearboard ;
+	CEndPointItem* item ;
 	vector<CPiranhaPlant*> plant;
 	vector<CQBrick*> qbrick;
 	vector<CBrokenBrick*> bbrick;

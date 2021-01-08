@@ -1,6 +1,5 @@
 #include <iostream>
 #include <fstream>
-
 #include "WorldMapScene.h"
 #include "Utils.h"
 #include "Textures.h"
@@ -16,6 +15,12 @@ CWorldMapScene::CWorldMapScene(int id, LPCWSTR filePath) :
 {
 	board = NULL;
 	player = NULL;
+	speedBar = NULL;
+	numCoin.clear();
+	numLive.clear();
+	numScore.clear();
+	numTime.clear();
+	itemList.clear();
 	key_handler = new CWorldMapSceneKeyHandler(this);
 }
 
@@ -35,6 +40,9 @@ CWorldMapScene::CWorldMapScene(int id, LPCWSTR filePath) :
 #define OBJECT_TYPE_OBJECT	1
 #define OBJECT_TYPE_ENVIRONMENT 2
 #define OBJECT_TYPE_BOARD 16
+#define OBJECT_TYPE_NUMBER				22
+#define OBJECT_TYPE_SPEEDBAR			23
+#define OBJECT_TYPE_ITEM				24
 
 #define MAX_SCENE_LINE 1024
 
@@ -175,6 +183,31 @@ void CWorldMapScene::_ParseSection_OBJECTS(string line)
 		obj = new CBoard();
 		board = (CBoard*)obj;
 		break;
+	case OBJECT_TYPE_NUMBER:
+
+		obj = new CNumber();
+		if (object_setting == 0)
+			numCoin.push_back((CNumber*)obj);
+		else if (object_setting == 1)
+			numTime.push_back((CNumber*)obj);
+		else if (object_setting == 2)
+			numScore.push_back((CNumber*)obj);
+		else if (object_setting == 3)
+			numLive.push_back((CNumber*)obj);
+		obj->type = OBJECT_TYPE_NUMBER;
+		break;
+	case OBJECT_TYPE_SPEEDBAR:
+		obj = new CSpeedBar();
+		speedBar = (CSpeedBar*)obj;
+		obj->type = OBJECT_TYPE_SPEEDBAR;
+		break;
+	case OBJECT_TYPE_ITEM:
+		if (itemList.size() == 3)
+			return;
+		obj = new CItem();
+		itemList.push_back((CItem*)obj);
+		obj->type = OBJECT_TYPE_ITEM;
+		break;
 	default:
 		DebugOut(L"[ERR] Invalid object type: %d\n", object_type);
 		return;
@@ -236,7 +269,7 @@ void CWorldMapScene::Load()
 
 	f.close();
 
-	CTextures::GetInstance()->Add(ID_TEX_BBOX, L"textures\\bbox.png", D3DCOLOR_XRGB(237, 28, 36));
+	//CTextures::GetInstance()->Add(ID_TEX_BBOX, L"textures\\bbox.png", D3DCOLOR_XRGB(237, 28, 36));
 
 	DebugOut(L"[INFO] Done loading scene resources %s\n", sceneFilePath);
 }
@@ -247,8 +280,11 @@ void CWorldMapScene::Update(DWORD dt)
 	// TO-DO: This is a "dirty" way, need a more organized way 
 
 	vector<LPGAMEOBJECT> coObjects;
+	CGame* game = CGame::GetInstance();
 	for (size_t i = 0; i < objects.size(); i++)
 	{
+		if (objects[i]->type == OBJECT_TYPE_MARIO)
+			continue;
 		coObjects.push_back(objects[i]);
 	}
 
@@ -260,11 +296,69 @@ void CWorldMapScene::Update(DWORD dt)
 	// skip the rest if scene was already unloaded (Mario::Update might trigger PlayScene::Unload)
 	if (player == NULL) return;
 
+	float xCoin =  180.0f;
+	vector<int> temp;
+	temp = getNum(game->GetCoin());
+	for (int i = 0, j = 0; i < int(numCoin.size()); i++, j++)
+	{
+		if (j < int(temp.size()))
+			numCoin[i]->Update(xCoin, 219.0f, temp[j]);
+		else
+			numCoin[i]->Update(xCoin, 219.0f, 0);
+		xCoin -= NUMBER_WIDTH;
+	}
+	temp.clear();
+	temp = getNum(game->GetTime());
+	float xTime =  180.0f;
+	for (int i = numTime.size() - 1, j = 0; i >= 0; i--, j++)
+	{
+		if (j < int(temp.size()))
+			numTime[i]->Update(xTime, 227.0f, temp[j]);
+		else
+			numTime[i]->Update(xTime, 227.0f, 0);
+		xTime -= NUMBER_WIDTH;
+	}
+	temp.clear();
+	temp = getNum(game->GetLive());
+	float xLive =  77.0f;
+	for (int i = numLive.size() - 1, j = 0; i >= 0; i--, j++)
+	{
+		if (j < int(temp.size()))
+			numLive[i]->Update(xLive, 227.0f, temp[j]);
+		else
+			numLive[i]->Update(xLive, 227.0f, 0);
+		xLive -= NUMBER_WIDTH;
+	}
+	temp.clear();
+	temp = getNum(game->GetScore());
+	float xScore =  140.0f;
+	for (int i = 0, j = 0; i < int(numScore.size()); i++, j++)
+	{
+		if (j < int(temp.size()))
+			numScore[i]->Update(xScore, 227.0f, temp[j]);
+		else
+			numScore[i]->Update(xScore, 227.0f, 0);
+		xScore -= NUMBER_WIDTH;
+	}
+
+	//float xSpeedBar = camx + 92.0f;
+	//speedBar->Update(xSpeedBar, board->y + 17, player->speedStack);
+
+	temp.clear();
+	temp = game->GetItemList();
+	float xItemList =  207.0f;
+	for (int i = 0; i < int(itemList.size()); i++)
+	{
+		itemList[i]->SetState(temp[i]);
+		itemList[i]->SetPosition(xItemList, board->y + 16);
+		xItemList += 24.0f;
+	}
+	temp.clear();
+	//DebugOut(L"time = %d \n", game->GetTime());
 	// Update camera to follow mario
 	float cx, cy;
 	float camx, camy;
 	player->GetPosition(cx, cy);
-	CGame* game = CGame::GetInstance();
 	game->GetCamPos(camx, camy);
 
 	CGame::GetInstance()->SetCamPos(0.0f, 0.0f); // set Cam when game start
@@ -286,6 +380,12 @@ void CWorldMapScene::Unload()
 
 	objects.clear();
 	player = NULL;
+	board = NULL;
+	numCoin.clear();
+	numLive.clear();
+	numScore.clear();
+	numTime.clear();
+	itemList.clear();
 
 	DebugOut(L"[INFO] Scene %s unloaded! \n", sceneFilePath);
 }
@@ -311,6 +411,8 @@ void CWorldMapSceneKeyHandler::OnKeyDown(int KeyCode)
 		break;
 	case DIK_X:
 		CGame::GetInstance()->SwitchScene(2);
+		CGame* game = CGame::GetInstance();
+		game->SetTime(300);
 		break;
 	}
 }
@@ -347,4 +449,24 @@ void CWorldMapSceneKeyHandler::KeyState(BYTE* states)
 		mario->SetState(MINIMARIO_STATE_IDLE);
 	}
 
+}
+
+vector<int> CWorldMapScene::getNum(int number)
+{
+	vector<int> result;
+	int odd;
+	if (number == 0)
+	{
+		result.push_back(0);
+	}
+	else
+	{
+		while (number > 0)
+		{
+			odd = number % 10;
+			result.push_back(odd);
+			number = number / 10;
+		}
+	}
+	return result;
 }

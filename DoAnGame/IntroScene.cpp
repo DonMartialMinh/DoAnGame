@@ -262,6 +262,8 @@ void CIntroSceneKeyHandler::OnKeyDown(int KeyCode)
 	{
 	case DIK_X:
 		CGame::GetInstance()->SwitchScene(1);
+		CGame* game = CGame::GetInstance();
+		game->SetTime(0);
 		break;
 	}
 }

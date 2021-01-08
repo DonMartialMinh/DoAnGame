@@ -13,9 +13,14 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 	CScene(id, filePath)
 {
 	player = NULL;
+	speedBar = NULL;
+	item = NULL;
+	gameclearboard = NULL;
+	Dtime = NULL;
+	board = NULL;
+	button = NULL;
 	key_handler = new CPlayScenceKeyHandler(this);
-	CGame* game = CGame::GetInstance();
-	game->SetTime(300);
+
 
 }
 
@@ -349,7 +354,8 @@ void CPlayScene::Load()
 
 	f.close();
 
-	CTextures::GetInstance()->Add(ID_TEX_BBOX, L"textures\\bbox.png", D3DCOLOR_XRGB(237, 28, 36));
+	//CTextures::GetInstance()->Add(ID_TEX_BBOX, L"textures\\bbox.png", D3DCOLOR_XRGB(237, 28, 36));
+	CTextures::GetInstance()->Add(ID_TEX_BBOX, L"textures\\bbox.png", D3DCOLOR_XRGB(255, 255, 255));
 
 	DebugOut(L"[INFO] Done loading scene resources %s\n", sceneFilePath);
 }
@@ -418,7 +424,7 @@ void CPlayScene::Update(DWORD dt)
 		if (qbrick[i]->trigger)						// show item
 		{
 			qbrick[i]->trigger -= 1;
-			CGameObject* obj = NULL;
+			CGameObject* obj;
 			obj = qbrick[i]->ShowItem();
 			objects.push_back(obj);
 			if (obj->type == OBJECT_TYPE_PBUTTON)
@@ -538,9 +544,9 @@ void CPlayScene::Update(DWORD dt)
 	float xCoin = camx + 180.0f;
 	vector<int> temp;
 	temp = getNum(game->GetCoin());
-	for (int i = 0, j = 0; i < numCoin.size(); i++, j++)
+	for (int i = 0, j = 0; i < int(numCoin.size()); i++, j++)
 	{
-		if (j < temp.size())
+		if (j < int(temp.size()))
 			numCoin[i]->Update(xCoin, board->y + 17, temp[j]);
 		else
 			numCoin[i]->Update(xCoin, board->y + 17, 0);
@@ -551,7 +557,7 @@ void CPlayScene::Update(DWORD dt)
 	float xTime = camx + 180.0f;
 	for (int i = numTime.size() - 1, j = 0; i >= 0; i--, j++)
 	{
-		if (j < temp.size())
+		if (j < int(temp.size()))
 			numTime[i]->Update(xTime, board->y + 25, temp[j]);
 		else
 			numTime[i]->Update(xTime, board->y + 25, 0);
@@ -562,7 +568,7 @@ void CPlayScene::Update(DWORD dt)
 	float xLive = camx + 77.0f;
 	for (int i = numLive.size() - 1, j = 0; i >= 0; i--, j++)
 	{
-		if (j < temp.size())
+		if (j < int(temp.size()))
 			numLive[i]->Update(xLive, board->y + 25, temp[j]);
 		else
 			numLive[i]->Update(xLive, board->y + 25, 0);
@@ -571,9 +577,9 @@ void CPlayScene::Update(DWORD dt)
 	temp.clear();
 	temp = getNum(game->GetScore());
 	float xScore = camx + 140.0f;
-	for (int i = 0, j = 0; i < numScore.size(); i++, j++)
+	for (int i = 0, j = 0; i < int(numScore.size()); i++, j++)
 	{
-		if (j < temp.size())
+		if (j < int(temp.size()))
 			numScore[i]->Update(xScore, board->y + 25, temp[j]);
 		else
 			numScore[i]->Update(xScore, board->y + 25, 0);
@@ -586,7 +592,7 @@ void CPlayScene::Update(DWORD dt)
 	temp.clear();
 	temp = game->GetItemList();
 	float xItemList = camx + 207.0f;
-	for (int i = 0; i < itemList.size(); i++)
+	for (int i = 0; i < int(itemList.size()); i++)
 	{
 		itemList[i]->SetState(temp[i]);
 		itemList[i]->SetPosition(xItemList, board->y + 16);
@@ -610,6 +616,19 @@ void CPlayScene::Unload()
 
 	objects.clear();
 	player = NULL;
+	board = NULL;
+	button = NULL;
+	gameclearboard = NULL;
+	item = NULL;
+	plant.clear();
+	qbrick.clear();
+	bbrick.clear();
+	objects.clear();
+	numCoin.clear();
+	numLive.clear();
+	numScore.clear();
+	numTime.clear();
+	itemList.clear();
 
 	DebugOut(L"[INFO] Scene %s unloaded! \n", sceneFilePath);
 }

@@ -1,9 +1,8 @@
 #pragma once
 
 #include <Windows.h>
-#include <d3dx9.h>
 #include <vector>
-
+#include <d3dx9.h>
 #include "Sprites.h"
 #include "Animations.h"
 

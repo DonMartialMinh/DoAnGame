@@ -110,13 +110,27 @@ public:
 
 	vector<int> GetItemList() { return ItemList; }
 	void PushItem(int item) {
-		for (int i = 0; i < ItemList.size(); i++)
+		for (int i = 0; i < int(ItemList.size()); i++)
 		{
 			if (ItemList[i] == 0)
 			{
 				ItemList[i] = item;
 				break;
 			}
+		}
+		if (int(ItemList[0]) != 0 && int(ItemList[1]) != 0 && int(ItemList[2]) != 0)			// add live when enough itemlist
+		{
+			if (int(ItemList[0]) == 1 && int(ItemList[1]) == 1 && int(ItemList[2]) == 1)		// 3 star add 5 lives
+				AddLive(5);
+			else if (int(ItemList[0]) == 2 && int(ItemList[1]) == 2 && int(ItemList[2]) == 2)	// 3 mushroom add 2 lives
+				AddLive(2);
+			else if (int(ItemList[0]) == 3 && int(ItemList[1]) == 3 && int(ItemList[2]) == 3)	// 3 flower add 3 lives
+				AddLive(3);
+			else
+				AddLive(1);																		// else add 1 live
+			
+			for (int i = 0; i < int(ItemList.size()); i++)										// clear items
+				ItemList[i] = 0;
 		}
 	}
 

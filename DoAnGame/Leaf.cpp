@@ -46,7 +46,7 @@ void CLeaf::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	}
 
 	if (rising)
-		y -= 1;
+		y -= 1.0f;
 	else
 		state = LEAF_STATE_FALLING;
 
@@ -66,7 +66,6 @@ void CLeaf::Render()
 	int ani = LEAF_FALL_RIGHT;
 	if (vx >= 0) ani = LEAF_FALL_LEFT;
 	animation_set->at(ani)->Render(round(x), round(y));
-	//RenderBoundingBox();
 }
 
 

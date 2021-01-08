@@ -18,7 +18,7 @@
 class CSpeedBar : public CGameObject
 {
 private:
-	int progress;
+	int progress = 0;
 public:
 	virtual void Render();
 	virtual void Update(float x, float y, int progress);
