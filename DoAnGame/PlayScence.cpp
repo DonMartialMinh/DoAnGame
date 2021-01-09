@@ -452,7 +452,10 @@ void CPlayScene::Update(DWORD dt)
 		{
 			button->trigger -= 1;
 			for (int i = 0; i < int(bbrick.size()); i++)
+			{
 				bbrick[i]->SetState(BROKENBRICK_STATE_COIN); // turn brokenbrick into coin
+				bbrick[i]->type = OBJECT_TYPE_COIN;
+			}
 		}
 	}
 
