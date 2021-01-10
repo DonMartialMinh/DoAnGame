@@ -108,7 +108,7 @@ void CGameObject::CalcPotentialCollisions(
 		{
 			if (e->t > 0 && e->t <= 1.0f)
 			{
-				if ((coObjects->at(i)->type == OBJECT_TYPE_BRICK) || (coObjects->at(i)->type == OBJECT_TYPE_QBRICK) || (coObjects->at(i)->type == OBJECT_TYPE_UPSIDEBRICK))			// avoid collision with mario and environment
+				if ((coObjects->at(i)->type == OBJECT_TYPE_BRICK) || (coObjects->at(i)->type == OBJECT_TYPE_QBRICK) || (coObjects->at(i)->type == OBJECT_TYPE_UPSIDEBRICK) || (coObjects->at(i)->type == OBJECT_TYPE_BROKENBRICK))			// avoid collision with mario and environment
 					coEvents.push_back(e);
 				else
 					delete e;

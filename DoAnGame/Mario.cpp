@@ -577,7 +577,9 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						{
 							qbrick->StartRinging();
 							qbrick->trigger = 1;
-							qbrick->SetState(BRICK_STATE_EMP);
+							qbrick->stack--;
+							if (qbrick->stack == 0)
+								qbrick->SetState(BRICK_STATE_EMP);
 						}
 					}
 				}
@@ -715,6 +717,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					CGame::GetInstance()->SwitchScene(p->GetSceneId());
 					game->SetTime(0);
 					obj = NULL;
+					return;
 				}
 			}
 		}

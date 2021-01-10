@@ -29,6 +29,9 @@
 
 #define ONE_SEC 1000
 
+#define MAP_1	2
+#define MAP_2	3
+
 
 class CPlayScene : public CScene
 {

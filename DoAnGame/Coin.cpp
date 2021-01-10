@@ -5,9 +5,9 @@ CCoin::CCoin()
 	sparkle_start = NULL;
 }
 
-CCoin::CCoin(int issparkle)
-{
-	isSparkle = issparkle;
+CCoin::CCoin(int setting)
+{								
+	isSparkle = setting;		// create coin animation when hit the Question brick
 	StartSparkling();
 }
 

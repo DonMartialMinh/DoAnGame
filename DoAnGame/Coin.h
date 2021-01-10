@@ -23,6 +23,6 @@ class CCoin : public CGameObject
 public:
 	int isSparkle = 0;
 	CCoin();
-	CCoin(int isSparkle);
+	CCoin(int setting);
 	void StartSparkling() { sparkling = 1; sparkle_start = DWORD(GetTickCount64()); }
 };

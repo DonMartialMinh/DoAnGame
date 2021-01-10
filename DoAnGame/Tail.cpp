@@ -103,9 +103,11 @@ void CTail::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				CQBrick* brick = dynamic_cast<CQBrick*>(e->obj);
 				if (brick->GetState() != BRICK_STATE_EMP)
 				{
-					brick->SetState(BRICK_STATE_EMP);
 					brick->trigger = 1;
 					brick->StartRinging();
+					brick->stack--;
+					if (brick->stack == 0)
+						brick->SetState(BRICK_STATE_EMP);
 				}
 			}
 			else if (dynamic_cast<CBrokenBrick*>(e->obj))				// object is Broken Brick

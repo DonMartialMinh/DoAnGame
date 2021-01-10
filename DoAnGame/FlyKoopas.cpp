@@ -196,9 +196,11 @@ void CFlyKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				{
 					if (qbrick->GetState() != BRICK_STATE_EMP)
 					{
-						qbrick->SetState(BRICK_STATE_EMP);
 						qbrick->trigger = 1;
 						qbrick->StartRinging();
+						qbrick->stack--;
+						if (qbrick->stack == 0)
+							qbrick->SetState(BRICK_STATE_EMP);
 					}
 				}
 				if (abs(nx) > 0.0001f)

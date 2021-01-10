@@ -6,12 +6,13 @@
 #define OBJECT_TYPE_LEAF			19
 #define OBJECT_TYPE_PBUTTON			15
 
-CQBrick::CQBrick(CGameObject*player, int setting, float y)
+CQBrick::CQBrick(CGameObject*player, int setting, int stack, float y)
 {
 	this->player = player;
 	this->setting = setting;
 	ring_start = NULL;
 	min = y;
+	this->stack = stack;	
 	SetState(BRICK_STATE_QUES);
 }
 

@@ -30,7 +30,7 @@
 #define MAIN_WINDOW_TITLE L"Supper Mario Bros 3"
 #define WINDOW_ICON_PATH L"mario.ico"
 
-#define BACKGROUND_COLOR D3DCOLOR_XRGB(175, 232, 226)
+#define BACKGROUND_COLOR D3DCOLOR_XRGB(156, 252, 240)
 #define SCREEN_WIDTH 334 
 #define SCREEN_HEIGHT 292
 
@@ -69,7 +69,7 @@ void Render()
 	LPDIRECT3DSURFACE9 bb = game->GetBackBuffer();
 	LPD3DXSPRITE spriteHandler = game->GetSpriteHandler();
 
-	if (((d3ddv->BeginScene())))
+	if ((d3ddv->BeginScene()))
 	{
 		// Clear back buffer with a color
 		d3ddv->ColorFill(bb, NULL, BACKGROUND_COLOR);

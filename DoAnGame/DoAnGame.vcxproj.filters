@@ -34,6 +34,9 @@
     <Filter Include="Bricks">
       <UniqueIdentifier>{a94689d4-53cb-4178-bd87-e5854702dad9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Grid">
+      <UniqueIdentifier>{d59686f5-a4b8-4c27-93fa-cc45e3de029f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -162,6 +165,9 @@
     <ClCompile Include="Item.cpp">
       <Filter>GameBoard</Filter>
     </ClCompile>
+    <ClCompile Include="Grid.cpp">
+      <Filter>Grid</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -283,6 +289,9 @@
     </ClInclude>
     <ClInclude Include="Item.h">
       <Filter>GameBoard</Filter>
+    </ClInclude>
+    <ClInclude Include="Grid.h">
+      <Filter>Grid</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

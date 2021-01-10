@@ -166,15 +166,15 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	float y = float(atof(tokens[2].c_str()));
 	int ani_set_id = atoi(tokens[3].c_str());
 	int object_setting = 0;
-	float xSetting = 0;
-	float ySetting = 0;
+	float setting1 = 0;
+	float setting2 = 0;
 
 	if (tokens.size() == 5)
 		object_setting = atoi(tokens[4].c_str());
 	else if (tokens.size() == 6)
 	{
-		xSetting = float(atof(tokens[4].c_str()));
-		ySetting = float(atof(tokens[5].c_str()));
+		setting1 = float(atof(tokens[4].c_str()));
+		setting2 = float(atof(tokens[5].c_str()));
 	}
 
 	CAnimationSets* animation_sets = CAnimationSets::GetInstance();
@@ -204,7 +204,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj->type = OBJECT_TYPE_BRICK;
 		break;
 	case OBJECT_TYPE_KOOPAS: 
-		obj = new CKoopas(xSetting, ySetting); 
+		obj = new CKoopas(setting1, setting2);
 		obj->type = OBJECT_TYPE_KOOPAS;
 		break;
 	case OBJECT_TYPE_ENVIRONMENT: 
@@ -216,11 +216,11 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj->type = OBJECT_TYPE_UPSIDEBRICK;
 		break;
 	case OBJECT_TYPE_COIN:	
-		obj = new CCoin(); 
+		obj = new CCoin();
 		obj->type = OBJECT_TYPE_COIN;
 		break;
 	case OBJECT_TYPE_QBRICK: 
-		obj = new CQBrick(player, object_setting, y);
+		obj = new CQBrick(player, int(setting1), int(setting2), y);
 		obj->type = OBJECT_TYPE_QBRICK;
 		qbrick.push_back((CQBrick*)obj);
 		break;
@@ -242,7 +242,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj->type = OBJECT_TYPE_PIRANHAPLANT;
 		break;
 	case OBJECT_TYPE_SWITCH:
-		obj = new CSwitch(xSetting, ySetting);
+		obj = new CSwitch(setting1, setting2);
 		obj->type = OBJECT_TYPE_SWITCH;
 		break;
 	case OBJECT_TYPE_BROKENBRICK:
@@ -401,16 +401,16 @@ void CPlayScene::Update(DWORD dt)
 		objects.push_back(player->TailAttack());
 	}
 
-	if (gameclearboard->GetState() == BOARD_STATE_EMPTY)
-	{
-		if (item->sparkling == 1)
-			gameclearboard->SetState(BOARD_STATE_STAR);
-		else if (item->sparkling == 2)
-			gameclearboard->SetState(BOARD_STATE_MUSHROOM);
-		else if (item->sparkling == 3)
-			gameclearboard->SetState(BOARD_STATE_FLOWER);
-		else;
-	}
+	//if (gameclearboard->GetState() == BOARD_STATE_EMPTY)
+	//{
+	//	if (item->sparkling == 1)
+	//		gameclearboard->SetState(BOARD_STATE_STAR);
+	//	else if (item->sparkling == 2)
+	//		gameclearboard->SetState(BOARD_STATE_MUSHROOM);
+	//	else if (item->sparkling == 3)
+	//		gameclearboard->SetState(BOARD_STATE_FLOWER);
+	//	else;
+	//}
 
 	for (int i = 0; i < int(plant.size()); i++)
 	{
