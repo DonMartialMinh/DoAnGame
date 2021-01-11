@@ -766,8 +766,11 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		// clean up collision events
 		for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
 
-		if (vx > 0 && x > 2812 && state != MARIO_STATE_ENDGAME) x = 2812;
-		if (vx < 0 && x < 3) x = 3;
+		float camx, camy;
+		game->GetCamPos(camx, camy);
+
+		if (vx > 0 && x > 2800 && state != MARIO_STATE_ENDGAME) x = 2800;
+		//if (x < camx) x = camx;
 
 
 		//DebugOut(L"\tsliding = %f\n", sliding);

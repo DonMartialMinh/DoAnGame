@@ -401,6 +401,7 @@ void CWorldMapSceneKeyHandler::OnKeyDown(int KeyCode)
 	//DebugOut(L"[INFO] KeyDown: %d\n", KeyCode);
 
 	CMiniMario* mario = ((CWorldMapScene*)scence)->GetPlayer();
+	CGame* game = CGame::GetInstance();
 	switch (KeyCode)
 	{
 	case DIK_1:
@@ -417,7 +418,10 @@ void CWorldMapSceneKeyHandler::OnKeyDown(int KeyCode)
 		break;
 	case DIK_X:
 		CGame::GetInstance()->SwitchScene(2);
-		CGame* game = CGame::GetInstance();
+		game->SetTime(300);
+		break;
+	case DIK_C:
+		CGame::GetInstance()->SwitchScene(3);
 		game->SetTime(300);
 		break;
 	}

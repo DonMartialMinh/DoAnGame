@@ -12,6 +12,7 @@ using namespace std;
 CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 	CScene(id, filePath)
 {
+	this->id = id;
 	player = NULL;
 	speedBar = NULL;
 	item = NULL;
@@ -296,7 +297,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	}
 	break;
 	default:
-		DebugOut(L"[ERR] Invalid object type: %d\n", object_type);
+		//DebugOut(L"[ERR] Invalid object type: %d\n", object_type);
 		return;
 	}
 
@@ -364,8 +365,10 @@ void CPlayScene::Load()
 
 void CPlayScene::Update(DWORD dt)
 {
-	// We know that Mario is the first object in the list hence we won't add him into the colliable object list
-	// TO-DO: This is a "dirty" way, need a more organized way 
+
+	TimeLapse();					// reduce time 1 sec
+	if (isWaiting)
+		return;
 
 	vector<LPGAMEOBJECT> coObjects;
 	CGame* game = CGame::GetInstance();
@@ -401,16 +404,17 @@ void CPlayScene::Update(DWORD dt)
 		objects.push_back(player->TailAttack());
 	}
 
-	//if (gameclearboard->GetState() == BOARD_STATE_EMPTY)
-	//{
-	//	if (item->sparkling == 1)
-	//		gameclearboard->SetState(BOARD_STATE_STAR);
-	//	else if (item->sparkling == 2)
-	//		gameclearboard->SetState(BOARD_STATE_MUSHROOM);
-	//	else if (item->sparkling == 3)
-	//		gameclearboard->SetState(BOARD_STATE_FLOWER);
-	//	else;
-	//}
+	if (gameclearboard->GetState() == BOARD_STATE_EMPTY)
+	{
+		if (item != NULL)
+			if (item->sparkling == 1)
+				gameclearboard->SetState(BOARD_STATE_STAR);
+			else if (item->sparkling == 2)
+				gameclearboard->SetState(BOARD_STATE_MUSHROOM);
+			else if (item->sparkling == 3)
+				gameclearboard->SetState(BOARD_STATE_FLOWER);
+			else;
+	}
 
 	for (int i = 0; i < int(plant.size()); i++)
 	{
@@ -485,11 +489,13 @@ void CPlayScene::Update(DWORD dt)
 	float cx, cy;
 	float camx, camy;
 	player->GetPosition(cx, cy);
-	UpdateCamera(cx, cy);			// Update camera
+	UpdateCamera(cx, cy, id);			// Update camera
 	game->GetCamPos(camx, camy);
 	board->Update(camx, camy);		// Update Board follow mario
-	TimeLapse();					// reduce time 1 sec
 	UpdateBoardInfo(camx);			// Update BoardInfo
+
+	if (player->x < camx) 
+		player->x = camx;
 }
 
 void CPlayScene::Render()
@@ -766,53 +772,104 @@ void CPlayScene::TimeLapse()
 	}
 }
 
-void CPlayScene::UpdateCamera(float cx, float cy)
+void CPlayScene::UpdateCamera(float cx, float cy, int id)
 {
 	CGame* game = CGame::GetInstance();
-	if (cx < game->GetScreenWidth() / 2)
+	float camx, camy;
+	game->GetCamPos(camx, camy);
+	if (id == MAP_1)
 	{
-		if (cy < 50.0f)
+		if (cx < game->GetScreenWidth() / 2)
 		{
-			cy -= 50.0f;
-			CGame::GetInstance()->SetCamPos(0.0f, round(cy));
+			if (cy < 50.0f)
+			{
+				cy -= 50.0f;
+				CGame::GetInstance()->SetCamPos(0.0f, round(cy));
+			}
+			else if (cy > 0 && cy < 240)
+				CGame::GetInstance()->SetCamPos(0.0f, 0.0f); // set Cam when game start
+			else if (cy > 240 && cy < 442)					// Cam in other screen
+			{
+				cy -= game->GetScreenHeight() / 2;
+				CGame::GetInstance()->SetCamPos(0.0f, 240.0f);
+			}
 		}
-		else if (cy > 0 && cy < 240)
-			CGame::GetInstance()->SetCamPos(0.0f, 0.0f); // set Cam when game start
-		else if (cy > 240 && cy < 442)					// Cam in other screen
+		else if (cx > 2661.0f)
 		{
-			cy -= game->GetScreenHeight() / 2;
-			CGame::GetInstance()->SetCamPos(0.0f, 240.0f);
-		}
-	}
-	else if (cx > 2661.0f)
-	{
-		if (cy < 50.0f)
-		{
-			cy -= 50.0f;
-			CGame::GetInstance()->SetCamPos(2508.0f, round(cy));
+			if (cy < 50.0f)
+			{
+				cy -= 50.0f;
+				CGame::GetInstance()->SetCamPos(2508.0f, round(cy));
+			}
+			else
+				CGame::GetInstance()->SetCamPos(2508.0f, 0.0f); //set Cam when game end
 		}
 		else
-			CGame::GetInstance()->SetCamPos(2508.0f, 0.0f); //set Cam when game end
+		{
+			if (cy < 50.0f)
+			{
+				cx -= game->GetScreenWidth() / 2;
+				cy -= 50.0f;
+				CGame::GetInstance()->SetCamPos(round(cx), round(cy));
+			}
+			else if (cy > 0 && cy < 240)
+			{
+				cx -= game->GetScreenWidth() / 2;
+				cy -= 50.0f;
+				CGame::GetInstance()->SetCamPos(round(cx), 0.0f); // set Cam Focus
+			}
+			else if (cy > 240 && cy < 442)					// Cam in other screen
+			{
+				cx -= game->GetScreenWidth() / 2;
+				cy -= 50.0f;
+				CGame::GetInstance()->SetCamPos(round(cx), 240.0f);
+			}
+		}
 	}
-	else
+	else if (id == MAP_2)
 	{
-		if (cy < 50.0f)
+		if (player->x > 2034.0f)
 		{
-			cx -= game->GetScreenWidth() / 2;
-			cy -= 50.0f;
-			CGame::GetInstance()->SetCamPos(round(cx), round(cy));
+			if (cx < 2304.0f + game->GetScreenWidth() / 2)
+			{
+				if (cy < 50.0f)
+				{
+					cy -= 50.0f;
+					CGame::GetInstance()->SetCamPos(2304.0f, round(cy));
+				}
+				else if (cy > 0 && cy < 240)
+					CGame::GetInstance()->SetCamPos(2304.0f, 0.0f); // set Cam when game start
+			}
+			else if (cx > 2661.0f)
+			{
+				if (cy < 50.0f)
+				{
+					cy -= 50.0f;
+					CGame::GetInstance()->SetCamPos(2508.0f, round(cy));
+				}
+				else
+					CGame::GetInstance()->SetCamPos(2508.0f, 0.0f); //set Cam when game end
+			}
+			else
+			{
+				if (cy < 50.0f)
+				{
+					cx -= game->GetScreenWidth() / 2;
+					cy -= 50.0f;
+					CGame::GetInstance()->SetCamPos(round(cx), round(cy));
+				}
+				else if (cy > 0 && cy < 240)
+				{
+					cx -= game->GetScreenWidth() / 2;
+					cy -= 50.0f;
+					CGame::GetInstance()->SetCamPos(round(cx), 0.0f); // set Cam Focus
+				}
+			}
 		}
-		else if (cy > 0 && cy < 240)
+		else
 		{
-			cx -= game->GetScreenWidth() / 2;
-			cy -= 50.0f;
-			CGame::GetInstance()->SetCamPos(round(cx), 0.0f); // set Cam Focus
-		}
-		else if (cy > 240 && cy < 442)					// Cam in other screen
-		{
-			cx -= game->GetScreenWidth() / 2;
-			cy -= 50.0f;
-			CGame::GetInstance()->SetCamPos(round(cx), 240.0f);
+			if (camx < 1728.0f)
+				CGame::GetInstance()->SetCamPos(round(camx + 0.5f), 0.0f);
 		}
 	}
 }

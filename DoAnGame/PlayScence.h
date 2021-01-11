@@ -46,9 +46,10 @@ protected:
 	vector<CBrokenBrick*> bbrick;
 	vector<LPGAMEOBJECT> objects;
 	DWORD Dtime;
-	DWORD TimeWaitToScene;
+	DWORD TimeWaitToScene;			// time wait load to scene
 	int Itime = 0;
 	int isWaiting;
+	int id;							// id of scene
 	// game play
 	vector<CNumber*> numCoin;
 	vector<CNumber*> numTime;
@@ -75,7 +76,7 @@ public:
 	vector<int> getNum(int number);
 	void UpdateBoardInfo(float camX);
 	void TimeLapse();
-	void UpdateCamera(float cx, float cy);
+	void UpdateCamera(float cx, float cy, int id);
 	void Timing() { Itime = 1; Dtime = DWORD(GetTickCount64()); }			// reduce gameplay time one sec
 	//friend class CPlayScenceKeyHandler;
 };
