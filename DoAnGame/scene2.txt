@@ -270,6 +270,19 @@ fly left
 50037	34	0	50	16	170
 50038	51	0	67	16	170
 
+#BOOMERANG BROS
+50050	345	173	369	202	10
+50051	374	173	398	202	10
+
+#BOOMERANG
+50052	374	209	399	225	10
+50053	348	209	364	224	10
+50054	323	209	338	224	10
+50055	298	208	314	223	10
+
+#BROS DIE
+50056	409	178	425	202	10
+
 
 #BRICK
 20001	239	222	255	238	20
@@ -832,6 +845,11 @@ fly left
 #die deflect
 808	50032	100
 
+#BOOMERANG BROS
+850	50050	100	50051	100
+851	50052	150	50053	150	50054	150	50055	150
+852	50056	100
+
 
 #KOOPAS 2
 #Fly right
@@ -1201,10 +1219,13 @@ fly left
 
 330	715
 
+331	850	852
+332	851
+
 
 [OBJECTS]
 # type	x	y	ani_set_id	extra_settings per object type
-# type: 0 = Mario , 1 = Brick, 2 = Goomba, 3 = Koopas, 4 = Environment, 5 = UpsideBrick, 6 = Coin, 7 = QBrick, 8 = FireBall, 9 = FlyGoomba, 10 = FlyKoopas, 11 = Plant, 12 PiranhaPlant, 13 Switch, 14 BrokenBrick, 15 PButton, 16 board, 20 EndPointItem, 21 gameclearboard, 22 Number
+# type: 0 = Mario , 1 = Brick, 2 = Goomba, 3 = Koopas, 4 = Environment, 5 = UpsideBrick, 6 = Coin, 7 = QBrick, 8 = FireBall, 9 = FlyGoomba, 10 = FlyKoopas, 11 = Plant, 12 PiranhaPlant, 13 Switch, 14 BrokenBrick, 15 PButton, 16 board, 20 EndPointItem, 21 gameclearboard, 22 Number, 25 BoomerangBros
 
 4	0	186	313
 4	16	186	314
@@ -2118,7 +2139,7 @@ fly left
 20	2704	98	111
 
 # MARIO
-0	15	90	1
+0	2500	90	1
 
 #pipe
 1	1936	106	40
@@ -2144,7 +2165,8 @@ fly left
 3	1070	70	39	1005	1080
 3	2000	70	39	1975	2005
 
-
+#BoomerangBros
+25	2320	120	331	2310	2340
 
 #Board
 16	0	202	110

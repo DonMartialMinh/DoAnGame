@@ -138,8 +138,8 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 			// how to push back Mario if collides with a moving objects, what if Mario is pushed this way into another object?
 
-			//if (rdx != 0 && rdx != dx)
-			//	x += nx * abs(rdx);
+			if (rdx != 0 && rdx != dx)
+				x += nx * abs(rdx);
 
 			// block every object first!
 			x += min_tx * dx + nx * 0.4f;
@@ -769,7 +769,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		float camx, camy;
 		game->GetCamPos(camx, camy);
 
-		if (vx > 0 && x > 2800 && state != MARIO_STATE_ENDGAME) x = 2800;
+		//if (vx > 0 && x > camx + game->GetScreenWidth() && state != MARIO_STATE_ENDGAME) x = camx + game->GetScreenWidth() - 30.0f;
 		//if (x < camx) x = camx;
 
 
@@ -1253,7 +1253,6 @@ void CMario::Render()
 	}
 
 	animation_set->at(ani)->Render(round(x),round(y), alpha);
-	//RenderBoundingBox();
 }
 
 void CMario::SetState(int state)

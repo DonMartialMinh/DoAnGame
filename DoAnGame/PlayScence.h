@@ -26,6 +26,7 @@
 #include "SpeedBar.h"
 #include "Tail.h"
 #include "Item.h"
+#include "BoomerangBros.h"
 
 #define ONE_SEC 1000
 
@@ -50,6 +51,7 @@ protected:
 	int Itime = 0;
 	int isWaiting;
 	int id;							// id of scene
+	float temp = 0;
 	// game play
 	vector<CNumber*> numCoin;
 	vector<CNumber*> numTime;

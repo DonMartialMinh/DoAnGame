@@ -64,6 +64,7 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 #define OBJECT_TYPE_NUMBER				22
 #define OBJECT_TYPE_SPEEDBAR			23
 #define OBJECT_TYPE_ITEM				24
+#define OBJECT_TYPE_BOOMERANGBROS		25
 #define OBJECT_TYPE_PORTAL	50
 
 #define MAX_SCENE_LINE 1024
@@ -288,6 +289,10 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		itemList.push_back((CItem*)obj);
 		obj->type = OBJECT_TYPE_BOARD;
 		break;
+	case OBJECT_TYPE_BOOMERANGBROS:
+		obj = new CBoomerangBros(setting1, setting2);
+		obj->type = OBJECT_TYPE_BOOMERANGBROS;
+		break;
 	case OBJECT_TYPE_PORTAL:
 	{
 		float r = float(atof(tokens[4].c_str()));
@@ -357,7 +362,6 @@ void CPlayScene::Load()
 
 	f.close();
 
-	//CTextures::GetInstance()->Add(ID_TEX_BBOX, L"textures\\bbox.png", D3DCOLOR_XRGB(237, 28, 36));
 	//CTextures::GetInstance()->Add(ID_TEX_BBOX, L"textures\\bbox.png", D3DCOLOR_XRGB(255, 255, 255));
 
 	DebugOut(L"[INFO] Done loading scene resources %s\n", sceneFilePath);
@@ -496,6 +500,9 @@ void CPlayScene::Update(DWORD dt)
 
 	if (player->x < camx) 
 		player->x = camx;
+
+	if (player->x > camx + game->GetScreenWidth() - 30.0f && player->GetState() != MARIO_STATE_ENDGAME) 
+		player->x = camx + game->GetScreenWidth() - 30.0f;
 }
 
 void CPlayScene::Render()
@@ -868,8 +875,13 @@ void CPlayScene::UpdateCamera(float cx, float cy, int id)
 		}
 		else
 		{
+			if (temp == 0)
+				temp = 1.0f;
+			else
+				temp = 0;
+
 			if (camx < 1728.0f)
-				CGame::GetInstance()->SetCamPos(round(camx + 0.5f), 0.0f);
+				CGame::GetInstance()->SetCamPos(round(camx + temp), 0.0f);
 		}
 	}
 }

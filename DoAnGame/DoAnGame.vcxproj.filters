@@ -168,6 +168,12 @@
     <ClCompile Include="Grid.cpp">
       <Filter>Grid</Filter>
     </ClCompile>
+    <ClCompile Include="BoomerangBros.cpp">
+      <Filter>Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="Boomerang.cpp">
+      <Filter>Enemies</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -292,6 +298,12 @@
     </ClInclude>
     <ClInclude Include="Grid.h">
       <Filter>Grid</Filter>
+    </ClInclude>
+    <ClInclude Include="BoomerangBros.h">
+      <Filter>Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="Boomerang.h">
+      <Filter>Enemies</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
