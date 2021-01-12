@@ -2,9 +2,16 @@
 #include "Brick.h"
 #include "UpsideBrick.h"
 #include "Koopas.h"
+#include "Utils.h"
 
-CFlyKoopas::CFlyKoopas()
+CFlyKoopas::CFlyKoopas(float yMin, float yMax, int type)
 {
+	this->type = type;
+	if (this->type == FLYKOOPAS_TYPE_ON_AIR)
+	{
+		this->yMin = yMin;
+		this->yMax = yMax;
+	}
 	SetState(FLYKOOPAS_STATE_FLYING);
 }
 
@@ -36,6 +43,23 @@ void CFlyKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	//
 	// TO-DO: make sure Koopas can interact with the world and to each of them too!
 	// 
+
+	if (type == FLYKOOPAS_TYPE_ON_AIR )
+	{
+		if (state == FLYKOOPAS_STATE_FLYING)
+		{
+			y += dy;
+			if ( y >= yMax)
+			{
+				y = yMax; vy = -vy;
+			}
+			else if ( y <= yMin)
+			{
+				y = yMin; vy = -vy;
+			}
+			return;
+		}
+	}
 
 	vy += FLYKOOPAS_GRAVITY * dt;
 
@@ -269,9 +293,16 @@ void CFlyKoopas::SetState(int state)
 		break;
 	case FLYKOOPAS_STATE_WALKING:
 		vy = 0;
+		vx = -FLYKOOPAS_WALKING_SPEED;
 		break;
 	case FLYKOOPAS_STATE_FLYING:
-		vx = -FLYKOOPAS_WALKING_SPEED;
+		if (type == FLYKOOPAS_TYPE_ON_AIR)			
+		{
+			vx = 0;
+			vy = FLYKOOPAS_ON_AIR_VY;
+		}
+		else
+			vx = -FLYKOOPAS_WALKING_SPEED;
 		break;
 	}
 

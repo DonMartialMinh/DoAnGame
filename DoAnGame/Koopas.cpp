@@ -211,7 +211,7 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				if (abs(nx) > 0.0001f)
 					vx = -vx;
 				CBrokenBrick* bbrick = dynamic_cast<CBrokenBrick*>(e->obj);
-				if (e->nx != 0 && ((state == KOOPAS_STATE_DIE || state == KOOPAS_STATE_DIE_DEFLECT) && vx != 0))
+				if (e->nx != 0 && ((state == KOOPAS_STATE_DIE || state == KOOPAS_STATE_DIE_DEFLECT) && vx != 0) && this->y + KOOPAS_BBOX_HEIGHT_DIE - 1  > bbrick->y)
 				{
 					if (bbrick->GetState() == BROKENBRICK_STATE_BRICK)
 					{

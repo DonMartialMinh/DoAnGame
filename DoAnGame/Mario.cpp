@@ -662,8 +662,12 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						}
 						else if (e->ny > 0)
 						{
-							bbrick->trigger = 1;
-							bbrick->isFinish = 1;
+							if (level > MARIO_LEVEL_SMALL)
+							{
+								bbrick->trigger = 1;
+								bbrick->isFinish = 1;
+							}
+							else;
 						}
 					}
 					else

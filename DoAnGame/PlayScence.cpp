@@ -232,8 +232,13 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj->type = OBJECT_TYPE_FLYGOOMBA;
 		break;
 	case OBJECT_TYPE_FLYKOOPAS: 
-		obj = new CFlyKoopas(); 
+	{
+		float yMin = float(atof(tokens[4].c_str()));
+		float yMax = float(atof(tokens[5].c_str()));
+		int type = atoi(tokens[6].c_str());
+		obj = new CFlyKoopas(yMin, yMax, type);
 		obj->type = OBJECT_TYPE_FLYKOOPAS;
+	}
 		break;
 	case OBJECT_TYPE_PLANT: 
 		obj = new CPlant(player, y); 
@@ -534,6 +539,7 @@ void CPlayScene::Unload()
 
 	objects.clear();
 	player = NULL;
+	bros = NULL;
 	board = NULL;
 	button = NULL;
 	gameclearboard = NULL;

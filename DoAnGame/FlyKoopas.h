@@ -6,11 +6,16 @@
 #include "FlyGoomba.h"
 #include "Koopas.h"
 
+#define FLYKOOPAS_TYPE_ON_AIR 1
+#define FLYKOOPAS_TYPE_ON_GROUND 0
+
 #define FLYKOOPAS_WALKING_SPEED 0.035f;
 #define FLYKOOPAS_SPIN_SPEED 0.22f
 #define FLYKOOPAS_GRAVITY		0.001f
 #define FLYKOOPAS_DIE_DEFLECT_SPEED 0.25f
 #define FLYKOOPAS_DEFLECT_SPEED 0.3f
+
+#define FLYKOOPAS_ON_AIR_VY 0.025f
 
 #define FLYKOOPAS_BBOX_WIDTH 16
 #define FLYKOOPAS_BBOX_HEIGHT 26
@@ -39,9 +44,11 @@ class CFlyKoopas : public CGameObject
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void Render();
-
+	int type;
+	float yMin;
+	float yMax;
 public:
 	int isHolded = 0;
-	CFlyKoopas();
+	CFlyKoopas(float yMin, float yMax, int type);
 	virtual void SetState(int state);
 };
