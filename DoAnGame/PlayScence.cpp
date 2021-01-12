@@ -14,6 +14,7 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 {
 	this->id = id;
 	player = NULL;
+	bros = NULL;
 	speedBar = NULL;
 	item = NULL;
 	gameclearboard = NULL;
@@ -292,6 +293,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_BOOMERANGBROS:
 		obj = new CBoomerangBros(setting1, setting2);
 		obj->type = OBJECT_TYPE_BOOMERANGBROS;
+		bros = (CBoomerangBros*)obj;
 		break;
 	case OBJECT_TYPE_PORTAL:
 	{
@@ -418,6 +420,15 @@ void CPlayScene::Update(DWORD dt)
 			else if (item->sparkling == 3)
 				gameclearboard->SetState(BOARD_STATE_FLOWER);
 			else;
+	}
+
+	if (bros != NULL)
+	{
+		if (bros->boomerang)
+		{
+			bros->boomerang -= 1;
+			objects.push_back(bros->NewBoomerang());
+		}
 	}
 
 	for (int i = 0; i < int(plant.size()); i++)

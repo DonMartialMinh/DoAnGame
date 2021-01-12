@@ -138,8 +138,8 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 			// how to push back Mario if collides with a moving objects, what if Mario is pushed this way into another object?
 
-			if (rdx != 0 && rdx != dx)
-				x += nx * abs(rdx);
+			//if (rdx != 0 && rdx != dx)
+			//	x += nx * abs(rdx);
 
 			// block every object first!
 			x += min_tx * dx + nx * 0.4f;
@@ -409,6 +409,45 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						}
 					}
 				}  // if Koopas
+				else if (dynamic_cast<CBoomerangBros*>(e->obj)) // if e->obj is Goomba 
+				{
+					CBoomerangBros* bros = dynamic_cast<CBoomerangBros*>(e->obj);
+					// jump on top >> kill boomerang bros and deflect a bit 
+					if (e->ny < 0)
+					{
+						if (bros->GetState() != BROS_STATE_DIE)
+						{
+							bros->SetState(BROS_STATE_DIE);
+							vy = -MARIO_JUMP_DEFLECT_SPEED;
+							game->AddScore(1000);
+						}
+					}
+					else
+					{
+						if (untouchable == 0)
+						{
+							if (bros->GetState() != GOOMBA_STATE_DIE)
+							{
+								if (level > MARIO_LEVEL_BIG)
+								{
+									StartTransform_Racoon();
+									level = MARIO_LEVEL_BIG;
+									ResetState();
+									StartUntouchable();
+								}
+								else if (level == MARIO_LEVEL_BIG)
+								{
+									level = MARIO_LEVEL_SMALL;
+									CMario::ToSmall(this->y);
+									ResetState();
+									StartUntouchable();
+								}
+								else
+									SetState(MARIO_STATE_DIE);
+							}
+						}
+					}
+				}
 				else if (dynamic_cast<CPlant*>(e->obj))
 				{
 					CPlant* plant = dynamic_cast<CPlant*>(e->obj);
@@ -462,6 +501,34 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 							SetState(MARIO_STATE_DIE);
 					}
 				}  // if Plant
+				else if (dynamic_cast<CBoomerang*>(e->obj))
+				{
+					CBoomerang* boomerang = dynamic_cast<CBoomerang*>(e->obj);
+					if (e->ny > 0)
+					{
+						vy = temp;
+						x -= min_tx * dx + nx * 0.4f;
+						y -= min_ty * dy + ny * 0.4f;
+					}
+					if (untouchable == 0) {
+						if (level > MARIO_LEVEL_BIG)
+						{
+							StartTransform_Racoon();
+							level = MARIO_LEVEL_BIG;
+							ResetState();
+							StartUntouchable();
+						}
+						else if (level == MARIO_LEVEL_BIG)
+						{
+							level = MARIO_LEVEL_SMALL;
+							ResetState();
+							CMario::ToSmall(this->y);
+							StartUntouchable();
+						}
+						else
+							SetState(MARIO_STATE_DIE);
+					}
+				}  // if boomerang
 				else if (dynamic_cast<CPiranhaPlant*>(e->obj))
 				{
 					CPiranhaPlant* plant = dynamic_cast<CPiranhaPlant*>(e->obj);

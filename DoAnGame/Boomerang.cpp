@@ -3,9 +3,8 @@
 
 CBoomerang::CBoomerang()
 {
-	//SetState(FIREBALL_STATE_SPIN);
 	ny = 1;
-	nx = -1;
+	nx = 1;
 	vx = BOOMERANG_SPIN_SPEED_VX * nx;
 	vy = BOOMERANG_SPIN_SPEED_VY * ny;
 }
@@ -29,7 +28,7 @@ void CBoomerang::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	float scrh = float(game->GetScreenHeight());
 	game->GetCamPos(camx, camy);
 
-	if (x < camx || x > camx + scrw)						// delete fireball if out map
+	if (x < camx || x > camx + scrw)						// delete boomerang if out map
 		isFinish = 1;
 	if (y < camy || y > camy + scrh)
 		isFinish = 1;
@@ -39,7 +38,7 @@ void CBoomerang::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	CGameObject::Update(dt);
 
-	vx += BOOMERANG_GRAVITY * dt;
+	vx += -BOOMERANG_GRAVITY * dt;
 
 	x += dx;
 	y += dy;

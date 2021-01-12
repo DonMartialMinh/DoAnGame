@@ -118,6 +118,13 @@ void CFireBall::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				koopas->vx = 0.05f * this->nx;
 				game->AddScore(100);
 			}
+			else if (dynamic_cast<CBoomerangBros*>(e->obj))				// object is Boomerang bros
+			{
+				isFinish = 1;
+				CBoomerangBros* bros = dynamic_cast<CBoomerangBros*>(e->obj);
+				bros->SetState(BROS_STATE_DIE);
+				game->AddScore(1000);
+			}
 			else if (dynamic_cast<CBrick*>(e->obj))				// object is Flykoopas
 			{
 				CBrick* brick = dynamic_cast<CBrick*>(e->obj);

@@ -1,12 +1,14 @@
 #include "BoomerangBros.h"
 #include "Utils.h"
 
+#define OBJECT_TYPE_BOOMERANG 26
+
 CBoomerangBros::CBoomerangBros(float max, float min)
 {
 	xMax = round(max);
 	xMin = round(min);
 	SetState(BROS_STATE_WALKING);
-
+	LoadBoomerang();
 }
 
 void CBoomerangBros::GetBoundingBox(float& left, float& top, float& right, float& bottom)
@@ -30,6 +32,15 @@ void CBoomerangBros::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	if (y < camy || y > camy + scrh)		// out screen height then delete
 		return;
 
+	if (state != BROS_STATE_DIE)
+		if (GetTickCount64() - load_start > BROS_LOADBOOMERANG_TIME)		//load boomerang falling time
+		{
+			load_start = 0;
+			Load = 0;
+			this->boomerang = 1;
+			LoadBoomerang();
+			SetState(BROS_STATE_WALKING_NO_BOOMERANG);
+		}
 
 	CGameObject::Update(dt);
 
@@ -66,13 +77,21 @@ void CBoomerangBros::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 		for (int i = 0; i < int(coEventsResult.size()); i++)
 		{
-			if (abs(nx) > 0.0001f)
+			LPCOLLISIONEVENT e = coEventsResult[i];
+
+			if (dynamic_cast<CBoomerang*>(e->obj)) // if e->obj is Goomba 
+			{
+				CBoomerang* boomerang = dynamic_cast<CBoomerang*>(e->obj);
+				boomerang->isFinish = 1;
+				SetState(BROS_STATE_WALKING);
+			}
+			else if (abs(nx) > 0.0001f)
 				vx = -vx;
 		}
 	}
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
 
-	if (state == BROS_STATE_WALKING)
+	if (state != BROS_STATE_DIE)
 	{
 		if (vx < 0 && x < xMax)
 		{
@@ -91,7 +110,9 @@ void CBoomerangBros::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 void CBoomerangBros::Render()
 {
 	int ani = BROS_ANI_WALKING;
-	if (state == BROS_STATE_DIE && vx == 0)
+	if (state == BROS_STATE_WALKING_NO_BOOMERANG)
+		ani = BROS_ANI_WALKING_NO_BOOMERANG;
+	else if (state == BROS_STATE_DIE && vx == 0)
 		ani = BROS_ANI_DIE;
 	animation_set->at(ani)->Render(round(x), round(y));
 }
@@ -110,4 +131,17 @@ void CBoomerangBros::SetState(int state)
 		break;
 	}
 
+}
+
+CGameObject* CBoomerangBros::NewBoomerang()		// create fireball function
+{
+	int ani_set_id = BOOMERANG_ANI_SET_ID;
+	CAnimationSets* animation_sets = CAnimationSets::GetInstance();
+	CGameObject* obj = NULL;
+	obj = new CBoomerang();
+	obj->type = OBJECT_TYPE_BOOMERANG;
+	obj->SetPosition(this->x, this->y - 8.0f);
+	LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
+	obj->SetAnimationSet(ani_set);
+	return obj;
 }

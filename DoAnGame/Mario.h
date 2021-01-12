@@ -22,6 +22,8 @@
 #include "PButton.h"
 #include "EndPointItem.h"
 #include "Tail.h"
+#include "BoomerangBros.h"
+#include "Boomerang.h"
 
 
 #define MARIO_WALKING_SPEED		0.10f 

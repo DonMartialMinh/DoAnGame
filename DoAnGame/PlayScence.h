@@ -38,6 +38,7 @@ class CPlayScene : public CScene
 {
 protected:
 	CMario* player;					// A play scene has to have player, right? 
+	CBoomerangBros* bros;
 	CBoard* board;
 	CPButton* button ;
 	CGameClearBoard* gameclearboard ;
@@ -46,12 +47,15 @@ protected:
 	vector<CQBrick*> qbrick;
 	vector<CBrokenBrick*> bbrick;
 	vector<LPGAMEOBJECT> objects;
+
 	DWORD Dtime;
 	DWORD TimeWaitToScene;			// time wait load to scene
+
 	int Itime = 0;
 	int isWaiting;
 	int id;							// id of scene
 	float temp = 0;
+
 	// game play
 	vector<CNumber*> numCoin;
 	vector<CNumber*> numTime;
