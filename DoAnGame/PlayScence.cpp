@@ -66,7 +66,9 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 #define OBJECT_TYPE_SPEEDBAR			23
 #define OBJECT_TYPE_ITEM				24
 #define OBJECT_TYPE_BOOMERANGBROS		25
-#define OBJECT_TYPE_PORTAL	50
+#define OBJECT_TYPE_BOOMERANG			26
+#define OBJECT_TYPE_MOVEBAR				27
+#define OBJECT_TYPE_PORTAL				50
 
 #define MAX_SCENE_LINE 1024
 
@@ -299,6 +301,10 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj = new CBoomerangBros(setting1, setting2);
 		obj->type = OBJECT_TYPE_BOOMERANGBROS;
 		bros = (CBoomerangBros*)obj;
+		break;
+	case OBJECT_TYPE_MOVEBAR:
+		obj = new CMoveBar();
+		obj->type = OBJECT_TYPE_MOVEBAR;
 		break;
 	case OBJECT_TYPE_PORTAL:
 	{

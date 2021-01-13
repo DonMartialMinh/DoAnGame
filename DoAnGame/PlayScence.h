@@ -27,6 +27,7 @@
 #include "Tail.h"
 #include "Item.h"
 #include "BoomerangBros.h"
+#include "MoveBar.h"
 
 #define ONE_SEC 1000
 

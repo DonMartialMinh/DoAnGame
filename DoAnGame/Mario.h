@@ -24,6 +24,7 @@
 #include "Tail.h"
 #include "BoomerangBros.h"
 #include "Boomerang.h"
+#include "MoveBar.h"
 
 
 #define MARIO_WALKING_SPEED		0.10f 

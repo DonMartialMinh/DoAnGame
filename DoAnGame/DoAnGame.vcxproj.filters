@@ -174,6 +174,9 @@
     <ClCompile Include="Boomerang.cpp">
       <Filter>Enemies</Filter>
     </ClCompile>
+    <ClCompile Include="MoveBar.cpp">
+      <Filter>Bricks</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -304,6 +307,9 @@
     </ClInclude>
     <ClInclude Include="Boomerang.h">
       <Filter>Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="MoveBar.h">
+      <Filter>Bricks</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

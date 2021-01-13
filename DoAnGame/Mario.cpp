@@ -564,6 +564,16 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						falling = 0;		//	racoon mario cant fall slowly
 					}
 				}
+				else if (dynamic_cast<CMoveBar*>(e->obj))
+				{
+					CMoveBar* bar = dynamic_cast<CMoveBar*>(e->obj);
+					if (e->ny < 0) // jump on top brick then can jumping again
+					{
+						isFlying = 0;
+						falling = 0;		//	racoon mario cant fall slowly
+						bar->SetState(BAR_STATE_FALLING);
+					}
+				}
 				else if (dynamic_cast<CSwitch*>(e->obj))
 				{
 					CSwitch* sw = dynamic_cast<CSwitch*>(e->obj);
@@ -1414,8 +1424,9 @@ void CMario::SetState(int state)
 		break;
 	case MARIO_STATE_ENDGAME:
 		ResetState();
-		vx = MARIO_WALKING_SPEED;
+		vx = MARIO_WALKING_SPEED - 0.02f;
 		nx = 1;
+		isRunning = 1;
 		break;
 	case MARIO_STATE_DIE:
 		vy = -MARIO_DIE_DEFLECT_SPEED;
