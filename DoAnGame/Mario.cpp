@@ -138,8 +138,11 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 			// how to push back Mario if collides with a moving objects, what if Mario is pushed this way into another object?
 
-			//if (rdx != 0 && rdx != dx)
-			//	x += nx * abs(rdx);
+			if (untouchable == 0)
+			{
+				if (rdx != 0 && rdx != dx)
+					x += nx * abs(rdx);
+			}
 
 			// block every object first!
 			x += min_tx * dx + nx * 0.4f;
