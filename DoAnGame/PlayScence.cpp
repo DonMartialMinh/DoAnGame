@@ -399,11 +399,12 @@ void CPlayScene::Update(DWORD dt)
 				continue;
 			coObjects.push_back(objects[i]);
 		}
-		for (size_t i = 0; i < objects.size(); i++)
+		/*for (size_t i = 0; i < objects.size(); i++)
 		{
 			if (objects[i]->type == OBJECT_TYPE_MARIO)
 				objects[i]->Update(dt, &coObjects);
-		}
+		}*/
+		player->Update(dt, &coObjects);
 		return;
 	}
 
@@ -588,7 +589,7 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 		mario->Reset();
 		break;
 	case DIK_T:
-		mario->SetPosition(138,382);
+		mario->SetPosition(138,480);
 		break;
 	case DIK_Z:
 		if (mario->getLevel() == MARIO_LEVEL_RACOON)
@@ -815,48 +816,48 @@ void CPlayScene::UpdateCamera(float cx, float cy, int id)
 	{
 		if (cx < game->GetScreenWidth() / 2)
 		{
-			if (cy < 50.0f)
+			if (cy < 280.0f)
 			{
 				cy -= 50.0f;
 				CGame::GetInstance()->SetCamPos(0.0f, round(cy));
 			}
-			else if (cy > 0 && cy < 240)
-				CGame::GetInstance()->SetCamPos(0.0f, 0.0f); // set Cam when game start
-			else if (cy > 240 && cy < 442)					// Cam in other screen
+			else if (cy > 230 && cy < 470)
+				CGame::GetInstance()->SetCamPos(0.0f, 230.0f); // set Cam when game start
+			else if (cy > 470 && cy < 672)					// Cam in other screen
 			{
 				cy -= game->GetScreenHeight() / 2;
-				CGame::GetInstance()->SetCamPos(0.0f, 240.0f);
+				CGame::GetInstance()->SetCamPos(0.0f, 470.0f);
 			}
 		}
 		else if (cx > 2661.0f)
 		{
-			if (cy < 50.0f)
+			if (cy < 280.0f)
 			{
 				cy -= 50.0f;
 				CGame::GetInstance()->SetCamPos(2508.0f, round(cy));
 			}
 			else
-				CGame::GetInstance()->SetCamPos(2508.0f, 0.0f); //set Cam when game end
+				CGame::GetInstance()->SetCamPos(2508.0f, 230.0f); //set Cam when game end
 		}
 		else
 		{
-			if (cy < 50.0f)
+			if (cy < 280.0f)
 			{
 				cx -= game->GetScreenWidth() / 2;
 				cy -= 50.0f;
 				CGame::GetInstance()->SetCamPos(round(cx), round(cy));
 			}
-			else if (cy > 0 && cy < 240)
+			else if (cy > 230 && cy < 470)
 			{
 				cx -= game->GetScreenWidth() / 2;
 				cy -= 50.0f;
-				CGame::GetInstance()->SetCamPos(round(cx), 0.0f); // set Cam Focus
+				CGame::GetInstance()->SetCamPos(round(cx), 230.0f); // set Cam Focus
 			}
-			else if (cy > 240 && cy < 442)					// Cam in other screen
+			else if (cy > 470 && cy < 672)					// Cam in other screen
 			{
 				cx -= game->GetScreenWidth() / 2;
 				cy -= 50.0f;
-				CGame::GetInstance()->SetCamPos(round(cx), 240.0f);
+				CGame::GetInstance()->SetCamPos(round(cx), 470.0f);
 			}
 		}
 	}

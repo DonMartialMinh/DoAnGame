@@ -23,15 +23,18 @@ CMario::CMario(float x, float y) : CGameObject()
 void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	CGame* game = CGame::GetInstance();
+	float camx, camy;
+	game->GetCamPos(camx, camy);
 	float scrh = float(game->GetScreenHeight());
-	if (this->y < scrh - 20.0f  && this->y > scrh - 52.0f)	// mario out of map then die
-	{
-		SetState(MARIO_STATE_DIE);
-		CGame::GetInstance()->SwitchScene(1);
-		game->SetTime(0);
-		game->SubLive();
-		return;
-	}
+	if (camy != 0.0f)
+		if (this->y > (camy + scrh - 40.0f) && this->y < (camy + scrh - 30.0f))	// mario out of map then die
+		{
+			SetState(MARIO_STATE_DIE);
+			CGame::GetInstance()->SwitchScene(1);
+			game->SetTime(0);
+			game->SubLive();
+			return;
+		}
 
 	AnimationTime();	// Time for all animation of mario
 
@@ -272,7 +275,11 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 								koopas->vx = KOOPAS_SPIN_SPEED;
 							else
 								koopas->vx = -KOOPAS_SPIN_SPEED;
-							vy = -MARIO_JUMP_DEFLECT_SPEED;
+							vy = temp;							//Mario went through the coin
+							x -= min_tx * dx + nx * 0.4f;
+							y -= min_ty * dy + ny * 0.4f;
+							x += dx;
+							y += dy;
 							game->AddScore(200);
 						}
 						else if ((koopas->GetState() == KOOPAS_STATE_DIE || koopas->GetState() == KOOPAS_STATE_DIE_DEFLECT) && koopas->vx != 0) {
@@ -354,7 +361,11 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 								koopas->vx = KOOPAS_SPIN_SPEED;
 							else
 								koopas->vx = -KOOPAS_SPIN_SPEED;
-							vy = -MARIO_JUMP_DEFLECT_SPEED;
+							vy = temp;							//Mario went through the koopas
+							x -= min_tx * dx + nx * 0.4f;
+							y -= min_ty * dy + ny * 0.4f;
+							x += dx;
+							y += dy;
 							game->AddScore(200);
 						}
 						else if ((koopas->GetState() == KOOPAS_STATE_DIE || koopas->GetState() == KOOPAS_STATE_DIE_DEFLECT) && koopas->vx != 0) {
