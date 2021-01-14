@@ -1,6 +1,7 @@
 #pragma once
 #include "GameObject.h"
 #include "Game.h"
+#include "Koopas.h"
 
 #define GOOMBA_WALKING_SPEED 0.035f;
 #define GOOMBA_DIE_DEFLECT_SPEED	 0.3f

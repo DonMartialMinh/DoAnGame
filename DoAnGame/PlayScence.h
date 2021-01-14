@@ -44,6 +44,7 @@ protected:
 	CPButton* button ;
 	CGameClearBoard* gameclearboard ;
 	CEndPointItem* item ;
+	vector<CMoveBar*> bar;
 	vector<CPiranhaPlant*> plant;
 	vector<CQBrick*> qbrick;
 	vector<CBrokenBrick*> bbrick;

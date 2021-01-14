@@ -15,7 +15,7 @@
 #define BRICK_ANI_QUES 0
 #define BRICK_ANI_EMP 1
 
-#define BRICK_RINGING_TIME 200
+#define BRICK_RINGING_TIME 100
 
 class CQBrick : public CGameObject
 {

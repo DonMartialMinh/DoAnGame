@@ -179,6 +179,15 @@
 
 #define MARIO_ANI_TRANSFORM_RACOON			111
 
+#define MARIO_ANI_BIG_HOLD_JUMP_RIGHT		112
+#define MARIO_ANI_BIG_HOLD_JUMP_LEFT		113
+#define MARIO_ANI_SMALL_HOLD_JUMP_RIGHT		114
+#define MARIO_ANI_SMALL_HOLD_JUMP_LEFT		115
+#define MARIO_ANI_FIRE_HOLD_JUMP_RIGHT		116
+#define MARIO_ANI_FIRE_HOLD_JUMP_LEFT		117
+#define MARIO_ANI_RACOON_HOLD_JUMP_RIGHT	118
+#define MARIO_ANI_RACOON_HOLD_JUMP_LEFT		119
+
 
 #define MARIO_ANI_DIE				8
 
@@ -254,6 +263,7 @@ public:
 	int KeyDownPressed = 0;
 	int switchType = 0; // 0 down 1 up
 	int speedStack = 0;
+	int isInMoveBar = 0;
 
 	float toX = 0;
 	float toY = 0;

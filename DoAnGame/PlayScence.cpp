@@ -304,6 +304,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		break;
 	case OBJECT_TYPE_MOVEBAR:
 		obj = new CMoveBar();
+		bar.push_back((CMoveBar*)obj);
 		obj->type = OBJECT_TYPE_MOVEBAR;
 		break;
 	case OBJECT_TYPE_PORTAL:
@@ -489,6 +490,8 @@ void CPlayScene::Update(DWORD dt)
 		}
 	}
 
+	
+
 	for (size_t i = 0; i < objects.size(); i++)
 	{
 		if (objects[i]->type == OBJECT_TYPE_MARIO || objects[i]->isFinish || objects[i]->type == OBJECT_TYPE_ENVIRONMENT || objects[i]->type == OBJECT_TYPE_BOARD)
@@ -550,6 +553,7 @@ void CPlayScene::Unload()
 	button = NULL;
 	gameclearboard = NULL;
 	item = NULL;
+	bar.clear();
 	plant.clear();
 	qbrick.clear();
 	bbrick.clear();
