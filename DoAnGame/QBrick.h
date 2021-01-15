@@ -27,11 +27,13 @@ public:
 	int setting = 0;
 	int ringing = 0;
 	int trigger = 0;
+	int attack = 0;
 	int stack = 1;			// number of time stack items
 	virtual void Render();
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void GetBoundingBox(float& l, float& t, float& r, float& b);
 	void StartRinging() { ringing = 1; ring_start = DWORD(GetTickCount64()); }
 	CQBrick(CGameObject* player, int setting, int stack, float y);
+	CGameObject* Attack();
 	CGameObject* ShowItem();
 };

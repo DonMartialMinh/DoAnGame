@@ -466,6 +466,11 @@ void CPlayScene::Update(DWORD dt)
 				button = (CPButton*)obj;
 			}
 		}
+		if (qbrick[i]->attack)						// Tail Attack
+		{
+			qbrick[i]->attack -= 1;
+			objects.push_back(qbrick[i]->Attack());
+		}
 	}
 
 	for (int i = 0; i < int(bbrick.size()); i++)

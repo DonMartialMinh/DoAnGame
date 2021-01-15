@@ -3,7 +3,13 @@
 CTail::CTail(int nx, float maxX)
 {
 	//SetState(FIREBALL_STATE_SPIN);
-	vx = TAIL_SPEED * nx;
+	if (nx == 0)
+	{
+		vy = -0.2f;
+		vx = 0;
+	}
+	else
+		vx = TAIL_SPEED * nx;
 	this->nx = nx;
 	this->maxX = maxX;
 }
@@ -22,10 +28,18 @@ void CTail::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	CGame* game = CGame::GetInstance();
 
-	if (this->x >= maxX && nx == 1)
-		isFinish = 1;
-	else if (this->x <= maxX && nx == -1)
-		isFinish = 1;
+	if (this->nx != 0)
+	{
+		if (this->x >= maxX && nx == 1)
+			isFinish = 1;
+		else if (this->x <= maxX && nx == -1)
+			isFinish = 1;
+	}
+	else
+	{
+		if (this->y < maxX)
+			isFinish = 1;
+	}
 
 	if (isFinish)
 		return;
@@ -91,6 +105,12 @@ void CTail::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				CKoopas* koopas = dynamic_cast<CKoopas*>(e->obj);
 				koopas->SetState(KOOPAS_STATE_DIE_DEFLECT);
 				game->AddScore(100);
+			}
+			else if (dynamic_cast<CMushRoom*>(e->obj))				// object is koopas
+			{
+				CMushRoom* mushroom = dynamic_cast<CMushRoom*>(e->obj);
+				if (mushroom->GetState() == MUSHROOM_STATE_MOVING)
+					mushroom->SetState(MUSHROOM_STATE_FLY);
 			}
 			else if (dynamic_cast<CFlyKoopas*>(e->obj))				// object is Flykoopas
 			{

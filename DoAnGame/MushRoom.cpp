@@ -12,9 +12,9 @@ void CMushRoom::GetBoundingBox(float& l, float& t, float& r, float& b)
 {
 	if (isFinish)
 		return;
-	l = x;
+	l = x + 3.0f;
 	t = y;
-	r = x + MUSHROOM_BBOX_WIDTH;
+	r = l + MUSHROOM_BBOX_WIDTH - 6.0f;
 	b = y + MUSHROOM_BBOX_HEIGHT;
 }
 
@@ -47,7 +47,7 @@ void CMushRoom::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	else
 		state = MUSHROOM_STATE_MOVING;
 
-	if (state == MUSHROOM_STATE_MOVING)	// Out of QBrick
+	if (state == MUSHROOM_STATE_MOVING || state == MUSHROOM_STATE_FLY)	// Out of QBrick
 	{
 
 		vy += MUSHROOM_GRAVITY * dt;
@@ -95,6 +95,10 @@ void CMushRoom::SetState(int state)
 	switch (state)
 	{
 	case MUSHROOM_STATE_MOVING:
+		vx = -MUSHROOM_MOVING_SPEED;
+		break;
+	case MUSHROOM_STATE_FLY:
+		vy = -MUSHROOM_FLY_SPEED;
 		vx = -MUSHROOM_MOVING_SPEED;
 		break;
 	}

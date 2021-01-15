@@ -10,6 +10,7 @@
 #include "PiranhaPlant.h"
 #include "QBrick.h"
 #include "BrokenBrick.h"
+#include "MushRoom.h"
 
 #define TAIL_BBOX_WIDTH  8
 #define TAIL_BBOX_HEIGHT 9

@@ -669,6 +669,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 							qbrick->StartRinging();
 							qbrick->trigger = 1;
 							qbrick->stack--;
+							qbrick->attack = 1;
 							if (qbrick->stack == 0)
 								qbrick->SetState(BRICK_STATE_EMP);
 						}

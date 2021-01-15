@@ -30,6 +30,7 @@
 #define OBJECT_TYPE_LEAF			19
 #define OBJECT_TYPE_ENDPOINTITEM	20
 #define OBJECT_TYPE_GAMECLEARBOARD	21
+#define OBJECT_TYPE_BRICKATTACK		22
 #define OBJECT_TYPE_PORTAL	50
 
 CGameObject::CGameObject()
@@ -120,7 +121,7 @@ void CGameObject::CalcPotentialCollisions(
 		{
 			if (e->t > 0 && e->t <= 1.0f)
 			{
-				if ( (coObjects->at(i)->type == OBJECT_TYPE_PLANTFIREBALL) || (coObjects->at(i)->type == OBJECT_TYPE_LEAF) || (coObjects->at(i)->type == OBJECT_TYPE_MUSHROOM) || (coObjects->at(i)->type == OBJECT_TYPE_COIN) || (coObjects->at(i)->type == OBJECT_TYPE_FIREBALL))			// avoid collision with mario and environment
+				if ( (coObjects->at(i)->type == OBJECT_TYPE_PLANTFIREBALL) || (coObjects->at(i)->type == OBJECT_TYPE_LEAF)  || (coObjects->at(i)->type == OBJECT_TYPE_COIN) || (coObjects->at(i)->type == OBJECT_TYPE_FIREBALL))			// avoid collision with mario and environment
 					delete e;
 				else
 					coEvents.push_back(e);

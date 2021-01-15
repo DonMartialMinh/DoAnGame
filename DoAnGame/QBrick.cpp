@@ -5,6 +5,7 @@
 #define OBJECT_TYPE_MUSHROOM		18
 #define OBJECT_TYPE_LEAF			19
 #define OBJECT_TYPE_PBUTTON			15
+#define OBJECT_TYPE_BRICKATTACK		22
 
 CQBrick::CQBrick(CGameObject*player, int setting, int stack, float y)
 {
@@ -29,9 +30,9 @@ void CQBrick::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	if (ringing)
 	{
 		if (GetTickCount64() - ring_start >= BRICK_RINGING_TIME / 2)
-			y += 1;
+			y += 1.5;
 		else
-			y -= 1;
+			y -= 1.5;
 	}
 	//DebugOut(L"min = %f\n", min);
 }
@@ -113,6 +114,20 @@ CGameObject* CQBrick::ShowItem()
 		LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
 		obj->SetAnimationSet(ani_set);
 	}
+	return obj;
+}
+
+CGameObject* CQBrick::Attack()		// create fireball function
+{
+	int ani_set_id = MARIO_TAIL_ANI_SET_ID;
+	CAnimationSets* animation_sets = CAnimationSets::GetInstance();
+	CGameObject* obj = NULL;
+	float maxRange = this->y - 10.0f;
+	obj = new CTail(0, maxRange);
+	obj->type = OBJECT_TYPE_BRICKATTACK;
+	obj->SetPosition(this->x + 4.0f, this->y + BRICK_BBOX_HEIGHT);
+	LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
+	obj->SetAnimationSet(ani_set);
 	return obj;
 }
 

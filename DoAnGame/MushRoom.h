@@ -8,11 +8,13 @@
 #define MUSHROOM_GRAVITY	0.001f
 
 #define MUSHROOM_STATE_MOVING 100
+#define MUSHROOM_STATE_FLY		200
 
 #define MUSHROOM_ANI_RED 0
 #define MUSHROOM_ANI_GREEN 1
 
 #define MUSHROOM_MOVING_SPEED 0.05f 
+#define MUSHROOM_FLY_SPEED 0.2f 
 
 class CMushRoom : public CGameObject
 {
