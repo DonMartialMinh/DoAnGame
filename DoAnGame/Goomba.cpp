@@ -27,12 +27,12 @@ void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	float camy;
 	float scrh = float(game->GetScreenHeight());
 	game->GetCamPos(camx, camy);
-	if (y < camy || y > camy + scrh)		// out screen height then delete
-	{
-		isFinish = 1;
-		dying = 1;
-		return;
-	}
+	//if (y < camy || y > camy + scrh)		// out screen height then delete
+	//{
+	//	isFinish = 1;
+	//	dying = 1;
+	//	return;
+	//}
 
 
 	if (isFinish && dying)	// if dying and die animation finish then return

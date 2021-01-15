@@ -812,7 +812,6 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					CPortal* p = dynamic_cast<CPortal*>(e->obj);
 					CGame::GetInstance()->SwitchScene(p->GetSceneId());
 					game->SetTime(0);
-					obj = NULL;
 					return;
 				}
 			}

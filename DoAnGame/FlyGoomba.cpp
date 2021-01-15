@@ -32,12 +32,12 @@ void CFlyGoomba::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	float camy;
 	float scrh = float(game->GetScreenHeight());
 	game->GetCamPos(camx, camy);
-	if (y < camy || y > camy + scrh)		// out screen height then delete
-	{
-		isFinish = 1;
-		dying = 1;
-		return;
-	}
+	//if (y < camy || y > camy + scrh)		// out screen height then delete
+	//{
+	//	isFinish = 1;
+	//	dying = 1;
+	//	return;
+	//}
 
 
 	if (isFinish && dying)	// if dying and die animation finish then return
@@ -176,7 +176,7 @@ void CFlyGoomba::SetState(int state)
 		vx = -FLYGOOMBA_WALKING_SPEED;
 		break;
 	case FLYGOOMBA_STATE_WALKING:
-		y += FLYGOOMBA_BBOX_HEIGHT - FLYGOOMBA_BBOX1_HEIGHT + 1;
+		//y += FLYGOOMBA_BBOX_HEIGHT - FLYGOOMBA_BBOX1_HEIGHT + 1;
 		vy = 0;
 		break;
 	}

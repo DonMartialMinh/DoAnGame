@@ -122,10 +122,10 @@ CGameObject* CQBrick::Attack()		// create fireball function
 	int ani_set_id = MARIO_TAIL_ANI_SET_ID;
 	CAnimationSets* animation_sets = CAnimationSets::GetInstance();
 	CGameObject* obj = NULL;
-	float maxRange = this->y - 10.0f;
+	float maxRange = this->y;
 	obj = new CTail(0, maxRange);
 	obj->type = OBJECT_TYPE_BRICKATTACK;
-	obj->SetPosition(this->x + 4.0f, this->y + BRICK_BBOX_HEIGHT);
+	obj->SetPosition(this->x + 4.0f, this->y + BRICK_BBOX_HEIGHT/2);
 	LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
 	obj->SetAnimationSet(ani_set);
 	return obj;

@@ -139,6 +139,13 @@ void CTail::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					brick->isFinish = 1;
 				}
 			}
+			else if (dynamic_cast<CBoomerangBros*>(e->obj))				// object is Boomerang bros
+			{
+				isFinish = 1;
+				CBoomerangBros* bros = dynamic_cast<CBoomerangBros*>(e->obj);
+				bros->SetState(BROS_STATE_DIE);
+				game->AddScore(1000);
+			}
 		}
 	}
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
