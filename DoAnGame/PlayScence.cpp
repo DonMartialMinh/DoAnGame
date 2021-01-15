@@ -582,7 +582,7 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 	if (mario->GetState() == MARIO_STATE_DIE || mario->GetState() == MARIO_STATE_ENDGAME || mario->transform || mario->transformRacoon) return;
 	switch (KeyCode)
 	{
-	case DIK_X:
+	case DIK_S:
 		if ((mario->getLevel() == MARIO_LEVEL_RACOON && mario->isFlying == 1 && mario->isRunning == 1 && mario->sliding == 1) || mario->flying)			//condition to fly
 			mario->SetState(MARIO_RACOON_STATE_FLY);
 		else if (mario->getLevel() == MARIO_LEVEL_RACOON && mario->isFlying == 1)
@@ -590,17 +590,28 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 		else if (mario->GetState() != MARIO_STATE_DUCK)
 			mario->SetState(MARIO_STATE_JUMP);
 		break;
-	case DIK_A:
-		mario->Reset();
+	case DIK_X:
+		if ((mario->getLevel() == MARIO_LEVEL_RACOON && mario->isFlying == 1 && mario->isRunning == 1 && mario->sliding == 1) || mario->flying)			//condition to fly
+			mario->SetState(MARIO_RACOON_STATE_FLY);
+		else if (mario->getLevel() == MARIO_LEVEL_RACOON && mario->isFlying == 1)
+			mario->SetState(MARIO_RACOON_STATE_FALL);
+		else if (mario->GetState() != MARIO_STATE_DUCK)
+			mario->SetState(MARIO_STATE_JUMP_SHORT);
 		break;
 	case DIK_T:
 		mario->SetPosition(138,480);
+		break;
+	case DIK_A:
+		if (mario->getLevel() == MARIO_LEVEL_RACOON)
+			mario->SetState(MARIO_RACOON_STATE_TAIL);
+		else if (mario->getLevel() == MARIO_LEVEL_FIRE)
+			mario->SetState(MARIO_FIRE_STATE_THROW);						
 		break;
 	case DIK_Z:
 		if (mario->getLevel() == MARIO_LEVEL_RACOON)
 			mario->SetState(MARIO_RACOON_STATE_TAIL);
 		else if (mario->getLevel() == MARIO_LEVEL_FIRE)
-			mario->SetState(MARIO_FIRE_STATE_THROW);						
+			mario->SetState(MARIO_FIRE_STATE_THROW);
 		break;
 	case DIK_1:
 		if (mario->getLevel() != MARIO_LEVEL_SMALL)
@@ -649,8 +660,9 @@ void CPlayScenceKeyHandler::KeyState(BYTE* states)
 	// disable control key when Mario die 
 	if (mario->GetState() == MARIO_STATE_DIE || mario->GetState() == MARIO_STATE_ENDGAME || mario->transform || mario->transformRacoon) return;
 
-	if (game->IsKeyDown(DIK_LSHIFT))
+	if (game->IsKeyDown(DIK_A))
 	{
+		mario->canHold = 1;
 		mario->isRunning = 1;
 		if (abs(mario->GetVx()) >= MARIO_RUNNING_SPEED)
 		{
@@ -661,14 +673,6 @@ void CPlayScenceKeyHandler::KeyState(BYTE* states)
 	else {
 		mario->isRunning = 0;
 		mario->sliding = 0;
-	}
-
-	if (game->IsKeyDown(DIK_C))
-	{
-		mario->canHold = 1;
-	}
-	else
-	{
 		mario->canHold = 0;
 		mario->holding = 0;
 	}

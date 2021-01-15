@@ -78,17 +78,17 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				speedStack = 0;
 			else if (abs(vx) > MARIO_WALKING_SPEED && abs(vx) < MARIO_WALKING_SPEED + 0.01f)
 				speedStack = 1;
-			else if (abs(vx) > MARIO_WALKING_SPEED + 0.01f && abs(vx) < MARIO_WALKING_SPEED + 0.02f)
+			else if (abs(vx) > MARIO_WALKING_SPEED + 0.01f && abs(vx) < MARIO_WALKING_SPEED + 0.03f)
 				speedStack = 2;
-			else if (abs(vx) > MARIO_WALKING_SPEED + 0.02f && abs(vx) < MARIO_WALKING_SPEED + 0.03f)
-				speedStack = 3;
 			else if (abs(vx) > MARIO_WALKING_SPEED + 0.03f && abs(vx) < MARIO_WALKING_SPEED + 0.05f)
+				speedStack = 3;
+			else if (abs(vx) > MARIO_WALKING_SPEED + 0.05f && abs(vx) < MARIO_WALKING_SPEED + 0.06f)
 				speedStack = 4;
-			else if (abs(vx) > MARIO_WALKING_SPEED + 0.05f && abs(vx) < MARIO_WALKING_SPEED + 0.07f)
+			else if (abs(vx) > MARIO_WALKING_SPEED + 0.06f && abs(vx) < MARIO_WALKING_SPEED + 0.07f)
 				speedStack = 4;
 			else if (abs(vx) > MARIO_WALKING_SPEED + 0.07f && abs(vx) < MARIO_WALKING_SPEED + 0.09f)
 				speedStack = 5;
-			else if (abs(vx) > MARIO_WALKING_SPEED + 0.09f && abs(vx) < MARIO_WALKING_SPEED + 0.11f)
+			else if (abs(vx) > MARIO_WALKING_SPEED + 0.09f && abs(vx) < MARIO_WALKING_SPEED + 0.1f)
 				speedStack = 6;
 			else if (abs(vx) == MARIO_RUNNING_SPEED)
 				speedStack = 7;
@@ -1480,6 +1480,16 @@ void CMario::SetState(int state)
 				vy = -(MARIO_JUMP_SPEED_Y + 0.08f);		//vy when slide
 			else
 				vy = -MARIO_JUMP_SPEED_Y;
+		}
+		break;
+	case MARIO_STATE_JUMP_SHORT:
+		if (isFlying == 0 && isDucking == 0)
+		{
+			isFlying = 1;
+			if (sliding)
+				vy = -(MARIO_JUMP_SPEED_Y_SHORT  + 0.08f);		//vy when slide
+			else
+				vy = -MARIO_JUMP_SPEED_Y_SHORT ;
 		}
 		break;
 	case MARIO_STATE_DUCK:
