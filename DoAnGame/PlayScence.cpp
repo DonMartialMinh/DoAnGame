@@ -399,11 +399,6 @@ void CPlayScene::Update(DWORD dt)
 				continue;
 			coObjects.push_back(objects[i]);
 		}
-		/*for (size_t i = 0; i < objects.size(); i++)
-		{
-			if (objects[i]->type == OBJECT_TYPE_MARIO)
-				objects[i]->Update(dt, &coObjects);
-		}*/
 		player->Update(dt, &coObjects);
 		return;
 	}
@@ -507,10 +502,11 @@ void CPlayScene::Update(DWORD dt)
 
 	for (size_t i = 0; i < objects.size(); i++)
 	{
-		if (objects[i]->type == OBJECT_TYPE_ENVIRONMENT)
+		if (objects[i]->type == OBJECT_TYPE_ENVIRONMENT || objects[i]->type == OBJECT_TYPE_MARIO)
 			continue;
 		objects[i]->Update(dt, &coObjects);
 	}
+	player->Update(dt, &coObjects);
 
 	coObjects.clear();
 
@@ -876,37 +872,37 @@ void CPlayScene::UpdateCamera(float cx, float cy, int id)
 		{
 			if (cx < 2304.0f + game->GetScreenWidth() / 2)
 			{
-				if (cy < 50.0f)
+				if (cy < 280.0f)
 				{
 					cy -= 50.0f;
 					CGame::GetInstance()->SetCamPos(2304.0f, round(cy));
 				}
-				else if (cy > 0 && cy < 240)
-					CGame::GetInstance()->SetCamPos(2304.0f, 0.0f); // set Cam when game start
+				else if (cy > 230 && cy < 470)
+					CGame::GetInstance()->SetCamPos(2304.0f, 230.0f); // set Cam when game start
 			}
 			else if (cx > 2661.0f)
 			{
-				if (cy < 50.0f)
+				if (cy < 280.0f)
 				{
 					cy -= 50.0f;
 					CGame::GetInstance()->SetCamPos(2508.0f, round(cy));
 				}
 				else
-					CGame::GetInstance()->SetCamPos(2508.0f, 0.0f); //set Cam when game end
+					CGame::GetInstance()->SetCamPos(2508.0f, 230.0f); //set Cam when game end
 			}
 			else
 			{
-				if (cy < 50.0f)
+				if (cy < 280.0f)
 				{
 					cx -= game->GetScreenWidth() / 2;
 					cy -= 50.0f;
 					CGame::GetInstance()->SetCamPos(round(cx), round(cy));
 				}
-				else if (cy > 0 && cy < 240)
+				else if (cy > 230 && cy < 470)
 				{
 					cx -= game->GetScreenWidth() / 2;
 					cy -= 50.0f;
-					CGame::GetInstance()->SetCamPos(round(cx), 0.0f); // set Cam Focus
+					CGame::GetInstance()->SetCamPos(round(cx), 230.0f); // set Cam Focus
 				}
 			}
 		}
@@ -918,7 +914,7 @@ void CPlayScene::UpdateCamera(float cx, float cy, int id)
 				temp = 0;
 
 			if (camx < 1728.0f)
-				CGame::GetInstance()->SetCamPos(round(camx + temp), 0.0f);
+				CGame::GetInstance()->SetCamPos(round(camx + temp), 230.0f);
 		}
 	}
 }

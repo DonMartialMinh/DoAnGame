@@ -28,7 +28,7 @@ public:
 	~Grid();
 
 	void SetFile(char* str);
-	void ReloadGrid();
+	void loadGrid();
 
 
 	CGameObject* GetNewObject(int type, float x, float y, int w, int h, int Model);

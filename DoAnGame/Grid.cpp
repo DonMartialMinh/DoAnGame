@@ -18,7 +18,7 @@ void Grid::SetFile(char* str)
 	filepath = str;
 }
 
-void Grid::ReloadGrid()
+void Grid::loadGrid()
 {
 	for (int i = 0; i < GRID_CELL_MAX_ROW; i++)
 		for (int j = 0; j < GRID_CELL_MAX_COLUMN; j++)
@@ -27,20 +27,10 @@ void Grid::ReloadGrid()
 		}
 
 
-	int id, type, direction, w, h, model, n;
-	float x, y;
 
-	//ifstream inp(filepath, ios::in);
-	//inp >> n;
-	//for (int i = 0; i < n; i++)
-	//{
-	//	inp >> id >> type >> direction >> x >> y >> w >> h >> model;
-	//	Insert(id, type, direction, x, y, w, h, model);
-	//}
-	//inp.close();
 }
 
-CGameObject* Grid::GetNewObject(int type, float x, float y, int w, int h, int Model)
+CGameObject* Grid::GetNewObject(int id, float x, float y, int ani, int h, int Model)
 {
 	//switch (type)
 	//{
@@ -90,20 +80,4 @@ void Grid::GetListObject(vector<CGameObject*>& ListObj)
 			{
 				ListObj.insert(ListObj.end(), cells[i][j].begin(), cells[i][j].end());
 			}
-}
-
-void Grid::Insert(int id, int type, int direction, float x, float y, int w, int h, int Model)
-{
-	int top = (int)(y / GRID_CELL_HEIGHT);
-	int bottom = (int)((y + h) / GRID_CELL_HEIGHT);
-	int left = (int)(x / GRID_CELL_WIDTH);
-	int right = (int)((x + w) / GRID_CELL_WIDTH);
-
-	CGameObject* obj = GetNewObject(type, x, y, w, h, Model);
-	if (obj == NULL)
-		return;
-
-	for (int i = top; i <= bottom; i++)
-		for (int j = left; j <= right; j++)
-			cells[i][j].push_back(obj);
 }
