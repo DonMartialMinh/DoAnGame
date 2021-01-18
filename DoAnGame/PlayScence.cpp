@@ -345,9 +345,9 @@ void CPlayScene::Load()
 	grid = new Grid();
 
 	if (this->id == MAP_1)
-	{
 		grid->SetFile("grid_map1-1.txt");
-	}
+	else if (this->id == MAP_2)
+		grid->SetFile("grid_map1-4.txt");
 
 	grid->loadGrid( player, plant, bros,  qbrick, bbrick,  bar, item);
 }
