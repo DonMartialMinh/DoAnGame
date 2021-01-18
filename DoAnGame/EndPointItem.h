@@ -15,11 +15,10 @@
 
 class CEndPointItem : public CGameObject
 {
-
+public:
 	virtual void GetBoundingBox(float& l, float& t, float& r, float& b);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void Render();
-public:
 	int sparkling = 0;
 	CEndPointItem();
 	void randomitem();

@@ -24,6 +24,13 @@ void CPiranhaPlant::GetBoundingBox(float& l, float& t, float& r, float& b)
 
 void CPiranhaPlant::Render()
 {
+	CGame* game = CGame::GetInstance();
+	float camx;
+	float camy;
+	float scrw = float(game->GetScreenWidth());
+	game->GetCamPos(camx, camy);
+	if (x > camx + scrw)		// out screen width then return
+		return;
 	if (isFinish && dying)
 		return;
 	int ani = PIRANHAPLANT_ANI_BOTLEFT;

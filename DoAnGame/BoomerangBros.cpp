@@ -28,8 +28,11 @@ void CBoomerangBros::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	float camx;
 	float camy;
 	float scrh = float(game->GetScreenHeight());
+	float scrw = float(game->GetScreenWidth());
 	game->GetCamPos(camx, camy);
 	if (y < camy || y > camy + scrh)		// out screen height then delete
+		return;
+	if (x > camx + scrw)		// out screen width then return
 		return;
 
 	if (state != BROS_STATE_DIE)

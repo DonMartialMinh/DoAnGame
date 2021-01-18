@@ -6,6 +6,7 @@
 #include "Sprites.h"
 #include "Portal.h"
 #include <cmath> 
+#include <stdio.h>
 
 using namespace std;
 
@@ -13,10 +14,10 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 	CScene(id, filePath)
 {
 	this->id = id;
+	grid = NULL;
 	player = NULL;
 	bros = NULL;
 	speedBar = NULL;
-	item = NULL;
 	gameclearboard = NULL;
 	Dtime = NULL;
 	board = NULL;
@@ -24,8 +25,6 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 	isWaiting = 1;
 	TimeWaitToScene = DWORD(GetTickCount64());
 	key_handler = new CPlayScenceKeyHandler(this);
-
-
 }
 
 /*
@@ -170,17 +169,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	float x = float(atof(tokens[1].c_str()));
 	float y = float(atof(tokens[2].c_str()));
 	int ani_set_id = atoi(tokens[3].c_str());
-	int object_setting = 0;
-	float setting1 = 0;
-	float setting2 = 0;
 
-	if (tokens.size() == 5)
-		object_setting = atoi(tokens[4].c_str());
-	else if (tokens.size() == 6)
-	{
-		setting1 = float(atof(tokens[4].c_str()));
-		setting2 = float(atof(tokens[5].c_str()));
-	}
 
 	CAnimationSets* animation_sets = CAnimationSets::GetInstance();
 
@@ -188,6 +177,56 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 
 	switch (object_type)
 	{
+	case OBJECT_TYPE_GOOMBA:
+		obj = new CGoomba();
+		obj->type = OBJECT_TYPE_GOOMBA;
+		listEnemies.push_back((CGoomba*)obj);
+		break;
+	case OBJECT_TYPE_KOOPAS:
+	{
+		float setting1 = float(atof(tokens[4].c_str()));
+		float setting2 = float(atof(tokens[5].c_str()));
+		obj = new CKoopas(setting1, setting2);
+		obj->type = OBJECT_TYPE_KOOPAS;
+		listEnemies.push_back((CKoopas*)obj);
+	}
+	break;
+	case OBJECT_TYPE_FLYGOOMBA:
+		obj = new CFlyGoomba();
+		obj->type = OBJECT_TYPE_FLYGOOMBA;
+		listEnemies.push_back((CFlyGoomba*)obj);
+		break;
+	case OBJECT_TYPE_FLYKOOPAS:
+	{
+		float yMin = float(atof(tokens[4].c_str()));
+		float yMax = float(atof(tokens[5].c_str()));
+		int type = atoi(tokens[6].c_str());
+		obj = new CFlyKoopas(yMin, yMax, type);
+		obj->type = OBJECT_TYPE_FLYKOOPAS;
+		listEnemies.push_back((CFlyKoopas*)obj);
+	}
+	break;
+	case OBJECT_TYPE_PLANT:
+		obj = new CPlant(player, y);
+		obj->type = OBJECT_TYPE_PLANT;
+		listEnemies.push_back((CPlant*)obj);
+		break;
+	case OBJECT_TYPE_PIRANHAPLANT:
+		obj = new CPiranhaPlant(player, y);
+		plant.push_back((CPiranhaPlant*)obj);
+		obj->type = OBJECT_TYPE_PIRANHAPLANT;
+		listEnemies.push_back((CPiranhaPlant*)obj);
+		break;
+	case OBJECT_TYPE_BOOMERANGBROS:
+	{
+		float setting1 = float(atof(tokens[4].c_str()));
+		float setting2 = float(atof(tokens[5].c_str()));
+		obj = new CBoomerangBros(setting1, setting2);
+		obj->type = OBJECT_TYPE_BOOMERANGBROS;
+		bros = (CBoomerangBros*)obj;
+		listEnemies.push_back((CBoomerangBros*)obj);
+	}
+	break;
 	case OBJECT_TYPE_MARIO:
 		if (player != NULL)
 		{
@@ -196,86 +235,22 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		}
 		obj = new CMario(x, y);
 		obj->type = OBJECT_TYPE_MARIO;
-		player = (CMario*)obj; 
-
+		player = (CMario*)obj;
 		DebugOut(L"[INFO] Player object created!\n");
 		break;
-	case OBJECT_TYPE_GOOMBA: 
-		obj = new CGoomba(); 
-		obj->type = OBJECT_TYPE_GOOMBA;
-		break;
-	case OBJECT_TYPE_BRICK: 
-		obj = new CBrick(); 
-		obj->type = OBJECT_TYPE_BRICK;
-		break;
-	case OBJECT_TYPE_KOOPAS: 
-		obj = new CKoopas(setting1, setting2);
-		obj->type = OBJECT_TYPE_KOOPAS;
-		break;
-	case OBJECT_TYPE_ENVIRONMENT: 
+	case OBJECT_TYPE_ENVIRONMENT:
 		obj = new CEnvironment();
 		obj->type = OBJECT_TYPE_ENVIRONMENT;
-		break;
-	case OBJECT_TYPE_UPSIDEBRICK: 
-		obj = new CUpsideBrick(); 
-		obj->type = OBJECT_TYPE_UPSIDEBRICK;
-		break;
-	case OBJECT_TYPE_COIN:	
-		obj = new CCoin();
-		obj->type = OBJECT_TYPE_COIN;
-		break;
-	case OBJECT_TYPE_QBRICK: 
-		obj = new CQBrick(player, int(setting1), int(setting2), y);
-		obj->type = OBJECT_TYPE_QBRICK;
-		qbrick.push_back((CQBrick*)obj);
-		break;
-	case OBJECT_TYPE_FLYGOOMBA: 
-		obj = new CFlyGoomba(); 
-		obj->type = OBJECT_TYPE_FLYGOOMBA;
-		break;
-	case OBJECT_TYPE_FLYKOOPAS: 
-	{
-		float yMin = float(atof(tokens[4].c_str()));
-		float yMax = float(atof(tokens[5].c_str()));
-		int type = atoi(tokens[6].c_str());
-		obj = new CFlyKoopas(yMin, yMax, type);
-		obj->type = OBJECT_TYPE_FLYKOOPAS;
-	}
-		break;
-	case OBJECT_TYPE_PLANT: 
-		obj = new CPlant(player, y); 
-		obj->type = OBJECT_TYPE_PLANT;
-		break;
-	case OBJECT_TYPE_PIRANHAPLANT:
-		obj = new CPiranhaPlant(player, y); 
-		plant.push_back((CPiranhaPlant*)obj);
-		obj->type = OBJECT_TYPE_PIRANHAPLANT;
-		break;
-	case OBJECT_TYPE_SWITCH:
-		obj = new CSwitch(setting1, setting2);
-		obj->type = OBJECT_TYPE_SWITCH;
-		break;
-	case OBJECT_TYPE_BROKENBRICK:
-		obj = new CBrokenBrick();
-		bbrick.push_back((CBrokenBrick*)obj);
-		obj->type = OBJECT_TYPE_BROKENBRICK;
+		background.push_back((CEnvironment*)obj);
 		break;
 	case OBJECT_TYPE_BOARD:
 		obj = new CBoard();
 		board = (CBoard*)obj;
 		obj->type = OBJECT_TYPE_BOARD;
 		break;
-	case OBJECT_TYPE_ENDPOINTITEM:
-		obj = new CEndPointItem();
-		item = (CEndPointItem*)obj;
-		obj->type = OBJECT_TYPE_ENDPOINTITEM;
-		break;
-	case OBJECT_TYPE_GAMECLEARBOARD:
-		obj = new CGameClearBoard();
-		gameclearboard = (CGameClearBoard*)obj;
-		obj->type = OBJECT_TYPE_BOARD;
-		break;
 	case OBJECT_TYPE_NUMBER:
+	{
+		int object_setting = atoi(tokens[4].c_str());
 		obj = new CNumber();
 		if (object_setting == 0)
 			numCoin.push_back((CNumber*)obj);
@@ -286,6 +261,12 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		else if (object_setting == 3)
 			numLive.push_back((CNumber*)obj);
 		obj->type = OBJECT_TYPE_BOARD;
+	}
+		break;
+	case OBJECT_TYPE_GAMECLEARBOARD:
+		obj = new CGameClearBoard();
+		gameclearboard = (CGameClearBoard*)obj;
+		//DebugOut(L"success");
 		break;
 	case OBJECT_TYPE_SPEEDBAR:
 		obj = new CSpeedBar();
@@ -297,24 +278,6 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		itemList.push_back((CItem*)obj);
 		obj->type = OBJECT_TYPE_BOARD;
 		break;
-	case OBJECT_TYPE_BOOMERANGBROS:
-		obj = new CBoomerangBros(setting1, setting2);
-		obj->type = OBJECT_TYPE_BOOMERANGBROS;
-		bros = (CBoomerangBros*)obj;
-		break;
-	case OBJECT_TYPE_MOVEBAR:
-		obj = new CMoveBar();
-		bar.push_back((CMoveBar*)obj);
-		obj->type = OBJECT_TYPE_MOVEBAR;
-		break;
-	case OBJECT_TYPE_PORTAL:
-	{
-		float r = float(atof(tokens[4].c_str()));
-		float b = float(atof(tokens[5].c_str()));
-		int scene_id = atoi(tokens[6].c_str());
-		obj = new CPortal(x, y, r, b, scene_id);
-	}
-	break;
 	default:
 		//DebugOut(L"[ERR] Invalid object type: %d\n", object_type);
 		return;
@@ -326,13 +289,12 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
 
 	obj->SetAnimationSet(ani_set);
-	objects.push_back(obj);
 }
 
 void CPlayScene::Load()
 {
 	DebugOut(L"[INFO] Start loading scene resources from : %s \n", sceneFilePath);
-
+	//grid.loadGrid(player);
 	ifstream f;
 	f.open(sceneFilePath);
 
@@ -379,6 +341,15 @@ void CPlayScene::Load()
 	//CTextures::GetInstance()->Add(ID_TEX_BBOX, L"textures\\bbox.png", D3DCOLOR_XRGB(255, 255, 255));
 
 	DebugOut(L"[INFO] Done loading scene resources %s\n", sceneFilePath);
+
+	grid = new Grid();
+
+	if (this->id == MAP_1)
+	{
+		grid->SetFile("grid_map1-1.txt");
+	}
+
+	grid->loadGrid( player, plant, bros,  qbrick, bbrick,  bar, item);
 }
 
 void CPlayScene::Update(DWORD dt)
@@ -390,14 +361,21 @@ void CPlayScene::Update(DWORD dt)
 
 	vector<LPGAMEOBJECT> coObjects;
 	CGame* game = CGame::GetInstance();
+	grid->GetListObject(listObjects);
 
 	if (player->transform || player->transformRacoon || player->GetState() == MARIO_STATE_DIE)	// frozen scene
 	{
-		for (size_t i = 0; i < objects.size(); i++)
+		for (size_t i = 0; i < listObjects.size(); i++)
 		{
-			if (objects[i]->type == OBJECT_TYPE_MARIO || objects[i]->isFinish || objects[i]->type == OBJECT_TYPE_ENVIRONMENT || objects[i]->type == OBJECT_TYPE_BOARD)
-				continue;
-			coObjects.push_back(objects[i]);
+			coObjects.push_back(listObjects[i]);
+		}
+		for (size_t i = 0; i < createObjects.size(); i++)
+		{
+			coObjects.push_back(createObjects[i]);
+		}
+		for (size_t i = 0; i < listEnemies.size(); i++)
+		{
+			coObjects.push_back(listEnemies[i]);
 		}
 		player->Update(dt, &coObjects);
 		return;
@@ -409,33 +387,34 @@ void CPlayScene::Update(DWORD dt)
 	if (player->fireball)						// Draw fireball
 	{
 		player->fireball -= 1;
-		objects.push_back(player->NewFireBall());
+		createObjects.push_back(player->NewFireBall());
 	}
 
 	if (player->tail)						// Tail Attack
 	{
 		player->tail -= 1;
-		objects.push_back(player->TailAttack());
+		createObjects.push_back(player->TailAttack());
 	}
 
-	if (gameclearboard->GetState() == BOARD_STATE_EMPTY)
-	{
-		if (item != NULL)
-			if (item->sparkling == 1)
-				gameclearboard->SetState(BOARD_STATE_STAR);
-			else if (item->sparkling == 2)
-				gameclearboard->SetState(BOARD_STATE_MUSHROOM);
-			else if (item->sparkling == 3)
-				gameclearboard->SetState(BOARD_STATE_FLOWER);
-			else;
-	}
+	if (gameclearboard != NULL)
+		if (gameclearboard->GetState() == BOARD_STATE_EMPTY)
+		{
+			if (item[0] != NULL)
+				if (item[0]->sparkling == 1)
+					gameclearboard->SetState(BOARD_STATE_STAR);
+				else if (item[0]->sparkling == 2)
+					gameclearboard->SetState(BOARD_STATE_MUSHROOM);
+				else if (item[0]->sparkling == 3)
+					gameclearboard->SetState(BOARD_STATE_FLOWER);
+				else;
+		}
 
 	if (bros != NULL)
 	{
 		if (bros->boomerang)
 		{
 			bros->boomerang -= 1;
-			objects.push_back(bros->NewBoomerang());
+			createObjects.push_back(bros->NewBoomerang());
 		}
 	}
 
@@ -444,7 +423,7 @@ void CPlayScene::Update(DWORD dt)
 		if (plant[i]->fireball)						// Draw fireball
 		{
 			plant[i]->fireball -= 1;
-			objects.push_back(plant[i]->NewFireBall());
+			createObjects.push_back(plant[i]->NewFireBall());
 		}
 	}
 
@@ -455,7 +434,7 @@ void CPlayScene::Update(DWORD dt)
 			qbrick[i]->trigger -= 1;
 			CGameObject* obj;
 			obj = qbrick[i]->ShowItem();
-			objects.push_back(obj);
+			createObjects.push_back(obj);
 			if (obj->type == OBJECT_TYPE_PBUTTON)
 			{
 				button = (CPButton*)obj;
@@ -464,7 +443,7 @@ void CPlayScene::Update(DWORD dt)
 		if (qbrick[i]->attack)						// Tail Attack
 		{
 			qbrick[i]->attack -= 1;
-			objects.push_back(qbrick[i]->Attack());
+			createObjects.push_back(qbrick[i]->Attack());
 		}
 	}
 
@@ -474,7 +453,7 @@ void CPlayScene::Update(DWORD dt)
 		{
 			bbrick[i]->trigger -= 1;
 			vector<CGameObject*> temp = bbrick[i]->Broken();
-			objects.insert(objects.end(), temp.begin(), temp.end());
+			createObjects.insert(createObjects.end(), temp.begin(), temp.end());
 		}
 	}
 
@@ -491,20 +470,30 @@ void CPlayScene::Update(DWORD dt)
 		}
 	}
 
-	
-
-	for (size_t i = 0; i < objects.size(); i++)
+	for (size_t i = 0; i < listObjects.size(); i++)
 	{
-		if (objects[i]->type == OBJECT_TYPE_MARIO || objects[i]->isFinish || objects[i]->type == OBJECT_TYPE_ENVIRONMENT || objects[i]->type == OBJECT_TYPE_BOARD)
-			continue;
-		coObjects.push_back(objects[i]);
+		coObjects.push_back(listObjects[i]);
 	}
-
-	for (size_t i = 0; i < objects.size(); i++)
+	for (size_t i = 0; i < createObjects.size(); i++)
 	{
-		if (objects[i]->type == OBJECT_TYPE_ENVIRONMENT || objects[i]->type == OBJECT_TYPE_MARIO)
-			continue;
-		objects[i]->Update(dt, &coObjects);
+		coObjects.push_back(createObjects[i]);
+
+	}
+	for (size_t i = 0; i < listEnemies.size(); i++)
+	{
+		coObjects.push_back(listEnemies[i]);
+	}
+	for (size_t i = 0; i < listObjects.size(); i++)
+	{
+		listObjects[i]->Update(dt, &coObjects);
+	}
+	for (size_t i = 0; i < createObjects.size(); i++)
+	{
+		createObjects[i]->Update(dt, &coObjects);
+	}
+	for (size_t i = 0; i < listEnemies.size(); i++)
+	{
+		listEnemies[i]->Update(dt, &coObjects);
 	}
 	player->Update(dt, &coObjects);
 
@@ -536,8 +525,31 @@ void CPlayScene::Render()
 {
 	if (isWaiting)
 		return;
-	for (int i = 0; i < int(objects.size()); i++)
-		objects[i]->Render();
+	for (int i = 0; i < int(background.size()); i++)
+		background[i]->Render();
+	gameclearboard->Render();
+	player->Render();
+	for (int i = 0; i < int(listEnemies.size()); i++)
+		listEnemies[i]->Render();
+	for (int i = 0; i < int(listObjects.size()); i++)
+		listObjects[i]->Render();
+	for (int i = 0; i < int(createObjects.size()); i++)
+		createObjects[i]->Render();
+
+	// Under bar render
+	board->Render();
+	for (int i = 0; i < int(numCoin.size()); i++)
+		numCoin[i]->Render();
+	for (int i = 0; i < int(numTime.size()); i++)
+		numTime[i]->Render();
+	for (int i = 0; i < int(numScore.size()); i++)
+		numScore[i]->Render();
+	for (int i = 0; i < int(numLive.size()); i++)
+		numLive[i]->Render();
+	for (int i = 0; i < int(itemList.size()); i++)
+		itemList[i]->Render();
+	speedBar->Render();
+
 }
 
 /*
@@ -545,21 +557,28 @@ void CPlayScene::Render()
 */
 void CPlayScene::Unload()
 {
-	for (int i = 0; i < int(objects.size()); i++)
-		delete objects[i];
-
-	objects.clear();
+	for (int i = 0; i < int(background.size()); i++)
+		delete background[i];
+	for (int i = 0; i < int(listObjects.size()); i++)
+		delete listObjects[i];
+	for (int i = 0; i < int(createObjects.size()); i++)
+		delete createObjects[i];
+	for (int i = 0; i < int(listEnemies.size()); i++)
+		delete listEnemies[i];
+	listEnemies.clear();
+	listObjects.clear();
+	createObjects.clear();
+	background.clear();
 	player = NULL;
 	bros = NULL;
 	board = NULL;
 	button = NULL;
 	gameclearboard = NULL;
-	item = NULL;
+	item.clear();
 	bar.clear();
 	plant.clear();
 	qbrick.clear();
 	bbrick.clear();
-	objects.clear();
 	numCoin.clear();
 	numLive.clear();
 	numScore.clear();
@@ -881,7 +900,7 @@ void CPlayScene::UpdateCamera(float cx, float cy, int id)
 					CGame::GetInstance()->SetCamPos(2304.0f, 230.0f); // set Cam when game start
 			}
 			else if (cx > 2661.0f)
-			{
+			{ 
 				if (cy < 280.0f)
 				{
 					cy -= 50.0f;

@@ -33,6 +33,13 @@ void CPlant::Render()
 
 void CPlant::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
+	CGame* game = CGame::GetInstance();
+	float camx;
+	float camy;
+	float scrw = float(game->GetScreenWidth());
+	game->GetCamPos(camx, camy);
+	if (x > camx + scrw)		// out screen width then return
+		return;
 	if (isFinish && dying)
 		return;
 	CGameObject::Update(dt);

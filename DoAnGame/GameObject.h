@@ -59,6 +59,8 @@ public:
 
 	int state = -1;
 
+	int id = 0;
+
 	DWORD dt = NULL;
 
 	LPANIMATION_SET animation_set = NULL;
@@ -93,6 +95,9 @@ public:
 	float GetVy() { return vy; };
 	void SetVx(float vx) { this->vx = vx; };
 	void SetVy(float vy) { this->vy = vy; };
+	
+	int GetId() { return id; };
+	void SetId(int id) { this->id = id; };
 
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom) = 0;
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects = NULL);

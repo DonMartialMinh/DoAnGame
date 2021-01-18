@@ -16,7 +16,7 @@
 #define TAIL_BBOX_WIDTH  8
 #define TAIL_BBOX_HEIGHT 9
 
-#define TAIL_SPEED		0.05f 
+#define TAIL_SPEED		0.2f 
 
 
 class CTail : public CGameObject

@@ -28,6 +28,9 @@
 #include "Item.h"
 #include "BoomerangBros.h"
 #include "MoveBar.h"
+#include "Grid.h"
+
+using namespace std;
 
 #define ONE_SEC 1000
 
@@ -41,15 +44,18 @@ protected:
 	CMario* player;					// A play scene has to have player, right? 
 	CBoomerangBros* bros;
 	CBoard* board;
-	CPButton* button ;
-	CGameClearBoard* gameclearboard ;
-	CEndPointItem* item ;
+	CPButton* button;
+	CGameClearBoard* gameclearboard;
+	vector<CEndPointItem*> item;
 	vector<CMoveBar*> bar;
 	vector<CPiranhaPlant*> plant;
 	vector<CQBrick*> qbrick;
 	vector<CBrokenBrick*> bbrick;
-	vector<LPGAMEOBJECT> objects;
-
+	vector<LPGAMEOBJECT> listObjects;
+	vector<LPGAMEOBJECT> listEnemies;
+	vector<LPGAMEOBJECT> createObjects;
+	vector<CEnvironment*> background;
+	Grid* grid;
 	DWORD Dtime;
 	DWORD TimeWaitToScene;			// time wait load to scene
 
