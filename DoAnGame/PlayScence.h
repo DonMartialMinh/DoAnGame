@@ -37,6 +37,8 @@ using namespace std;
 #define MAP_1	2
 #define MAP_2	3
 
+#define TIME_BACK_TO_BRICK	10000
+
 
 class CPlayScene : public CScene
 {
@@ -57,9 +59,11 @@ protected:
 	vector<CEnvironment*> background;
 	Grid* grid;
 	DWORD Dtime;
+	DWORD TimeBrokenBrickBackToBrick;
 	DWORD TimeWaitToScene;			// time wait load to scene
 
 	int Itime = 0;
+	int isBrokenBrickBackToBrick = 0;
 	int isWaiting;
 	int id;							// id of scene
 	float temp = 0;
@@ -91,7 +95,10 @@ public:
 	void UpdateBoardInfo(float camX);
 	void TimeLapse();
 	void UpdateCamera(float cx, float cy, int id);
+	void IsCollisionAABBWithEnemies();
+	void IsCollisionAABBWithItems();
 	void Timing() { Itime = 1; Dtime = DWORD(GetTickCount64()); }			// reduce gameplay time one sec
+	void StartCountTimeBackToBrick() { isBrokenBrickBackToBrick = 0; TimeBrokenBrickBackToBrick = DWORD(GetTickCount64()); }			// reduce gameplay time one sec
 	//friend class CPlayScenceKeyHandler;
 };
 

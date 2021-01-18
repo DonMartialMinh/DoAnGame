@@ -593,6 +593,8 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					CSwitch* sw = dynamic_cast<CSwitch*>(e->obj);
 					if (e->ny < 0)
 					{
+						isFlying = 0;
+						falling = 0;		//	racoon mario cant fall slowly
 						if (KeyDownPressed)
 						{
 							StartSwitching(sw->toX, sw->toY);
@@ -1511,7 +1513,6 @@ void CMario::SetState(int state)
 		sliding = 1;
 		break;
 	case MARIO_FIRE_STATE_THROW:
-		StartThrowing();
 		this->fireball += 1;	//Stack fireball
 		break;
 	case MARIO_RACOON_STATE_FALL:

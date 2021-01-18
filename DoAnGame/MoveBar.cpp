@@ -18,13 +18,13 @@ void CMoveBar::GetBoundingBox(float& left, float& top, float& right, float& bott
 
 void CMoveBar::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-	CGame* game = CGame::GetInstance();
-	float camx;
-	float camy;
-	float scrw = float(game->GetScreenWidth());
-	game->GetCamPos(camx, camy);
-	if ( x > camx + scrw)		// out screen width then return
-		return;
+	//CGame* game = CGame::GetInstance();
+	//float camx;
+	//float camy;
+	//float scrw = float(game->GetScreenWidth());
+	//game->GetCamPos(camx, camy);
+	//if ( x > camx + scrw)		// out screen width then return
+	//	return;
 
 
 	if (isFinish)	

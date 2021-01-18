@@ -71,6 +71,7 @@ public:
 	void GetPosition(float& x, float& y) { x = this->x; y = this->y; }
 	void GetSpeed(float& vx, float& vy) { vx = this->vx; vy = this->vy; }
 
+	bool CheckAABB(CGameObject* object);
 	int GetState() { return this->state; }
 
 	void RenderBoundingBox();

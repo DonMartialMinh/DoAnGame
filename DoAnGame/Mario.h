@@ -225,7 +225,6 @@
 class CMario : public CGameObject
 {
 	//int level;
-	int untouchable;
 	int falling;
 	int alpha = 255;
 
@@ -243,6 +242,7 @@ class CMario : public CGameObject
 	float start_y;
 
 public:
+	int untouchable;
 	CGameObject* obj = NULL;
 	int fireball = 0;
 	int tail = 0;

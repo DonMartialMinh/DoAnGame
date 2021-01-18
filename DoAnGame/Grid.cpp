@@ -53,7 +53,7 @@ void Grid::SetFile(char* str)
 	filepath = str;
 }
 
-void Grid::loadGrid(CMario* player, vector<CPiranhaPlant*>& plant, CBoomerangBros* bros, vector<CQBrick*>& qbrick, vector<CBrokenBrick*>& bbrick, vector<CMoveBar*>& bar, vector<CEndPointItem*>& item)
+void Grid::loadGrid(CMario* player, vector<CQBrick*>& qbrick, vector<CBrokenBrick*>& bbrick, vector<CMoveBar*>& bar, vector<CEndPointItem*>& item)
 {
 	for (int i = 0; i < GRID_CELL_MAX_ROW; i++)
 		for (int j = 0; j < GRID_CELL_MAX_COLUMN; j++)

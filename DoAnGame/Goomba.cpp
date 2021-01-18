@@ -91,16 +91,6 @@ void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					goomba->vx = -goomba->vx;
 				}
 			}
-			if (dynamic_cast<CKoopas*>(e->obj))	// if e->obj is goomba 
-			{
-				CKoopas* koopas = dynamic_cast<CKoopas*>(e->obj);
-				if (koopas->isHolded)
-				{
-					this->SetState(GOOMBA_STATE_DIE_DEFLECT);
-					this->vx = 0.05f * koopas->nx;
-					game->AddScore(100);
-				}
-			}
 			else
 			{
 				if (abs(nx) > 0.0001f)

@@ -342,14 +342,17 @@ void CPlayScene::Load()
 
 	DebugOut(L"[INFO] Done loading scene resources %s\n", sceneFilePath);
 
+	// grid initialize
 	grid = new Grid();
 
+	// set file grid
 	if (this->id == MAP_1)
 		grid->SetFile("grid_map1-1.txt");
 	else if (this->id == MAP_2)
 		grid->SetFile("grid_map1-4.txt");
 
-	grid->loadGrid( player, plant, bros,  qbrick, bbrick,  bar, item);
+	// LoadGrid
+	grid->loadGrid( player,  qbrick, bbrick,  bar, item);
 }
 
 void CPlayScene::Update(DWORD dt)
@@ -363,6 +366,14 @@ void CPlayScene::Update(DWORD dt)
 	CGame* game = CGame::GetInstance();
 	grid->GetListObject(listObjects);
 
+	// delete create object finished
+	for (int i = 0; i < int(createObjects.size()); i++)
+	{
+		if (createObjects[i]->isFinish == 1)
+			createObjects.erase(createObjects.begin() + i);
+	}
+
+	// if player is transforming or die then frozen sceene
 	if (player->transform || player->transformRacoon || player->GetState() == MARIO_STATE_DIE)	// frozen scene
 	{
 		for (size_t i = 0; i < listObjects.size(); i++)
@@ -381,24 +392,39 @@ void CPlayScene::Update(DWORD dt)
 		return;
 	}
 
+	// out of time then die
 	if (game->GetTime() < 0)
 		player->SetState(MARIO_STATE_DIE);
 
-	if (player->fireball)						// Draw fireball
+	// Draw fireball
+	if (player->fireball)			
 	{
+		int temp = 0;
 		player->fireball -= 1;
-		createObjects.push_back(player->NewFireBall());
+		for (int i = 0; i < int(createObjects.size()); i++)
+		{
+			if (createObjects[i]->type == OBJECT_TYPE_FIREBALL && createObjects[i]->isFinish == 0)
+				temp++;
+		}
+		if (temp < 2)			//max fire ball = 2
+		{
+			createObjects.push_back(player->NewFireBall());
+			player->StartThrowing();
+		}
+
+		else;
 	}
 
-	if (player->tail)						// Tail Attack
+	//create tail attack
+	if (player->tail)
 	{
 		player->tail -= 1;
 		createObjects.push_back(player->TailAttack());
 	}
 
+	// show gameclearboard if mario hit the endpoint item
 	if (gameclearboard != NULL)
 		if (gameclearboard->GetState() == BOARD_STATE_EMPTY)
-		{
 			if (item[0] != NULL)
 				if (item[0]->sparkling == 1)
 					gameclearboard->SetState(BOARD_STATE_STAR);
@@ -407,8 +433,8 @@ void CPlayScene::Update(DWORD dt)
 				else if (item[0]->sparkling == 3)
 					gameclearboard->SetState(BOARD_STATE_FLOWER);
 				else;
-		}
 
+	// boomerang bros throws boomerang
 	if (bros != NULL)
 	{
 		if (bros->boomerang)
@@ -418,6 +444,7 @@ void CPlayScene::Update(DWORD dt)
 		}
 	}
 
+	// plant create fireball attack
 	for (int i = 0; i < int(plant.size()); i++)
 	{
 		if (plant[i]->fireball)						// Draw fireball
@@ -427,6 +454,7 @@ void CPlayScene::Update(DWORD dt)
 		}
 	}
 
+	// question brick trigger show items
 	for (int i = 0; i < int(qbrick.size()); i++)
 	{
 		if (qbrick[i]->trigger)						// show item
@@ -447,16 +475,29 @@ void CPlayScene::Update(DWORD dt)
 		}
 	}
 
+
 	for (int i = 0; i < int(bbrick.size()); i++)
 	{
+		// broken bricks turn into pieces
 		if (bbrick[i]->trigger)						// Draw fragment
 		{
 			bbrick[i]->trigger -= 1;
 			vector<CGameObject*> temp = bbrick[i]->Broken();
 			createObjects.insert(createObjects.end(), temp.begin(), temp.end());
 		}
+
+		// after 10 seconds then turn back to brokenbricks
+		if (bbrick[i]->GetState() == BROKENBRICK_STATE_COIN)
+		{
+			if (isBrokenBrickBackToBrick)
+			{
+				bbrick[i]->SetState(BROKENBRICK_STATE_BRICK);
+				bbrick[i]->type = OBJECT_TYPE_BROKENBRICK;
+			}
+		}
 	}
 
+	// if stomped on P button then turn brokenbricks to coin
 	if (button != NULL)
 	{
 		if (button->trigger)
@@ -466,10 +507,12 @@ void CPlayScene::Update(DWORD dt)
 			{
 				bbrick[i]->SetState(BROKENBRICK_STATE_COIN); // turn brokenbrick into coin
 				bbrick[i]->type = OBJECT_TYPE_COIN;
+				StartCountTimeBackToBrick();
 			}
 		}
 	}
 
+	// pushback object being collided
 	for (size_t i = 0; i < listObjects.size(); i++)
 	{
 		coObjects.push_back(listObjects[i]);
@@ -477,12 +520,13 @@ void CPlayScene::Update(DWORD dt)
 	for (size_t i = 0; i < createObjects.size(); i++)
 	{
 		coObjects.push_back(createObjects[i]);
-
 	}
 	for (size_t i = 0; i < listEnemies.size(); i++)
 	{
 		coObjects.push_back(listEnemies[i]);
 	}
+
+	// update object
 	for (size_t i = 0; i < listObjects.size(); i++)
 	{
 		listObjects[i]->Update(dt, &coObjects);
@@ -495,8 +539,17 @@ void CPlayScene::Update(DWORD dt)
 	{
 		listEnemies[i]->Update(dt, &coObjects);
 	}
+
+	// update player
 	player->Update(dt, &coObjects);
 
+	// set AABB collision with enemies
+	IsCollisionAABBWithEnemies();
+
+	// set AABB collision with items
+	IsCollisionAABBWithItems();
+
+	//clear coObject
 	coObjects.clear();
 
 	// skip the rest if scene was already unloaded (Mario::Update might trigger PlayScene::Unload)
@@ -511,28 +564,53 @@ void CPlayScene::Update(DWORD dt)
 	player->GetPosition(cx, cy);
 	UpdateCamera(cx, cy, id);			// Update camera
 	game->GetCamPos(camx, camy);
-	board->Update(camx, camy);		// Update Board follow mario
+	board->Update(camx, camy);		// Update Board follow player
 	UpdateBoardInfo(camx);			// Update BoardInfo
 
+	// set min location of player
 	if (player->x < camx) 
 		player->x = camx;
 
+	// player hit the endpoint item and go through the screen
 	if (player->x > camx + game->GetScreenWidth() - 30.0f && player->GetState() != MARIO_STATE_ENDGAME) 
 		player->x = camx + game->GetScreenWidth() - 30.0f;
 }
 
 void CPlayScene::Render()
 {
+	// if on state waiting to screen then return
 	if (isWaiting)
 		return;
+
+	// render background
 	for (int i = 0; i < int(background.size()); i++)
 		background[i]->Render();
+
+	// render gameclearboard
 	gameclearboard->Render();
+
+	// render mario
 	player->Render();
+
+	// render plant before because it needs to "Underpipe"
 	for (int i = 0; i < int(listEnemies.size()); i++)
+	{
+		if (listEnemies[i]->type != OBJECT_TYPE_PLANT && listEnemies[i]->type != OBJECT_TYPE_PIRANHAPLANT)
+			continue;
 		listEnemies[i]->Render();
+	}
+	// render objects
 	for (int i = 0; i < int(listObjects.size()); i++)
 		listObjects[i]->Render();
+	// render list enenies
+	for (int i = 0; i < int(listEnemies.size()); i++)
+	{
+		if (listEnemies[i]->type == OBJECT_TYPE_PLANT || listEnemies[i]->type == OBJECT_TYPE_PIRANHAPLANT)
+			continue;
+		listEnemies[i]->Render();
+	}
+
+	// render created objects like fireball of mario and piranhaplant, etc...
 	for (int i = 0; i < int(createObjects.size()); i++)
 		createObjects[i]->Render();
 
@@ -829,6 +907,121 @@ void CPlayScene::TimeLapse()
 		TimeWaitToScene = 0;
 		isWaiting = 0;
 	}
+
+	if (GetTickCount64() - TimeBrokenBrickBackToBrick > TIME_BACK_TO_BRICK)
+	{
+		TimeBrokenBrickBackToBrick = 0;
+		isBrokenBrickBackToBrick = 1;
+	}
+}
+
+void CPlayScene::IsCollisionAABBWithEnemies()
+{
+	for (int i = 0; i < int(listEnemies.size()); i++)
+	{
+		CGameObject* enemy = dynamic_cast<CGameObject*> (listEnemies[i]);
+		if (!enemy->isFinish && enemy->type != OBJECT_TYPE_KOOPAS && enemy->type != OBJECT_TYPE_FLYKOOPAS)
+		{
+			if (player->CheckAABB(enemy))
+			{
+				if (player->untouchable == 0 )
+				{
+					if (player->getLevel() > MARIO_LEVEL_BIG)
+					{
+						player->StartTransform_Racoon();
+						player->level = MARIO_LEVEL_BIG;
+						player->ResetState();
+						player->StartUntouchable();
+					}
+					else if (player->getLevel() == MARIO_LEVEL_BIG)
+					{
+						player->level = MARIO_LEVEL_SMALL;
+						player->ResetState();
+						CMario::ToSmall(player->y);
+						player->StartUntouchable();
+					}
+					else
+						player->SetState(MARIO_STATE_DIE);
+				}
+			}
+		}
+	}
+
+	for (int i = 0; i < int(createObjects.size()); i++)
+	{
+		CGameObject* object = dynamic_cast<CGameObject*> (createObjects[i]);
+		if (!object->isFinish)
+		{
+			if (object->type == OBJECT_TYPE_PLANTFIREBALL || object->type == OBJECT_TYPE_BOOMERANG)
+			{
+				if (player->untouchable == 0)
+				{
+					if (player->CheckAABB(object))
+					{
+						if (player->getLevel() > MARIO_LEVEL_BIG)
+						{
+							player->StartTransform_Racoon();
+							player->level = MARIO_LEVEL_BIG;
+							player->ResetState();
+							player->StartUntouchable();
+						}
+						else if (player->getLevel() == MARIO_LEVEL_BIG)
+						{
+							player->level = MARIO_LEVEL_SMALL;
+							player->ResetState();
+							CMario::ToSmall(player->y);
+							player->StartUntouchable();
+						}
+						else
+							player->SetState(MARIO_STATE_DIE);
+					}
+				}
+			}
+		}
+	}
+}
+
+void CPlayScene::IsCollisionAABBWithItems()
+{
+	CGame* game = CGame::GetInstance();
+	for (int i = 0; i < int(listObjects.size()); i++)
+	{
+		CGameObject* object = dynamic_cast<CGameObject*> (listObjects[i]);
+		if ((!object->isFinish) && (object->type == OBJECT_TYPE_COIN))
+		{
+			if (player->CheckAABB(object))
+			{
+				object->isFinish = 1;
+				game->AddScore(100);
+				game->AddCoin();
+			}
+		}
+	}
+	for (int i = 0; i < int(createObjects.size()); i++)
+	{
+		CGameObject* object = dynamic_cast<CGameObject*> (createObjects[i]);
+		if (!object->isFinish)
+		{
+			if (object->type == OBJECT_TYPE_LEAF)
+			{
+				if (player->CheckAABB(object))
+				{
+					object->isFinish = 1;
+					if (player->level == MARIO_LEVEL_SMALL)
+					{
+						CMario::ToBig(player->y);
+						player->level = MARIO_LEVEL_BIG;
+						player->StartTransform();
+					}
+					else if (player->getLevel() != MARIO_LEVEL_RACOON)
+					{
+						player->StartTransform_Racoon();
+						player->level = MARIO_LEVEL_RACOON;
+					}
+				}
+			}
+		}
+	}
 }
 
 void CPlayScene::UpdateCamera(float cx, float cy, int id)
@@ -840,7 +1033,11 @@ void CPlayScene::UpdateCamera(float cx, float cy, int id)
 	{
 		if (cx < game->GetScreenWidth() / 2)
 		{
-			if (cy < 280.0f)
+			if (cy < 50.0f)
+			{
+				CGame::GetInstance()->SetCamPos(0.0f, 0.0f);
+			}
+			else if (cy < 280.0f)
 			{
 				cy -= 50.0f;
 				CGame::GetInstance()->SetCamPos(0.0f, round(cy));
@@ -855,7 +1052,11 @@ void CPlayScene::UpdateCamera(float cx, float cy, int id)
 		}
 		else if (cx > 2661.0f)
 		{
-			if (cy < 280.0f)
+			if (cy < 50.0f)
+			{
+				CGame::GetInstance()->SetCamPos(2508.0f, 0.0f);
+			}
+			else if (cy < 280.0f)
 			{
 				cy -= 50.0f;
 				CGame::GetInstance()->SetCamPos(2508.0f, round(cy));
@@ -865,7 +1066,13 @@ void CPlayScene::UpdateCamera(float cx, float cy, int id)
 		}
 		else
 		{
-			if (cy < 280.0f)
+			if (cy < 50.0f)
+			{
+				cx -= game->GetScreenWidth() / 2;
+				cy -= 50.0f;
+				CGame::GetInstance()->SetCamPos(round(cx), 0.0f);
+			}
+			else if (cy < 280.0f)
 			{
 				cx -= game->GetScreenWidth() / 2;
 				cy -= 50.0f;
@@ -887,11 +1094,15 @@ void CPlayScene::UpdateCamera(float cx, float cy, int id)
 	}
 	else if (id == MAP_2)
 	{
-		if (player->x > 2034.0f)
+		if (cx > 2034.0f)
 		{
 			if (cx < 2304.0f + game->GetScreenWidth() / 2)
 			{
-				if (cy < 280.0f)
+				if (cy < 50.0f)
+				{
+					CGame::GetInstance()->SetCamPos(2304.0f, 0.0f);
+				}
+				else if (cy < 280.0f)
 				{
 					cy -= 50.0f;
 					CGame::GetInstance()->SetCamPos(2304.0f, round(cy));
@@ -901,7 +1112,11 @@ void CPlayScene::UpdateCamera(float cx, float cy, int id)
 			}
 			else if (cx > 2661.0f)
 			{ 
-				if (cy < 280.0f)
+				if (cy < 50.0f)
+				{
+					CGame::GetInstance()->SetCamPos(2508.0f, 0.0f);
+				}
+				else if (cy < 280.0f)
 				{
 					cy -= 50.0f;
 					CGame::GetInstance()->SetCamPos(2508.0f, round(cy));
@@ -911,7 +1126,13 @@ void CPlayScene::UpdateCamera(float cx, float cy, int id)
 			}
 			else
 			{
-				if (cy < 280.0f)
+				if (cy < 50.0f)
+				{
+					cx -= game->GetScreenWidth() / 2;
+					cy -= 50.0f;
+					CGame::GetInstance()->SetCamPos(round(cx), 0.0f);
+				}
+				else if (cy < 280.0f)
 				{
 					cx -= game->GetScreenWidth() / 2;
 					cy -= 50.0f;

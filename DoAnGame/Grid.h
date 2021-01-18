@@ -36,7 +36,7 @@ public:
 	Grid();
 	~Grid();
 	void SetFile(char* str);
-	void loadGrid(CMario * player, vector<CPiranhaPlant*>& plant, CBoomerangBros* bros, vector<CQBrick*>& qbrick, vector<CBrokenBrick*>& bbrick, vector<CMoveBar*>& bar, vector<CEndPointItem*>& item);
+	void loadGrid(CMario * player, vector<CQBrick*>& qbrick, vector<CBrokenBrick*>& bbrick, vector<CMoveBar*>& bar, vector<CEndPointItem*>& item);
 	void GetListObject(vector<CGameObject*>& ListObj);
 
 };
