@@ -656,6 +656,23 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					y -= min_ty * dy + ny * 0.4f;
 					game->AddScore(1000);
 				}
+				else if (dynamic_cast<CFlower*>(e->obj))
+				{
+					CFlower* flower = dynamic_cast<CFlower*>(e->obj);
+					flower->isFinish = 1;
+					if (level == MARIO_LEVEL_SMALL)
+					{
+						CMario::ToBig(y);
+						level = MARIO_LEVEL_BIG;
+						StartTransform();
+					}
+					else if (level != MARIO_LEVEL_FIRE)
+					{
+						StartTransform_Racoon();
+						level = MARIO_LEVEL_FIRE;
+					}
+					game->AddScore(1000);
+				}
 				else if (dynamic_cast<CQBrick*>(e->obj))		//question brick
 				{
 					CQBrick* qbrick = dynamic_cast<CQBrick*>(e->obj);

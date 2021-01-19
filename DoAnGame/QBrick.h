@@ -5,6 +5,7 @@
 #include "Mario.h"
 #include "Leaf.h"
 #include "PButton.h"
+#include "Flower.h"
 
 #define BRICK_BBOX_WIDTH  16
 #define BRICK_BBOX_HEIGHT 16

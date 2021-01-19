@@ -157,6 +157,7 @@
     <ClCompile Include="EndPointItem.cpp" />
     <ClCompile Include="Environment.cpp" />
     <ClCompile Include="FireBall.cpp" />
+    <ClCompile Include="Flower.cpp" />
     <ClCompile Include="FlyGoomba.cpp" />
     <ClCompile Include="FlyKoopas.cpp" />
     <ClCompile Include="Fragment.cpp" />
@@ -205,6 +206,7 @@
     <ClInclude Include="EndPointItem.h" />
     <ClInclude Include="Environment.h" />
     <ClInclude Include="FireBall.h" />
+    <ClInclude Include="Flower.h" />
     <ClInclude Include="FlyGoomba.h" />
     <ClInclude Include="FlyKoopas.h" />
     <ClInclude Include="Fragment.h" />

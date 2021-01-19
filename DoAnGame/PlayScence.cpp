@@ -67,6 +67,8 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 #define OBJECT_TYPE_BOOMERANGBROS		25
 #define OBJECT_TYPE_BOOMERANG			26
 #define OBJECT_TYPE_MOVEBAR				27
+#define OBJECT_TYPE_FLOWER				28
+#define OBJECT_TYPE_MUSHROOM_GREEN		29
 #define OBJECT_TYPE_PORTAL				50
 
 #define MAX_SCENE_LINE 1024
@@ -592,6 +594,14 @@ void CPlayScene::Render()
 	// render mario
 	player->Render();
 
+	// render flower or mushroom before question brick
+	for (int i = 0; i < int(createObjects.size()); i++)
+	{
+		if (createObjects[i]->type != OBJECT_TYPE_MUSHROOM && createObjects[i]->type != OBJECT_TYPE_FLOWER && createObjects[i]->type != OBJECT_TYPE_MUSHROOM_GREEN)
+			continue;
+		createObjects[i]->Render();
+	}
+
 	// render plant before because it needs to "Underpipe"
 	for (int i = 0; i < int(listEnemies.size()); i++)
 	{
@@ -612,7 +622,12 @@ void CPlayScene::Render()
 
 	// render created objects like fireball of mario and piranhaplant, etc...
 	for (int i = 0; i < int(createObjects.size()); i++)
+	{
+		if (createObjects[i]->type == OBJECT_TYPE_MUSHROOM || createObjects[i]->type == OBJECT_TYPE_FLOWER || createObjects[i]->type == OBJECT_TYPE_MUSHROOM_GREEN)
+			continue;
 		createObjects[i]->Render();
+	}
+
 
 	// Under bar render
 	board->Render();
@@ -917,6 +932,7 @@ void CPlayScene::TimeLapse()
 
 void CPlayScene::IsCollisionAABBWithEnemies()
 {
+	CGame* game = CGame::GetInstance();
 	for (int i = 0; i < int(listEnemies.size()); i++)
 	{
 		CGameObject* enemy = dynamic_cast<CGameObject*> (listEnemies[i]);
@@ -1018,6 +1034,48 @@ void CPlayScene::IsCollisionAABBWithItems()
 						player->StartTransform_Racoon();
 						player->level = MARIO_LEVEL_RACOON;
 					}
+					game->AddScore(1000);
+				}
+			}
+			else if (object->type == OBJECT_TYPE_MUSHROOM)
+			{
+				if (player->CheckAABB(object))
+				{
+					object->isFinish = 1;
+					if (player->getLevel() < MARIO_LEVEL_BIG)
+					{
+						CMario::ToBig(player->y);
+						player->level = MARIO_LEVEL_BIG;
+						player->StartTransform();
+					}
+					game->AddScore(1000);
+				}
+			}
+			else if (object->type == OBJECT_TYPE_MUSHROOM_GREEN)
+			{
+				if (player->CheckAABB(object))
+				{
+					object->isFinish = 1;
+					game->AddLive(1);
+				}
+			}
+			else if (object->type == OBJECT_TYPE_FLOWER)
+			{
+				if (player->CheckAABB(object))
+				{
+					object->isFinish = 1;
+					if (player->getLevel() == MARIO_LEVEL_SMALL)
+					{
+						CMario::ToBig(player->y);
+						player->level = MARIO_LEVEL_BIG;
+						player->StartTransform();
+					}
+					else if (player->getLevel() != MARIO_LEVEL_FIRE)
+					{
+						player->StartTransform_Racoon();
+						player->level = MARIO_LEVEL_FIRE;
+					}
+					game->AddScore(1000);
 				}
 			}
 		}

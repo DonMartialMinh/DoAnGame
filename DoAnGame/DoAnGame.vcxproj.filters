@@ -177,6 +177,9 @@
     <ClCompile Include="MoveBar.cpp">
       <Filter>Bricks</Filter>
     </ClCompile>
+    <ClCompile Include="Flower.cpp">
+      <Filter>Items</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -310,6 +313,9 @@
     </ClInclude>
     <ClInclude Include="MoveBar.h">
       <Filter>Bricks</Filter>
+    </ClInclude>
+    <ClInclude Include="Flower.h">
+      <Filter>Items</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
