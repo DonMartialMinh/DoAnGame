@@ -32,6 +32,31 @@ void CMiniMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	CalcPotentialCollisions(coObjects, coEvents);
 
+	if (GetState() == MINIMARIO_STATE_WALKING_RIGHT)
+		if (this->x >= tempLocationX)
+		{
+			this->x = tempLocationX;
+			SetState(MINIMARIO_STATE_IDLE);
+		}
+	 if (GetState() == MINIMARIO_STATE_WALKING_LEFT)
+		if (this->x <= tempLocationX)
+		{
+			this->x = tempLocationX;
+			SetState(MINIMARIO_STATE_IDLE);
+		}
+	 if (GetState() == MINIMARIO_STATE_WALKING_DOWN)
+		if (this->y >= tempLocationY)
+		{
+			this->y = tempLocationY;
+			SetState(MINIMARIO_STATE_IDLE);
+		}
+	if (GetState() == MINIMARIO_STATE_WALKING_UP)
+		if (this->y <= tempLocationY)
+		{
+			this->y = tempLocationY;
+			SetState(MINIMARIO_STATE_IDLE);
+		}
+
 
 	// No collision occured, proceed normally
 	if (coEvents.size() == 0)
@@ -51,12 +76,14 @@ void CMiniMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 		// how to push back Mario if collides with a moving objects, what if Mario is pushed this way into another object?
 
-		//if (rdx != 0 && rdx != dx)
-		//	x += nx * abs(rdx);
+		if (rdx != 0 && rdx != dx)
+			x += nx * abs(rdx);
+		if (rdy != 0 && rdy != dy)
+			y += ny * abs(rdy);
 
 		// block every object first!
-		x += min_tx * dx + nx * 0.4f;
-		y += min_ty * dy + ny * 0.4f;
+		//x += min_tx * dx + nx * 0.4f;
+		//y += min_ty * dy + ny * 0.4f;
 
 		float temp = vy;
 		if (nx != 0) vx = 0;
@@ -68,6 +95,7 @@ void CMiniMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		for (UINT i = 0; i < coEventsResult.size(); i++)
 		{
 			LPCOLLISIONEVENT e = coEventsResult[i];
+			SetState(MINIMARIO_STATE_IDLE);
 		}
 	}
 
@@ -98,20 +126,36 @@ void CMiniMario::SetState(int state)
 	switch (state)
 	{
 	case MINIMARIO_STATE_WALKING_RIGHT:
+	{
+		tempLocationX = this->x + 30.0f;
+		tempLocationY = this->y;
 		vx = MINIMARIO_WALKING_SPEED;
-		vy = 0;
+		vy = 0; 
+	}
 		break;
 	case MINIMARIO_STATE_WALKING_LEFT:
+	{
+		tempLocationX = this->x - 30.0f;
+		tempLocationY = this->y;
 		vx = -MINIMARIO_WALKING_SPEED;
-		vy = 0;
+		vy = 0; 
+	}
 		break;
 	case MINIMARIO_STATE_WALKING_UP:
+	{
+		tempLocationX = this->x;
+		tempLocationY = this->y - 30.0f;
 		vy = -MINIMARIO_WALKING_SPEED;
 		vx = 0;
+	}
 		break;
 	case MINIMARIO_STATE_WALKING_DOWN:
+	{
+		tempLocationX = this->x;
+		tempLocationY = this->y + 30.0f;
 		vy = MINIMARIO_WALKING_SPEED;
 		vx = 0;
+	}
 		break;
 	case MINIMARIO_STATE_IDLE:
 		vx = 0;
@@ -122,9 +166,9 @@ void CMiniMario::SetState(int state)
 
 void CMiniMario::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
-	left = x;
-	top = y;
-	right = x + MINIMARIO_SMALL_BBOX_WIDTH;
+	left = x + 2.0f;
+	top = y + 2.0f;
+	right = x + MINIMARIO_SMALL_BBOX_WIDTH ;
 	bottom = y + MINIMARIO_SMALL_BBOX_HEIGHT;
 }
 

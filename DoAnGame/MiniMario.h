@@ -25,7 +25,7 @@
 #define MINIMARIO_LEVEL_FIRE			4
 
 #define MINIMARIO_SMALL_BBOX_WIDTH  12
-#define MINIMARIO_SMALL_BBOX_HEIGHT 10
+#define MINIMARIO_SMALL_BBOX_HEIGHT 11
 
 
 class CMiniMario : public CGameObject
@@ -33,7 +33,8 @@ class CMiniMario : public CGameObject
 
 	float start_x;			// initial position of Mario at scene
 	float start_y;
-
+	float tempLocationX =  0.0f;
+	float tempLocationY = 0.0f;
 public:
 
 

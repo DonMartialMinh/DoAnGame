@@ -23,6 +23,7 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 	board = NULL;
 	button = NULL;
 	isWaiting = 1;
+	TimeBrokenBrickBackToBrick = NULL;
 	TimeWaitToScene = DWORD(GetTickCount64());
 	key_handler = new CPlayScenceKeyHandler(this);
 }

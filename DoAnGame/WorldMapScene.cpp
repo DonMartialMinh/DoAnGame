@@ -271,7 +271,7 @@ void CWorldMapScene::Load()
 
 	f.close();
 
-	//CTextures::GetInstance()->Add(ID_TEX_BBOX, L"textures\\bbox.png", D3DCOLOR_XRGB(237, 28, 36));
+	//CTextures::GetInstance()->Add(ID_TEX_BBOX, L"textures\\bbox.png", D3DCOLOR_XRGB(255, 255, 255));
 
 	DebugOut(L"[INFO] Done loading scene resources %s\n", sceneFilePath);
 }
@@ -416,6 +416,22 @@ void CWorldMapSceneKeyHandler::OnKeyDown(int KeyCode)
 	case DIK_4:
 		mario->SetLevel(MINIMARIO_LEVEL_RACOON);
 		break;
+	case DIK_RIGHT:
+		if (mario->GetState() == MINIMARIO_STATE_IDLE)
+			mario->SetState(MINIMARIO_STATE_WALKING_RIGHT);
+		break;
+	case DIK_LEFT:
+		if (mario->GetState() == MINIMARIO_STATE_IDLE)
+			mario->SetState(MINIMARIO_STATE_WALKING_LEFT);
+		break;
+	case DIK_DOWN:
+		if (mario->GetState() == MINIMARIO_STATE_IDLE)
+			mario->SetState(MINIMARIO_STATE_WALKING_DOWN);
+		break;
+	case DIK_UP:
+		if (mario->GetState() == MINIMARIO_STATE_IDLE)
+			mario->SetState(MINIMARIO_STATE_WALKING_UP);
+		break;
 	case DIK_X:
 		CGame::GetInstance()->SwitchScene(2);
 		game->SetTime(300);
@@ -436,28 +452,6 @@ void CWorldMapSceneKeyHandler::KeyState(BYTE* states)
 {
 	CGame* game = CGame::GetInstance();
 	CMiniMario* mario = ((CWorldMapScene*)scence)->GetPlayer();
-
-
-	if (game->IsKeyDown(DIK_RIGHT))
-	{
-		mario->SetState(MINIMARIO_STATE_WALKING_RIGHT);
-	}
-	else if (game->IsKeyDown(DIK_LEFT))
-	{
-		mario->SetState(MINIMARIO_STATE_WALKING_LEFT);
-	}
-	else if (game->IsKeyDown(DIK_DOWN))
-	{
-		mario->SetState(MINIMARIO_STATE_WALKING_DOWN);
-	}
-	else if (game->IsKeyDown(DIK_UP))
-	{
-		mario->SetState(MINIMARIO_STATE_WALKING_UP);
-	}
-	else
-	{
-		mario->SetState(MINIMARIO_STATE_IDLE);
-	}
 
 }
 
