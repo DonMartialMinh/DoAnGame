@@ -432,13 +432,19 @@ void CWorldMapSceneKeyHandler::OnKeyDown(int KeyCode)
 		if (mario->GetState() == MINIMARIO_STATE_IDLE)
 			mario->SetState(MINIMARIO_STATE_WALKING_UP);
 		break;
-	case DIK_X:
-		CGame::GetInstance()->SwitchScene(2);
-		game->SetTime(300);
-		break;
-	case DIK_C:
-		CGame::GetInstance()->SwitchScene(3);
-		game->SetTime(300);
+	case DIK_S:
+	{
+		if (mario->x > 94.0f && mario->x < 101.0f && mario->y > 29.0f && mario->y < 35.0f)
+		{
+			CGame::GetInstance()->SwitchScene(2);
+			game->SetTime(300);
+		}
+		else if (mario->x > 190.0f && mario->x < 197.0f && mario->y > 60.0f && mario->y < 67.0f)
+		{
+			CGame::GetInstance()->SwitchScene(3);
+			game->SetTime(300);
+		}
+	}
 		break;
 	}
 }

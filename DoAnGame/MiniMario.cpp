@@ -99,6 +99,8 @@ void CMiniMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		}
 	}
 
+	DebugOut(L"x = %f\n", this->x);
+	DebugOut(L"y = %f\n", this->y);
 
 	// clean up collision events
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
