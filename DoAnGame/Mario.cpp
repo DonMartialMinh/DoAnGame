@@ -46,9 +46,18 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	// Calculate dx, dy 
 
 	CGameObject::Update(dt, coObjects);
-	vy += MARIO_GRAVITY * dt;
+
+	if (isInMoveBar)
+	{
+		vy += BAR_GRAVITY * dt;
+	}
+	else
+		vy += MARIO_GRAVITY * dt;
 
 	if (vy > 0.04f) isFlying = 1; // if falling then cant jump
+
+	if (isInMoveBar)
+		isFlying = 0;
 
 	if (switching)
 	{
@@ -585,8 +594,12 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					{
 						isFlying = 0;
 						falling = 0;		//	racoon mario cant fall slowly
+						isInMoveBar = 1;
 						bar->SetState(BAR_STATE_FALLING);
 					}
+					else
+						isInMoveBar = 0;
+
 				}
 				else if (dynamic_cast<CSwitch*>(e->obj))
 				{

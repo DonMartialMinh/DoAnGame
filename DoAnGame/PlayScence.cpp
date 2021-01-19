@@ -692,6 +692,7 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 	switch (KeyCode)
 	{
 	case DIK_S:
+		mario->isInMoveBar = 0;		// if jump then out of movebar
 		if ((mario->getLevel() == MARIO_LEVEL_RACOON && mario->isFlying == 1 && mario->isRunning == 1 && mario->sliding == 1) || mario->flying)			//condition to fly
 			mario->SetState(MARIO_RACOON_STATE_FLY);
 		else if (mario->getLevel() == MARIO_LEVEL_RACOON && mario->isFlying == 1)
@@ -700,6 +701,7 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 			mario->SetState(MARIO_STATE_JUMP);
 		break;
 	case DIK_X:
+		mario->isInMoveBar = 0;	// if jump then out of movebar
 		if ((mario->getLevel() == MARIO_LEVEL_RACOON && mario->isFlying == 1 && mario->isRunning == 1 && mario->sliding == 1) || mario->flying)			//condition to fly
 			mario->SetState(MARIO_RACOON_STATE_FLY);
 		else if (mario->getLevel() == MARIO_LEVEL_RACOON && mario->isFlying == 1)
