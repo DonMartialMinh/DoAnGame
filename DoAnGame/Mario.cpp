@@ -48,9 +48,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	CGameObject::Update(dt, coObjects);
 
 	if (isInMoveBar)
-	{
 		vy += BAR_GRAVITY * dt;
-	}
 	else
 		vy += MARIO_GRAVITY * dt;
 
@@ -596,6 +594,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						falling = 0;		//	racoon mario cant fall slowly
 						isInMoveBar = 1;
 						bar->SetState(BAR_STATE_FALLING);
+						bar->isStomped = 1;
 					}
 					else
 						isInMoveBar = 0;
@@ -732,11 +731,10 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						bbrick->isFinish = 1;					// Make coin disappear
 						vy = temp;							//Mario went through the coin
 						x -= min_tx * dx + nx * 0.4f;
-						//y -= min_ty * dy + ny * 0.4f;
 						x += dx;
 						if (flying)
 						{
-							//x += dx;
+							y -= min_ty * dy + ny * 0.4f;
 							y += dy;
 						}
 						game->AddScore(100);
@@ -817,11 +815,11 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					coin->isFinish = 1;					// Make coin disappear
 					vy = temp;							//Mario went through the coin
 					x -= min_tx * dx + nx * 0.4f;
-					//y -= min_ty * dy + ny * 0.4f;
+
 					x += dx;
-					if (flying)
+					if (flying || isInMoveBar)
 					{
-						//x += dx;
+						y -= min_ty * dy + ny * 0.4f;
 						y += dy;
 					}
 					game->AddScore(100);
@@ -1703,7 +1701,7 @@ CGameObject* CMario::NewFireBall()		// create fireball function
 	CGameObject* obj = NULL;
 	obj = new CFireBall(this->nx);
 	obj->type = OBJECT_TYPE_FIREBALL;
-	obj->SetPosition(this->x + MARIO_BIG_BBOX_WIDTH/2, this->y + MARIO_BIG_BBOX_HEIGHT/3);
+	obj->SetPosition(this->x + MARIO_BIG_BBOX_WIDTH/2 - 1.0f, this->y + MARIO_BIG_BBOX_HEIGHT/3);
 	LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
 	obj->SetAnimationSet(ani_set);
 	return obj;

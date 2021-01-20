@@ -18,6 +18,7 @@ class CMoveBar : public CGameObject
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void Render();
 public:
+	int isStomped = 0;
 	CMoveBar();
 	virtual void SetState(int state);
 };

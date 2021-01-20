@@ -97,6 +97,7 @@ public:
 	void UpdateCamera(float cx, float cy, int id);
 	void IsCollisionAABBWithEnemies();
 	void IsCollisionAABBWithItems();
+	void IsOutOfMoveBar();
 	void Timing() { Itime = 1; Dtime = DWORD(GetTickCount64()); }			// reduce gameplay time one sec
 	void StartCountTimeBackToBrick() { isBrokenBrickBackToBrick = 0; TimeBrokenBrickBackToBrick = DWORD(GetTickCount64()); }			// reduce gameplay time one sec
 	//friend class CPlayScenceKeyHandler;

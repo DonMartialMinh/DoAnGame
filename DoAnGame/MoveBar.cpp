@@ -8,8 +8,6 @@ CMoveBar::CMoveBar()
 
 void CMoveBar::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
-	if (isFinish)
-		return;
 	left = x;
 	top = y;
 	right = x + BAR_BBOX_WIDTH;
@@ -24,10 +22,6 @@ void CMoveBar::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	float scrw = float(game->GetScreenWidth());
 	game->GetCamPos(camx, camy);
 	if ( x > camx + scrw)		// out screen width then return
-		return;
-
-
-	if (isFinish)	
 		return;
 
 	CGameObject::Update(dt);

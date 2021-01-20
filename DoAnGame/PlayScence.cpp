@@ -355,7 +355,7 @@ void CPlayScene::Load()
 		grid->SetFile("grid_map1-4.txt");
 
 	// LoadGrid
-	grid->loadGrid( player,  qbrick, bbrick,  bar, item);
+	grid->loadGrid( player,  qbrick, bbrick, bar, item);
 }
 
 void CPlayScene::Update(DWORD dt)
@@ -546,6 +546,9 @@ void CPlayScene::Update(DWORD dt)
 	// update player
 	player->Update(dt, &coObjects);
 
+	// check mario is out of movebar or not
+	//IsOutOfMoveBar();
+
 	// set AABB collision with enemies
 	IsCollisionAABBWithEnemies();
 
@@ -651,14 +654,14 @@ void CPlayScene::Render()
 */
 void CPlayScene::Unload()
 {
-	for (int i = 0; i < int(background.size()); i++)
-		delete background[i];
-	for (int i = 0; i < int(listObjects.size()); i++)
-		delete listObjects[i];
-	for (int i = 0; i < int(createObjects.size()); i++)
-		delete createObjects[i];
-	for (int i = 0; i < int(listEnemies.size()); i++)
-		delete listEnemies[i];
+	//for (int i = 0; i < int(background.size()); i++)
+	//	delete background[i];
+	//for (int i = 0; i < int(listObjects.size()); i++)
+	//	delete listObjects[i];
+	//for (int i = 0; i < int(createObjects.size()); i++)
+	//	delete createObjects[i];
+	//for (int i = 0; i < int(listEnemies.size()); i++)
+	//	delete listEnemies[i];
 	listEnemies.clear();
 	listObjects.clear();
 	createObjects.clear();
@@ -666,6 +669,7 @@ void CPlayScene::Unload()
 	player = NULL;
 	bros = NULL;
 	board = NULL;
+	grid = NULL;
 	button = NULL;
 	gameclearboard = NULL;
 	item.clear();
@@ -1083,6 +1087,25 @@ void CPlayScene::IsCollisionAABBWithItems()
 			}
 		}
 	}
+}
+
+void CPlayScene::IsOutOfMoveBar()
+{
+	if (player != NULL)
+		if (player->isInMoveBar)
+		{
+			for (int i = 0; i < int(bar.size()); i++)
+			{
+				if (bar[i]->isStomped)
+				{
+					if (player->x > bar[i]->x + BAR_BBOX_WIDTH)
+					{
+						player->isInMoveBar = 0;
+						bar[i]->isStomped = 0;
+					}
+				}
+			}
+		}
 }
 
 void CPlayScene::UpdateCamera(float cx, float cy, int id)
