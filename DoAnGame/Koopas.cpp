@@ -44,6 +44,25 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	vy += KOOPAS_GRAVITY * dt;
 
+	if ((state == KOOPAS_STATE_DIE || state == KOOPAS_STATE_DIE_DEFLECT) && vx == 0)
+	{
+		if (GetTickCount64() - respawn_start > RESPAWN_TIME)
+		{
+			isHolded = 0;
+			SetState(KOOPAS_STATE_WALKING);
+			y -= KOOPAS_BBOX_HEIGHT - KOOPAS_BBOX_HEIGHT_DIE;
+			aboutToRespawn = 0;
+		}
+		else if (GetTickCount64() - respawn_start > RESPAWN_TIME - 1000)
+			aboutToRespawn = 1;
+	}
+	else if ((state == KOOPAS_STATE_DIE || state == KOOPAS_STATE_DIE_DEFLECT) && vx != 0)
+	{
+		respawn_start = DWORD(GetTickCount64());
+		aboutToRespawn = 0;
+	}
+
+
 	if (vx != 0)
 		isHolded = 0;
 
@@ -249,7 +268,14 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 void CKoopas::Render()
 {
 	int ani = KOOPAS_ANI_WALKING_LEFT;
-	if (state == KOOPAS_STATE_DIE && vx == 0)
+	if (aboutToRespawn)
+	{
+		if (state == KOOPAS_STATE_DIE)
+			ani = KOOPAS_ANI_RESPAWN_DIE;
+		else
+			ani = KOOPAS_ANI_RESPAWN_DIE_DEFLECT;
+	}
+	else if (state == KOOPAS_STATE_DIE && vx == 0)
 		ani = KOOPAS_ANI_DIE;
 	else if ((state == KOOPAS_STATE_DIE_DEFLECT && vx == 0) || state == KOOPAS_STATE_DIE_DEFLECT_OUT)
 		ani = KOOPAS_ANI_DIE_DEFLECT;
@@ -273,19 +299,25 @@ void CKoopas::SetState(int state)
 	switch (state)
 	{
 	case KOOPAS_STATE_DIE:
+		aboutToRespawn = 0;
+		StartRespawn();
 		y += KOOPAS_BBOX_HEIGHT - KOOPAS_BBOX_HEIGHT_DIE;
 		vx = 0;
 		vy = 0;
 		break;
 	case KOOPAS_STATE_DIE_DEFLECT:
+		aboutToRespawn = 0;
+		StartRespawn();
 		vy = -KOOPAS_DIE_DEFLECT_SPEED;
 		vx = 0;
 		break;
 	case KOOPAS_STATE_DIE_DEFLECT_OUT:
+		aboutToRespawn = 0;
 		vy = -KOOPAS_DIE_DEFLECT_SPEED;
 		isFinish = 1;
 		break;
 	case KOOPAS_STATE_WALKING:
+		aboutToRespawn = 0;
 		vx = -KOOPAS_WALKING_SPEED;
 		break;
 	}

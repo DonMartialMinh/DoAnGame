@@ -63,6 +63,24 @@ void CFlyKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	vy += FLYKOOPAS_GRAVITY * dt;
 
+	if ((state == FLYKOOPAS_STATE_DIE || state == FLYKOOPAS_STATE_DIE_DEFLECT) && vx == 0)
+	{
+		if (GetTickCount64() - respawn_start > RESPAWN_TIME)
+		{
+			isHolded = 0;
+			SetState(FLYKOOPAS_STATE_WALKING);
+			y -= FLYKOOPAS_BBOX_HEIGHT - FLYKOOPAS_BBOX_HEIGHT_DIE;
+			aboutToRespawn = 0;
+		}
+		else if (GetTickCount64() - respawn_start > RESPAWN_TIME - 1000)
+			aboutToRespawn = 1;
+	}
+	else if ((state == FLYKOOPAS_STATE_DIE || state == FLYKOOPAS_STATE_DIE_DEFLECT) && vx != 0)
+	{
+		respawn_start = DWORD(GetTickCount64());
+		aboutToRespawn = 0;
+	}
+
 	if (vx != 0)
 		isHolded = 0;
 
@@ -253,7 +271,14 @@ void CFlyKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 void CFlyKoopas::Render()
 {
 	int ani = FLYKOOPAS_ANI_WALKING_LEFT;
-	if (state == FLYKOOPAS_STATE_DIE && vx == 0)
+	if (aboutToRespawn)
+	{
+		if (state == FLYKOOPAS_STATE_DIE)
+			ani = FLYKOOPAS_ANI_RESPAWN_DIE;
+		else
+			ani = FLYKOOPAS_ANI_RESPAWN_DIE_DEFLECT;
+	}
+	else if (state == FLYKOOPAS_STATE_DIE && vx == 0)
 		ani = FLYKOOPAS_ANI_DIE;
 	else if ((state == FLYKOOPAS_STATE_DIE_DEFLECT && vx == 0) || state == FLYKOOPAS_STATE_DIE_DEFLECT_OUT)
 		ani = FLYKOOPAS_ANI_DIE_DEFLECT;
@@ -279,19 +304,25 @@ void CFlyKoopas::SetState(int state)
 	switch (state)
 	{
 	case FLYKOOPAS_STATE_DIE:
+		aboutToRespawn = 0;
+		StartRespawn();
 		y += FLYKOOPAS_BBOX_HEIGHT - FLYKOOPAS_BBOX_HEIGHT_DIE;
 		vx = 0;
 		vy = 0;
 		break;
 	case FLYKOOPAS_STATE_DIE_DEFLECT:
+		aboutToRespawn = 0;
+		StartRespawn();
 		vy = -FLYKOOPAS_DIE_DEFLECT_SPEED;
 		vx = 0;
 		break;
 	case FLYKOOPAS_STATE_DIE_DEFLECT_OUT:
+		aboutToRespawn = 0;
 		vy = -FLYKOOPAS_DIE_DEFLECT_SPEED;
 		isFinish = 1;
 		break;
 	case FLYKOOPAS_STATE_WALKING:
+		aboutToRespawn = 0;
 		vy = 0;
 		vx = -FLYKOOPAS_WALKING_SPEED;
 		break;

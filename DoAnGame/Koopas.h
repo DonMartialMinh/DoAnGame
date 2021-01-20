@@ -9,7 +9,7 @@
 #include "Plant.h"
 #include "PiranhaPlant.h"
 
-#define KOOPAS_WALKING_SPEED 0.035f;
+#define KOOPAS_WALKING_SPEED 0.035f
 #define KOOPAS_SPIN_SPEED 0.22f
 #define KOOPAS_GRAVITY		0.001f
 #define KOOPAS_DIE_DEFLECT_SPEED 0.3f
@@ -32,17 +32,23 @@
 #define KOOPAS_ANI_SPIN_RIGHT_DEFLECT	6
 #define KOOPAS_ANI_SPIN_LEFT_DEFLECT	5
 #define KOOPAS_ANI_DIE_DEFLECT 7
+#define KOOPAS_ANI_RESPAWN_DIE 8
+#define KOOPAS_ANI_RESPAWN_DIE_DEFLECT 9
+
+#define RESPAWN_TIME 7000
 
 class CKoopas : public CGameObject
 {
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void Render();
-
+	DWORD respawn_start = NULL;
 public:
 	int isHolded = 0;
 	float xMax = 0;
 	float xMin = 0;
+	int aboutToRespawn = 0;
 	CKoopas(float max, float min);
 	virtual void SetState(int state);
+	void StartRespawn() { respawn_start = DWORD(GetTickCount64()); }
 };

@@ -38,6 +38,8 @@
 #define FLYKOOPAS_ANI_DIE_DEFLECT 7
 #define FLYKOOPAS_ANI_FLY_RIGHT 8
 #define FLYKOOPAS_ANI_FLY_LEFT 9
+#define FLYKOOPAS_ANI_RESPAWN_DIE 10
+#define FLYKOOPAS_ANI_RESPAWN_DIE_DEFLECT 11
 
 class CFlyKoopas : public CGameObject
 {
@@ -47,8 +49,11 @@ class CFlyKoopas : public CGameObject
 	int type;
 	float yMin;
 	float yMax;
+	int aboutToRespawn = 0;
+	DWORD respawn_start = NULL;
 public:
 	int isHolded = 0;
 	CFlyKoopas(float yMin, float yMax, int type);
 	virtual void SetState(int state);
+	void StartRespawn() { respawn_start = DWORD(GetTickCount64()); }
 };
