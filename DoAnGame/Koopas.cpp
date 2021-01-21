@@ -125,7 +125,7 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					goomba->vx = 0.05f * this->nx;
 					game->AddScore(100);
 				}
-				else if (state == GOOMBA_STATE_WALKING)
+				else if (state == KOOPAS_STATE_WALKING)
 				{
 					vx = -vx;
 					goomba->vx = -goomba->vx;
@@ -140,7 +140,7 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					goomba->vx = 0.05f * this->nx;
 					game->AddScore(100);
 				}
-				else if (state == FLYGOOMBA_STATE_WALKING)
+				else if (state == KOOPAS_STATE_WALKING)
 				{
 					vx = -vx;
 					goomba->vx = -goomba->vx;
@@ -167,11 +167,6 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					//koopas->vx = 0.05f * this->nx;
 					game->AddScore(100);
 				}
-				else if (state == KOOPAS_STATE_WALKING)
-				{
-					vx = -vx;
-					koopas->vx = -koopas->vx;
-				}
 			}
 			else if (dynamic_cast<CFlyKoopas*>(e->obj))	// if e->obj is koopas
 			{
@@ -182,11 +177,7 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					//koopas->vx = 0.05f * this->nx;
 					game->AddScore(100);
 				}
-				else if (state == FLYKOOPAS_STATE_WALKING)
-				{
-					vx = -vx;
-					koopas->vx = -koopas->vx;
-				}
+
 			}
 			else if (dynamic_cast<CUpsideBrick*>(e->obj))	// if e->obj is UpsideBrick 
 			{
@@ -255,17 +246,17 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	}
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
 
-	if (state == KOOPAS_STATE_WALKING)
-	{
-		if (vx < 0 && x < xMax)
-		{
-			x = xMax; vx = -vx;
-		}
-		else if (vx > 0 && x > xMin)
-		{
-			x = xMin; vx = -vx;
-		}
-	}
+	//if (state == KOOPAS_STATE_WALKING)
+	//{
+	//	if (vx < 0 && x < xMax)
+	//	{
+	//		x = xMax; vx = -vx;
+	//	}
+	//	else if (vx > 0 && x > xMin)
+	//	{
+	//		x = xMin; vx = -vx;
+	//	}
+	//}
 
 }
 

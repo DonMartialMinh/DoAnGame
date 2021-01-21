@@ -36,7 +36,7 @@ using namespace std;
 
 
 
-#define TIME_BACK_TO_BRICK	10000
+#define TIME_BACK_TO_BRICK	8000
 
 
 class CPlayScene : public CScene
@@ -97,6 +97,7 @@ public:
 	void IsCollisionAABBWithEnemies();
 	void IsCollisionAABBWithItems();
 	void IsOutOfMoveBar();
+	void ClearBarStomped();
 	void Timing() { Itime = 1; Dtime = DWORD(GetTickCount64()); }			// reduce gameplay time one sec
 	void StartCountTimeBackToBrick() { isBrokenBrickBackToBrick = 0; TimeBrokenBrickBackToBrick = DWORD(GetTickCount64()); }			// reduce gameplay time one sec
 	//friend class CPlayScenceKeyHandler;

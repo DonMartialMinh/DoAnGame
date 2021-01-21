@@ -30,6 +30,7 @@ void CFlyKoopas::GetBoundingBox(float& left, float& top, float& right, float& bo
 
 void CFlyKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
+	CGame* game = CGame::GetInstance();
 /*	CGame* game = CGame::GetInstance();
 	float camx;
 	float camy;
@@ -141,6 +142,7 @@ void CFlyKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				{
 					goomba->SetState(GOOMBA_STATE_DIE_DEFLECT);
 					goomba->vx = 0.05f * this->nx;
+					game->AddScore(100);
 				}
 				else
 				{
@@ -155,6 +157,7 @@ void CFlyKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				{
 					goomba->SetState(FLYGOOMBA_STATE_DIE_DEFLECT);
 					goomba->vx = 0.05f * this->nx;
+					game->AddScore(100);
 				}
 				else
 				{
@@ -166,11 +169,13 @@ void CFlyKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			{
 				CPlant* plant = dynamic_cast<CPlant*>(e->obj);
 				plant->isFinish = 1;
+				game->AddScore(100);
 			}
 			else if (dynamic_cast<CPiranhaPlant*>(e->obj))			 // obj is PiranhaPlant
 			{
 				CPiranhaPlant* plant = dynamic_cast<CPiranhaPlant*>(e->obj);
 				plant->isFinish = 1;
+				game->AddScore(100);
 			}
 			else if (dynamic_cast<CKoopas*>(e->obj))	// if e->obj is koopas
 			{
@@ -178,12 +183,8 @@ void CFlyKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				if ((state == FLYKOOPAS_STATE_DIE || state == FLYKOOPAS_STATE_DIE_DEFLECT) && vx != 0)
 				{
 					koopas->SetState(FLYKOOPAS_STATE_DIE_DEFLECT_OUT);
+					game->AddScore(100);
 					//koopas->vx = 0.05f * this->nx;
-				}
-				else if (state == FLYKOOPAS_STATE_WALKING)
-				{
-					vx = -vx;
-					koopas->vx = -koopas->vx;
 				}
 			}
 			else if (dynamic_cast<CFlyKoopas*>(e->obj))	// if e->obj is Flykoopas
@@ -192,12 +193,8 @@ void CFlyKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				if ((state == FLYKOOPAS_STATE_DIE || state == FLYKOOPAS_STATE_DIE_DEFLECT) && vx != 0)
 				{
 					koopas->SetState(FLYKOOPAS_STATE_DIE_DEFLECT_OUT);
+					game->AddScore(100);
 					//koopas->vx = 0.05f * this->nx;
-				}
-				else if (state == FLYKOOPAS_STATE_WALKING)
-				{
-					vx = -vx;
-					koopas->vx = -koopas->vx;
 				}
 			}
 			else if (dynamic_cast<CUpsideBrick*>(e->obj))	// if e->obj is UpsideBrick 

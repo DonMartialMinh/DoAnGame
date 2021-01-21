@@ -5,7 +5,7 @@
 #define FLOWER_BBOX_WIDTH  16
 #define FLOWER_BBOX_HEIGHT 16
 
-#define FLOWER_RISING_SPEED  -0.25f
+#define FLOWER_RISING_SPEED  -0.28f
 
 
 

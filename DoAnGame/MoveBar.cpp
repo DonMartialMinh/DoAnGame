@@ -20,9 +20,17 @@ void CMoveBar::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	float camx;
 	float camy;
 	float scrw = float(game->GetScreenWidth());
+	float scrh = float(game->GetScreenHeight());
 	game->GetCamPos(camx, camy);
 	if ( x > camx + scrw)		// out screen width then return
 		return;
+
+	if (x + BAR_BBOX_WIDTH < camx || y > camy + scrh)
+	{
+		isFinish = 1;
+		isStomped = 0;
+	}
+
 
 	CGameObject::Update(dt);
 

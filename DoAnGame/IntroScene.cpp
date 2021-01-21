@@ -260,7 +260,9 @@ void CIntroSceneKeyHandler::OnKeyDown(int KeyCode)
 	//DebugOut(L"[INFO] KeyDown: %d\n", KeyCode);
 	switch (KeyCode)
 	{
-	case DIK_X:
+	case DIK_P:
+		break;
+	default:
 		CGame::GetInstance()->SwitchScene(1);
 		CGame* game = CGame::GetInstance();
 		game->SetTime(0);

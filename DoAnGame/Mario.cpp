@@ -944,14 +944,14 @@ void CMario::Render()
 	int ani = -1;
 	if (state == MARIO_STATE_DIE)
 		ani = MARIO_ANI_DIE;
-	else if (falling)
+	else if (falling && !holding)
 	{
 		if (nx > 0)
 			ani = MARIO_ANI_RACOON_FALL_RIGHT_1;
 		else
 			ani = MARIO_ANI_RACOON_FALL_LEFT_1;
 	}
-	else if (flying)
+	else if (flying && !holding)
 	{
 		if (nx > 0)
 			ani = MARIO_ANI_RACOON_FLYING_RIGHT;

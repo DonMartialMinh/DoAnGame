@@ -515,11 +515,15 @@ void CPlayScene::Update(DWORD dt)
 		listEnemies[i]->Update(dt, &coObjects);
 	}
 
+	// check mario is out of movebar or not
+	IsOutOfMoveBar();
+
+	// if player on air then none of move bar is stomped
+	if (player->isFlying)
+		ClearBarStomped();
+
 	// update player
 	player->Update(dt, &coObjects);
-
-	// check mario is out of movebar or not
-	//IsOutOfMoveBar();
 
 	// set AABB collision with enemies
 	IsCollisionAABBWithEnemies();
@@ -1111,16 +1115,46 @@ void CPlayScene::IsOutOfMoveBar()
 		{
 			for (int i = 0; i < int(bar.size()); i++)
 			{
-				if (bar[i]->isStomped)
-				{
-					if (player->x > bar[i]->x + BAR_BBOX_WIDTH)
+				if (!bar[i]->isFinish)
+					if (bar[i]->isStomped)
 					{
-						player->isInMoveBar = 0;
-						bar[i]->isStomped = 0;
+						if (player->getLevel() == MARIO_LEVEL_RACOON)
+						{
+							if ((player->x + MARIO_RACOON_BBOX_WIDTH - MARIO_BIG_BBOX_WIDTH > bar[i]->x + BAR_BBOX_WIDTH) || (player->x + MARIO_RACOON_BBOX_WIDTH < bar[i]->x))
+							{
+								player->isInMoveBar = 0;
+								bar[i]->isStomped = 0;
+							}
+						}
+						else if (player->getLevel() == MARIO_LEVEL_BIG || player->getLevel() == MARIO_LEVEL_FIRE)
+						{
+							if ((player->x > bar[i]->x + BAR_BBOX_WIDTH) || (player->x + MARIO_BIG_BBOX_WIDTH < bar[i]->x))
+							{
+								player->isInMoveBar = 0;
+								bar[i]->isStomped = 0;
+							}
+						}
+						else
+						{
+							if ((player->x > bar[i]->x + BAR_BBOX_WIDTH) || (player->x + MARIO_SMALL_BBOX_WIDTH < bar[i]->x))
+							{
+								player->isInMoveBar = 0;
+								bar[i]->isStomped = 0;
+							}
+						}
 					}
-				}
 			}
 		}
+}
+
+void CPlayScene::ClearBarStomped()
+{
+	for (int i = 0; i < int(bar.size()); i++)
+	{
+		if (!bar[i]->isFinish)
+			if (bar[i]->isStomped)
+				bar[i]->isStomped = 0;
+	}
 }
 
 void CPlayScene::UpdateCamera(float cx, float cy, int id)
