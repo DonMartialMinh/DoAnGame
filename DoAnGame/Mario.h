@@ -29,7 +29,7 @@
 
 
 #define MARIO_WALKING_SPEED			0.10f 
-#define MARIO_RUNNING_SPEED			0.21f 
+#define MARIO_RUNNING_SPEED			0.20f 
 #define MARIO_JUMP_SPEED_Y			0.33f
 #define MARIO_JUMP_SPEED_Y_SHORT	0.22f
 #define MARIO_JUMP_DEFLECT_SPEED	 0.2f
@@ -212,13 +212,15 @@
 
 #define MARIO_UNTOUCHABLE_TIME 2000
 #define MARIO_FALLING_TIME 300
-#define MARIO_FLYING_TIME 300
+#define MARIO_FLYING_TIME 500
 #define MARIO_TURNING_TIME 200
 #define MARIO_TAILING_TIME 300
 #define MARIO_KICKING_TIME 200
 #define MARIO_THROWING_TIME	300
 #define MARIO_TRANSFORM_TIME	800
 #define MARIO_SWITCHING_TIME	800
+
+#define MARIO_FLYING_COUNTDOWN_TIME	4000
 
 #define MARIO_FIREBALL_ANI_SET_ID 13
 #define MARIO_TAIL_ANI_SET_ID 11
@@ -239,6 +241,7 @@ class CMario : public CGameObject
 	DWORD trans_start;
 	DWORD transRacoon_start;
 	DWORD switch_start;
+	DWORD flycountdown_start = 0;
 	float start_x;			// initial position of Mario at scene
 	float start_y;
 
@@ -278,6 +281,7 @@ public:
 
 	void SetState(int state);
 	void SetLevel(int l) { level = l; }
+	void StartTimeFlyingCountDown() { flycountdown_start = DWORD(GetTickCount64()); }
 	void StartUntouchable() { untouchable = 1; untouchable_start = DWORD(GetTickCount64()); }
 	void StartFalling() { falling = 1; fall_start = DWORD(GetTickCount64()); }
 	void StartFlying() { flying = 1; fly_start = DWORD(GetTickCount64()); }

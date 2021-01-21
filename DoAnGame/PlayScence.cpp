@@ -731,8 +731,11 @@ void CPlayScenceKeyHandler::OnKeyUp(int KeyCode)
 	case DIK_DOWN:
 		if (mario->isFlying == 0 && mario->getLevel() != MARIO_LEVEL_SMALL)
 		{
-			mario->isDucking = 0;
-			mario->y -= (MARIO_BIG_BBOX_HEIGHT - MARIO_BIG_DUCK_BBOX_HEIGHT);
+			if (mario->isDucking)
+			{
+				mario->isDucking = 0;
+				mario->y -= (MARIO_BIG_BBOX_HEIGHT - MARIO_BIG_DUCK_BBOX_HEIGHT);
+			}
 		}
 		break;
 	}
@@ -750,7 +753,8 @@ void CPlayScenceKeyHandler::KeyState(BYTE* states)
 	if (game->IsKeyDown(DIK_A))
 	{
 		mario->canHold = 1;
-		mario->isRunning = 1;
+		if (!mario->flying)
+			mario->isRunning = 1;
 		if (abs(mario->GetVx()) >= MARIO_RUNNING_SPEED)
 		{
 			mario->SetState(MARIO_STATE_SLIDE);
@@ -766,28 +770,34 @@ void CPlayScenceKeyHandler::KeyState(BYTE* states)
 
 	if (game->IsKeyDown(DIK_RIGHT))
 	{
-		if (mario->vx < 0 && mario->turning == 0)
-			mario->SetState(MARIO_RACOON_STATE_TURN);
-		else if (mario->getLevel() == MARIO_LEVEL_RACOON && mario->nx < 0)
+		if (!mario->isDucking)
 		{
-			mario->x = mario->x - (MARIO_RACOON_BBOX_WIDTH - MARIO_BIG_BBOX_WIDTH);
+			if (mario->vx < 0 && mario->turning == 0)
+				mario->SetState(MARIO_RACOON_STATE_TURN);
+			else if (mario->getLevel() == MARIO_LEVEL_RACOON && mario->nx < 0)
+			{
+				mario->x = mario->x - (MARIO_RACOON_BBOX_WIDTH - MARIO_BIG_BBOX_WIDTH);
+			}
+			mario->SetState(MARIO_STATE_WALKING_RIGHT);
 		}
-		mario->SetState(MARIO_STATE_WALKING_RIGHT);
 	}
 	else if (game->IsKeyDown(DIK_LEFT))
 	{
-		if (mario->vx > 0 && mario->turning == 0)
-			mario->SetState(MARIO_RACOON_STATE_TURN);
-		else if (mario->getLevel() == MARIO_LEVEL_RACOON && mario->nx > 0)
+		if (!mario->isDucking)
 		{
-			mario->x = mario->x + MARIO_RACOON_BBOX_WIDTH - MARIO_BIG_BBOX_WIDTH;
+			if (mario->vx > 0 && mario->turning == 0)
+				mario->SetState(MARIO_RACOON_STATE_TURN);
+			else if (mario->getLevel() == MARIO_LEVEL_RACOON && mario->nx > 0)
+			{
+				mario->x = mario->x + MARIO_RACOON_BBOX_WIDTH - MARIO_BIG_BBOX_WIDTH;
+			}
+			mario->SetState(MARIO_STATE_WALKING_LEFT);
 		}
-		mario->SetState(MARIO_STATE_WALKING_LEFT);
 	}
 	else if (game->IsKeyDown(DIK_DOWN))
 	{
 		mario->KeyDownPressed = 1;
-		if (mario->getLevel() != MARIO_LEVEL_SMALL)
+		if (mario->getLevel() != MARIO_LEVEL_SMALL && !mario->holding)
 			mario->SetState(MARIO_STATE_DUCK);
 	}
 	else if (game->IsKeyDown(DIK_UP))

@@ -86,17 +86,17 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				speedStack = 0;
 			else if (abs(vx) > MARIO_WALKING_SPEED && abs(vx) < MARIO_WALKING_SPEED + 0.01f)
 				speedStack = 1;
-			else if (abs(vx) > MARIO_WALKING_SPEED + 0.01f && abs(vx) < MARIO_WALKING_SPEED + 0.03f)
+			else if (abs(vx) > MARIO_WALKING_SPEED + 0.01f && abs(vx) < MARIO_WALKING_SPEED + 0.02f)
 				speedStack = 2;
-			else if (abs(vx) > MARIO_WALKING_SPEED + 0.03f && abs(vx) < MARIO_WALKING_SPEED + 0.05f)
+			else if (abs(vx) > MARIO_WALKING_SPEED + 0.02f && abs(vx) < MARIO_WALKING_SPEED + 0.04f)
 				speedStack = 3;
+			else if (abs(vx) > MARIO_WALKING_SPEED + 0.04f && abs(vx) < MARIO_WALKING_SPEED + 0.05f)
+				speedStack = 4;
 			else if (abs(vx) > MARIO_WALKING_SPEED + 0.05f && abs(vx) < MARIO_WALKING_SPEED + 0.06f)
 				speedStack = 4;
-			else if (abs(vx) > MARIO_WALKING_SPEED + 0.06f && abs(vx) < MARIO_WALKING_SPEED + 0.07f)
-				speedStack = 4;
-			else if (abs(vx) > MARIO_WALKING_SPEED + 0.07f && abs(vx) < MARIO_WALKING_SPEED + 0.09f)
+			else if (abs(vx) > MARIO_WALKING_SPEED + 0.06f && abs(vx) < MARIO_WALKING_SPEED + 0.08f)
 				speedStack = 5;
-			else if (abs(vx) > MARIO_WALKING_SPEED + 0.09f && abs(vx) < MARIO_WALKING_SPEED + 0.1f)
+			else if (abs(vx) > MARIO_WALKING_SPEED + 0.08f && abs(vx) < MARIO_WALKING_SPEED + 0.09f)
 				speedStack = 6;
 			else if (abs(vx) == MARIO_RUNNING_SPEED)
 				speedStack = 7;
@@ -1583,6 +1583,8 @@ void CMario::SetState(int state)
 		StartFalling();
 		break;
 	case MARIO_RACOON_STATE_FLY:
+		if (flycountdown_start == 0)
+			StartTimeFlyingCountDown();
 		StartFlying();
 		break;
 	case MARIO_RACOON_STATE_TURN:
@@ -1728,6 +1730,17 @@ void CMario::AnimationTime()
 		}
 
 	}
+	if (flying)
+	{
+		if (GetTickCount64() - flycountdown_start > MARIO_FLYING_COUNTDOWN_TIME)
+		{
+			flycountdown_start = 0;
+			flying = 0;
+			isRunning = 0;
+		}
+	}
+	else
+		flycountdown_start = DWORD(GetTickCount64());
 }
 
 CGameObject* CMario::NewFireBall()		// create fireball function
