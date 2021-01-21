@@ -3,8 +3,9 @@
 #include "UpsideBrick.h"
 #include "Utils.h"
 
-CKoopas::CKoopas(float max, float min)
+CKoopas::CKoopas(float max, float min, int type)
 {
+	this->type = type;
 	xMax = round(max);
 	xMin = round(min);
 	SetState(KOOPAS_STATE_WALKING);
@@ -29,12 +30,12 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 
 	CGame* game = CGame::GetInstance();
-	float camx;
-	float camy;
-	float scrw = float(game->GetScreenWidth());
-	game->GetCamPos(camx, camy);
-	if (x > camx + scrw)		// out screen width then return
-		return;
+	//float camx;
+	//float camy;
+	//float scrw = float(game->GetScreenWidth());
+	//game->GetCamPos(camx, camy);
+	//if (x > camx + scrw)		// out screen width then return
+	//	return;
 
 	CGameObject::Update(dt);
 
@@ -99,7 +100,7 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 		// block every object first!
 		x += min_tx * dx + nx * 0.4f;
-		//y += min_ty * dy + ny * 0.4f;
+		y += min_ty * dy + ny * 0.4f;
 
 		float temp = vy;
 		//if (nx != 0) vx = 0;
@@ -109,7 +110,12 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		for (int i = 0; i < int(coEventsResult.size()); i++)
 		{
 			LPCOLLISIONEVENT e = coEventsResult[i];
-
+			if (e->ny > 0)
+			{
+				vy = temp;
+				x -= min_tx * dx + nx * 0.4f;
+				y -= min_ty * dy + ny * 0.4f;
+			}
 			if (dynamic_cast<CGoomba*>(e->obj))	// if e->obj is goomba 
 			{
 				CGoomba* goomba = dynamic_cast<CGoomba*>(e->obj);
@@ -119,9 +125,10 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					goomba->vx = 0.05f * this->nx;
 					game->AddScore(100);
 				}
-				else
+				else if (state == GOOMBA_STATE_WALKING)
 				{
 					vx = -vx;
+					goomba->vx = -goomba->vx;
 				}
 			}
 			else if (dynamic_cast<CFlyGoomba*>(e->obj))	// if e->obj is goomba 
@@ -133,13 +140,10 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					goomba->vx = 0.05f * this->nx;
 					game->AddScore(100);
 				}
-				else
+				else if (state == FLYGOOMBA_STATE_WALKING)
 				{
-					if (abs(nx) > 0.0001f)
-					{
-						vx = -vx;
-						goomba->vx = -goomba->vx;
-					}
+					vx = -vx;
+					goomba->vx = -goomba->vx;
 				}
 			}
 			else if (dynamic_cast<CPlant*>(e->obj))					// obj is plant
@@ -163,9 +167,10 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					//koopas->vx = 0.05f * this->nx;
 					game->AddScore(100);
 				}
-				else 
+				else if (state == KOOPAS_STATE_WALKING)
 				{
 					vx = -vx;
+					koopas->vx = -koopas->vx;
 				}
 			}
 			else if (dynamic_cast<CFlyKoopas*>(e->obj))	// if e->obj is koopas
@@ -177,9 +182,10 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					//koopas->vx = 0.05f * this->nx;
 					game->AddScore(100);
 				}
-				else if (state == KOOPAS_STATE_WALKING)
+				else if (state == FLYKOOPAS_STATE_WALKING)
 				{
 					vx = -vx;
+					koopas->vx = -koopas->vx;
 				}
 			}
 			else if (dynamic_cast<CUpsideBrick*>(e->obj))	// if e->obj is UpsideBrick 
@@ -267,28 +273,58 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 void CKoopas::Render()
 {
-	int ani = KOOPAS_ANI_WALKING_LEFT;
-	if (aboutToRespawn)
+	int ani;
+	if (type == 1) // RED KOOPAS
 	{
-		if (state == KOOPAS_STATE_DIE)
-			ani = KOOPAS_ANI_RESPAWN_DIE;
-		else
-			ani = KOOPAS_ANI_RESPAWN_DIE_DEFLECT;
+		ani = KOOPAS_RED_ANI_WALKING_LEFT;
+		if (aboutToRespawn)
+		{
+			if (state == KOOPAS_STATE_DIE)
+				ani = KOOPAS_RED_ANI_RESPAWN_DIE;
+			else
+				ani = KOOPAS_RED_ANI_RESPAWN_DIE_DEFLECT;
+		}
+		else if (state == KOOPAS_STATE_DIE && vx == 0)
+			ani = KOOPAS_RED_ANI_DIE;
+		else if ((state == KOOPAS_STATE_DIE_DEFLECT && vx == 0) || state == KOOPAS_STATE_DIE_DEFLECT_OUT)
+			ani = KOOPAS_RED_ANI_DIE_DEFLECT;
+		else if (state == KOOPAS_STATE_DIE && vx > 0)
+			ani = KOOPAS_RED_ANI_SPIN_RIGHT;
+		else if (state == KOOPAS_STATE_DIE && vx < 0)
+			ani = KOOPAS_RED_ANI_SPIN_LEFT;
+		else if (state == KOOPAS_STATE_DIE_DEFLECT && vx > 0)
+			ani = KOOPAS_RED_ANI_SPIN_RIGHT_DEFLECT;
+		else if (state == KOOPAS_STATE_DIE_DEFLECT && vx < 0)
+			ani = KOOPAS_RED_ANI_SPIN_LEFT_DEFLECT;
+		else if (vx > 0) ani = KOOPAS_RED_ANI_WALKING_RIGHT;
+		else if (vx <= 0) ani = KOOPAS_RED_ANI_WALKING_LEFT;
 	}
-	else if (state == KOOPAS_STATE_DIE && vx == 0)
-		ani = KOOPAS_ANI_DIE;
-	else if ((state == KOOPAS_STATE_DIE_DEFLECT && vx == 0) || state == KOOPAS_STATE_DIE_DEFLECT_OUT)
-		ani = KOOPAS_ANI_DIE_DEFLECT;
-	else if (state == KOOPAS_STATE_DIE && vx > 0)
-		ani = KOOPAS_ANI_SPIN_RIGHT;
-	else if (state == KOOPAS_STATE_DIE && vx < 0)
-		ani = KOOPAS_ANI_SPIN_LEFT;
-	else if (state == KOOPAS_STATE_DIE_DEFLECT && vx > 0)
-		ani = KOOPAS_ANI_SPIN_RIGHT_DEFLECT;
-	else if (state == KOOPAS_STATE_DIE_DEFLECT && vx < 0)
-		ani = KOOPAS_ANI_SPIN_LEFT_DEFLECT;
-	else if (vx > 0) ani = KOOPAS_ANI_WALKING_RIGHT;
-	else if (vx <= 0) ani = KOOPAS_ANI_WALKING_LEFT;
+	else
+	{
+		ani = KOOPAS_ANI_WALKING_LEFT;
+		if (aboutToRespawn)
+		{
+			if (state == KOOPAS_STATE_DIE)
+				ani = KOOPAS_ANI_RESPAWN_DIE;
+			else
+				ani = KOOPAS_ANI_RESPAWN_DIE_DEFLECT;
+		}
+		else if (state == KOOPAS_STATE_DIE && vx == 0)
+			ani = KOOPAS_ANI_DIE;
+		else if ((state == KOOPAS_STATE_DIE_DEFLECT && vx == 0) || state == KOOPAS_STATE_DIE_DEFLECT_OUT)
+			ani = KOOPAS_ANI_DIE_DEFLECT;
+		else if (state == KOOPAS_STATE_DIE && vx > 0)
+			ani = KOOPAS_ANI_SPIN_RIGHT;
+		else if (state == KOOPAS_STATE_DIE && vx < 0)
+			ani = KOOPAS_ANI_SPIN_LEFT;
+		else if (state == KOOPAS_STATE_DIE_DEFLECT && vx > 0)
+			ani = KOOPAS_ANI_SPIN_RIGHT_DEFLECT;
+		else if (state == KOOPAS_STATE_DIE_DEFLECT && vx < 0)
+			ani = KOOPAS_ANI_SPIN_LEFT_DEFLECT;
+		else if (vx > 0) ani = KOOPAS_ANI_WALKING_RIGHT;
+		else if (vx <= 0) ani = KOOPAS_ANI_WALKING_LEFT;
+	}
+
 	animation_set->at(ani)->Render(round(x), round(y));
 	//RenderBoundingBox();
 }

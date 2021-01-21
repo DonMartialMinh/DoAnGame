@@ -23,12 +23,12 @@ void CGoomba::GetBoundingBox(float& left, float& top, float& right, float& botto
 void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	CGame* game = CGame::GetInstance();
-	float camx;
-	float camy;
-	float scrw = float(game->GetScreenWidth());
-	game->GetCamPos(camx, camy);
-	if (x > camx + scrw)		// out screen width then return
-		return;
+	//float camx;
+	//float camy;
+	//float scrw = float(game->GetScreenWidth());
+	//game->GetCamPos(camx, camy);
+	//if (x > camx + scrw)		// out screen width then return
+	//	return;
 
 
 	if (isFinish && dying)	// if dying and die animation finish then return
@@ -74,22 +74,25 @@ void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 		// block every object first!
 		x += min_tx * dx + nx * 0.4f;
-		//y += min_ty * dy + ny * 0.4f;
+		y += min_ty * dy + ny * 0.4f;
 
+		float temp = vy;
 		if (ny != 0) vy = 0;
 
 		for (int i = 0; i < int(coEventsResult.size()); i++)
 		{
 			LPCOLLISIONEVENT e = coEventsResult[i];
-
+			if (e->ny > 0)
+			{
+				vy = temp;
+				x -= min_tx * dx + nx * 0.4f;
+				y -= min_ty * dy + ny * 0.4f;
+			}
 			if (dynamic_cast<CGoomba*>(e->obj))	// if e->obj is goomba 
 			{
 				CGoomba* goomba = dynamic_cast<CGoomba*>(e->obj);
-				if (abs(nx) > 0.0001f)
-				{
-					vx = -vx;
-					goomba->vx = -goomba->vx;
-				}
+				vx = -vx;
+				goomba->vx = -goomba->vx;
 			}
 			else
 			{

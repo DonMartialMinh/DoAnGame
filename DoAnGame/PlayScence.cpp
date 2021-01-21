@@ -180,35 +180,6 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 
 	switch (object_type)
 	{
-	case OBJECT_TYPE_GOOMBA:
-		obj = new CGoomba();
-		obj->type = OBJECT_TYPE_GOOMBA;
-		listEnemies.push_back((CGoomba*)obj);
-		break;
-	case OBJECT_TYPE_KOOPAS:
-	{
-		float setting1 = float(atof(tokens[4].c_str()));
-		float setting2 = float(atof(tokens[5].c_str()));
-		obj = new CKoopas(setting1, setting2);
-		obj->type = OBJECT_TYPE_KOOPAS;
-		listEnemies.push_back((CKoopas*)obj);
-	}
-	break;
-	case OBJECT_TYPE_FLYGOOMBA:
-		obj = new CFlyGoomba();
-		obj->type = OBJECT_TYPE_FLYGOOMBA;
-		listEnemies.push_back((CFlyGoomba*)obj);
-		break;
-	case OBJECT_TYPE_FLYKOOPAS:
-	{
-		float yMin = float(atof(tokens[4].c_str()));
-		float yMax = float(atof(tokens[5].c_str()));
-		int type = atoi(tokens[6].c_str());
-		obj = new CFlyKoopas(yMin, yMax, type);
-		obj->type = OBJECT_TYPE_FLYKOOPAS;
-		listEnemies.push_back((CFlyKoopas*)obj);
-	}
-	break;
 	case OBJECT_TYPE_PLANT:
 		obj = new CPlant(player, y);
 		obj->type = OBJECT_TYPE_PLANT;
@@ -269,7 +240,6 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_GAMECLEARBOARD:
 		obj = new CGameClearBoard();
 		gameclearboard = (CGameClearBoard*)obj;
-		//DebugOut(L"success");
 		break;
 	case OBJECT_TYPE_SPEEDBAR:
 		obj = new CSpeedBar();
@@ -296,6 +266,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 
 void CPlayScene::Load()
 {
+	CGame* game = CGame::GetInstance();
 	DebugOut(L"[INFO] Start loading scene resources from : %s \n", sceneFilePath);
 	//grid.loadGrid(player);
 	ifstream f;
@@ -349,13 +320,14 @@ void CPlayScene::Load()
 	grid = new Grid();
 
 	// set file grid
-	if (this->id == MAP_1)
+	if (this->id == MAP_11)
 		grid->SetFile("grid_map1-1.txt");
-	else if (this->id == MAP_2)
+	else if (this->id == MAP_14)
 		grid->SetFile("grid_map1-4.txt");
 
 	// LoadGrid
-	grid->loadGrid( player,  qbrick, bbrick, bar, item);
+	grid->loadGrid( player, qbrick, bbrick, bar, item);
+	player->SetLevel(game->GetLevel());
 }
 
 void CPlayScene::Update(DWORD dt)
@@ -970,6 +942,39 @@ void CPlayScene::IsCollisionAABBWithEnemies()
 		}
 	}
 
+	for (int i = 0; i < int(listObjects.size()); i++)
+	{
+		CGameObject* enemy = dynamic_cast<CGameObject*> (listObjects[i]);
+		if (!enemy->isFinish)
+		{
+			if (enemy->type == OBJECT_TYPE_GOOMBA || enemy->type == OBJECT_TYPE_FLYGOOMBA)
+			{
+				if (player->CheckAABB(enemy))
+				{
+					if (player->untouchable == 0)
+					{
+						if (player->getLevel() > MARIO_LEVEL_BIG)
+						{
+							player->StartTransform_Racoon();
+							player->level = MARIO_LEVEL_BIG;
+							player->ResetState();
+							player->StartUntouchable();
+						}
+						else if (player->getLevel() == MARIO_LEVEL_BIG)
+						{
+							player->level = MARIO_LEVEL_SMALL;
+							player->ResetState();
+							CMario::ToSmall(player->y);
+							player->StartUntouchable();
+						}
+						else
+							player->SetState(MARIO_STATE_DIE);
+					}
+				}
+			}
+		}
+	}
+
 	for (int i = 0; i < int(createObjects.size()); i++)
 	{
 		CGameObject* object = dynamic_cast<CGameObject*> (createObjects[i]);
@@ -1113,7 +1118,7 @@ void CPlayScene::UpdateCamera(float cx, float cy, int id)
 	CGame* game = CGame::GetInstance();
 	float camx, camy;
 	game->GetCamPos(camx, camy);
-	if (id == MAP_1)
+	if (id == MAP_11)
 	{
 		if (cx < game->GetScreenWidth() / 2)
 		{
@@ -1176,7 +1181,7 @@ void CPlayScene::UpdateCamera(float cx, float cy, int id)
 			}
 		}
 	}
-	else if (id == MAP_2)
+	else if (id == MAP_14)
 	{
 		if (cx > 2034.0f)
 		{

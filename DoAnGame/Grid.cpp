@@ -86,13 +86,39 @@ void Grid::loadGrid(CMario* player, vector<CQBrick*>& qbrick, vector<CBrokenBric
 
 		switch (object_type)
 		{
+		case OBJECT_TYPE_GOOMBA:
+			obj = new CGoomba();
+			obj->type = OBJECT_TYPE_GOOMBA;
+			break;
+		case OBJECT_TYPE_KOOPAS:
+		{
+			float setting1 = float(atof(tokens[6].c_str()));
+			float setting2 = float(atof(tokens[7].c_str()));
+			int type = atoi(tokens[8].c_str());
+			obj = new CKoopas(setting1, setting2, type);
+			obj->type = OBJECT_TYPE_KOOPAS;
+		}
+		break;
+		case OBJECT_TYPE_FLYGOOMBA:
+			obj = new CFlyGoomba();
+			obj->type = OBJECT_TYPE_FLYGOOMBA;
+			break;
+		case OBJECT_TYPE_FLYKOOPAS:
+		{
+			float yMin = float(atof(tokens[6].c_str()));
+			float yMax = float(atof(tokens[7].c_str()));
+			int type = atoi(tokens[8].c_str());
+			obj = new CFlyKoopas(yMin, yMax, type);
+			obj->type = OBJECT_TYPE_FLYKOOPAS;
+		}
+		break;
 		case OBJECT_TYPE_BRICK:
 			obj = new CBrick();
 			obj->type = OBJECT_TYPE_BRICK;
 			break;
 		case OBJECT_TYPE_UPSIDEBRICK:
 			obj = new CUpsideBrick();
-			obj->type = OBJECT_TYPE_UPSIDEBRICK;
+			obj->type = OBJECT_TYPE_BRICK;
 			break;
 		case OBJECT_TYPE_COIN:
 			obj = new CCoin();
@@ -103,7 +129,7 @@ void Grid::loadGrid(CMario* player, vector<CQBrick*>& qbrick, vector<CBrokenBric
 			float setting1 = float(atof(tokens[6].c_str()));
 			float setting2 = float(atof(tokens[7].c_str()));
 			obj = new CQBrick(player, int(setting1), int(setting2), y);
-			obj->type = OBJECT_TYPE_QBRICK;
+			obj->type = OBJECT_TYPE_BRICK;
 			qbrick.push_back((CQBrick*)obj);
 		}
 		break;
@@ -117,18 +143,18 @@ void Grid::loadGrid(CMario* player, vector<CQBrick*>& qbrick, vector<CBrokenBric
 			float setting1 = float(atof(tokens[6].c_str()));
 			float setting2 = float(atof(tokens[7].c_str()));
 			obj = new CSwitch(setting1, setting2);
-			obj->type = OBJECT_TYPE_SWITCH;
+			obj->type = OBJECT_TYPE_BRICK;
 		}
 		break;
 		case OBJECT_TYPE_BROKENBRICK:
 			obj = new CBrokenBrick();
 			bbrick.push_back((CBrokenBrick*)obj);
-			obj->type = OBJECT_TYPE_BROKENBRICK;
+			obj->type = OBJECT_TYPE_BRICK;
 			break;
 		case OBJECT_TYPE_MOVEBAR:
 			obj = new CMoveBar();
 			bar.push_back((CMoveBar*)obj);
-			obj->type = OBJECT_TYPE_MOVEBAR;
+			obj->type = OBJECT_TYPE_BRICK;
 			break;
 		case OBJECT_TYPE_PORTAL:
 		{
@@ -136,6 +162,7 @@ void Grid::loadGrid(CMario* player, vector<CQBrick*>& qbrick, vector<CBrokenBric
 			float b = float(atof(tokens[7].c_str()));
 			int scene_id = atoi(tokens[8].c_str());
 			obj = new CPortal(x, y, r, b, scene_id);
+			obj->type = OBJECT_TYPE_PORTAL;
 		}
 		break;
 		}
@@ -165,9 +192,33 @@ void Grid::GetListObject(vector<CGameObject*>& ListObj)
 	int left = (int)((camx) / GRID_CELL_WIDTH);
 	int right = (int)((camx + game->GetScreenWidth()) / GRID_CELL_WIDTH);
 
+	HandleCell(top, left, right, bottom);
+
 	for (int i = top; i <= bottom; i++)
 		for (int j = left; j <= right; j++)
 			for (int temp = 0; temp < int(cells[i][j].size()); temp++)
 				ListObj.push_back(cells[i][j].at(temp));
 
+}
+
+void Grid::HandleCell(int top, int left, int right, int bottom)
+{
+	for(int i = top; i <= bottom; i++)
+		for (int j = left; j <= right; j++)
+			if (cells[i][j].size() > 0)
+			{
+				for (int temp = 0; temp < int(cells[i][j].size()); temp++)
+				{
+					if (cells[i][j].at(temp)->type == OBJECT_TYPE_KOOPAS || cells[i][j].at(temp)->type == OBJECT_TYPE_FLYKOOPAS ||  cells[i][j].at(temp)->type == OBJECT_TYPE_GOOMBA || cells[i][j].at(temp)->type == OBJECT_TYPE_FLYGOOMBA)
+					{
+						int currenti = (int)((cells[i][j].at(temp)->y) / GRID_CELL_HEIGHT);
+						int currentj = (int)((cells[i][j].at(temp)->x) / GRID_CELL_WIDTH);
+						if (currenti != i || currentj != j)
+						{
+							cells[currenti][currentj].push_back(cells[i][j].at(temp));
+							cells[i][j].erase(cells[i][j].begin() + temp);
+						} 
+					}
+				}
+			}
 }

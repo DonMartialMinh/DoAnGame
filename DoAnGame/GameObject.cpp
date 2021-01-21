@@ -100,7 +100,10 @@ void CGameObject::CalcPotentialCollisions(
 		{
 			if (e->t > 0 && e->t <= 1.0f)
 			{
-				coEvents.push_back(e);
+				if (coObjects->at(i)->type == OBJECT_TYPE_COIN)
+					delete e;
+				else
+					coEvents.push_back(e);
 			}
 			else
 				delete e;
@@ -109,7 +112,7 @@ void CGameObject::CalcPotentialCollisions(
 		{
 			if (e->t > 0 && e->t <= 1.0f)
 			{
-				if ((coObjects->at(i)->type == OBJECT_TYPE_BRICK) || (coObjects->at(i)->type == OBJECT_TYPE_QBRICK) || (coObjects->at(i)->type == OBJECT_TYPE_UPSIDEBRICK) || (coObjects->at(i)->type == OBJECT_TYPE_BROKENBRICK))			// avoid collision with mario and environment
+				if (coObjects->at(i)->type == OBJECT_TYPE_BRICK)			// avoid collision with mario and environment
 					coEvents.push_back(e);
 				else
 					delete e;
@@ -121,7 +124,7 @@ void CGameObject::CalcPotentialCollisions(
 		{
 			if (e->t > 0 && e->t <= 1.0f)
 			{
-				if ( (coObjects->at(i)->type == OBJECT_TYPE_PLANTFIREBALL) || (coObjects->at(i)->type == OBJECT_TYPE_LEAF)  || (coObjects->at(i)->type == OBJECT_TYPE_COIN) || (coObjects->at(i)->type == OBJECT_TYPE_FIREBALL))			// avoid collision with mario and environment
+				if ((coObjects->at(i)->type == OBJECT_TYPE_PLANTFIREBALL) || (coObjects->at(i)->type == OBJECT_TYPE_LEAF)  || (coObjects->at(i)->type == OBJECT_TYPE_COIN) || (coObjects->at(i)->type == OBJECT_TYPE_FIREBALL) || (coObjects->at(i)->type == OBJECT_TYPE_MUSHROOM))			// avoid collision with mario and environment
 					delete e;
 				else
 					coEvents.push_back(e);
@@ -141,27 +144,64 @@ void CGameObject::FilterCollision(
 	float& min_tx, float& min_ty,
 	float& nx, float& ny, float& rdx, float& rdy)
 {
-	min_tx = 1.0f;
-	min_ty = 1.0f;
-	int min_ix = -1;
-	int min_iy = -1;
-	nx = 0.0f;
-	ny = 0.0f;
-	coEventsResult.clear();
-	for (UINT i = 0; i < coEvents.size(); i++)
+	if (this->type == OBJECT_TYPE_MARIO)	// Mario
 	{
-		LPCOLLISIONEVENT c = coEvents[i];
-		if (c->t < min_tx && c->nx != 0) {
-			min_tx = c->t; nx = c->nx; min_ix = i; rdx = c->dx;
-		}
-		if (c->t < min_ty && c->ny != 0) {
-			min_ty = c->t; ny = c->ny; min_iy = i; rdy = c->dy;
+		min_tx = 1.0f;
+		min_ty = 1.0f;
+		nx = 0.0f;
+		ny = 0.0f;
+		int min_ix = -1;
+		int min_iy = -1;
+		coEventsResult.clear();
+		for (UINT i = 0; i < coEvents.size(); i++)
+		{
+			LPCOLLISIONEVENT c = coEvents[i];
+			if (c->t < 1.0f && c->nx != 0) {
+				if (c->t < min_tx)
+				{
+					min_tx = c->t;
+					nx = c->nx;
+					rdx = c->dx;
+				}
+				min_ix = i;
+				coEventsResult.push_back(coEvents[min_ix]);
+			}
+			if (c->t < 1.0f && c->ny != 0) {
+				if (c->t < min_ty)
+				{
+					min_ty = c->t;
+					ny = c->ny;
+					rdy = c->dy;
+				}
+				min_iy = i;
+				coEventsResult.push_back(coEvents[min_iy]);
+			}
 		}
 	}
-	if (min_ix >= 0)
-		coEventsResult.push_back(coEvents[min_ix]);
-	if (min_iy >= 0)
-		coEventsResult.push_back(coEvents[min_iy]);
+	else
+	{
+		min_tx = 1.0f;
+		min_ty = 1.0f;
+		int min_ix = -1;
+		int min_iy = -1;
+		nx = 0.0f;
+		ny = 0.0f;
+		coEventsResult.clear();
+		for (UINT i = 0; i < coEvents.size(); i++)
+		{
+			LPCOLLISIONEVENT c = coEvents[i];
+			if (c->t < min_tx && c->nx != 0) {
+				min_tx = c->t; nx = c->nx; min_ix = i; rdx = c->dx;
+			}
+			if (c->t < min_ty && c->ny != 0) {
+				min_ty = c->t; ny = c->ny; min_iy = i; rdy = c->dy;
+			}
+		}
+		if (min_ix >= 0)
+			coEventsResult.push_back(coEvents[min_ix]);
+		if (min_iy >= 0)
+			coEventsResult.push_back(coEvents[min_iy]);
+	}
 }
 
 bool CGameObject::CheckAABB(CGameObject* object)

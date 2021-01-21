@@ -226,6 +226,7 @@ void CWorldMapScene::_ParseSection_OBJECTS(string line)
 
 void CWorldMapScene::Load()
 {
+	CGame* game = CGame::GetInstance();
 	DebugOut(L"[INFO] Start loading scene resources from : %s \n", sceneFilePath);
 
 	ifstream f;
@@ -274,6 +275,8 @@ void CWorldMapScene::Load()
 	//CTextures::GetInstance()->Add(ID_TEX_BBOX, L"textures\\bbox.png", D3DCOLOR_XRGB(255, 255, 255));
 
 	DebugOut(L"[INFO] Done loading scene resources %s\n", sceneFilePath);
+	player->SetLevel(game->GetLevel());
+	player->SetPosition(game->GetMiniMarioPositionX(), game->GetMiniMarioPositionY());
 }
 
 void CWorldMapScene::Update(DWORD dt)
@@ -436,13 +439,16 @@ void CWorldMapSceneKeyHandler::OnKeyDown(int KeyCode)
 	{
 		if (mario->x > 94.0f && mario->x < 101.0f && mario->y > 29.0f && mario->y < 35.0f)
 		{
-			CGame::GetInstance()->SwitchScene(2);
+			game->SetLevel(mario->getLevel());
 			game->SetTime(300);
+			CGame::GetInstance()->SwitchScene(2);
+
 		}
 		else if (mario->x > 190.0f && mario->x < 197.0f && mario->y > 60.0f && mario->y < 67.0f)
 		{
-			CGame::GetInstance()->SwitchScene(3);
+			game->SetLevel(mario->getLevel());
 			game->SetTime(300);
+			CGame::GetInstance()->SwitchScene(3);
 		}
 	}
 		break;

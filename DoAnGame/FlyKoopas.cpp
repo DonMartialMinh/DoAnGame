@@ -30,13 +30,13 @@ void CFlyKoopas::GetBoundingBox(float& left, float& top, float& right, float& bo
 
 void CFlyKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-	CGame* game = CGame::GetInstance();
+/*	CGame* game = CGame::GetInstance();
 	float camx;
 	float camy;
 	float scrw = float(game->GetScreenWidth());
 	game->GetCamPos(camx, camy);
-	if (x > camx + scrw)		// out screen width then return
-		return;
+	if (x > camx + scrw)*/		// out screen width then return
+		//return;
 
 	CGameObject::Update(dt);
 
@@ -144,10 +144,8 @@ void CFlyKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				}
 				else
 				{
-					if (e->nx)
-					{
-						vx = -vx;
-					}
+					vx = -vx;
+					goomba->vx = -goomba->vx;
 				}
 			}
 			else if (dynamic_cast<CFlyGoomba*>(e->obj))	// if e->obj is goomba 
@@ -160,11 +158,8 @@ void CFlyKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				}
 				else
 				{
-					if (e->nx)
-					{
-						vx = -vx;
-						goomba->vx = -goomba->vx;
-					}
+					vx = -vx;
+					goomba->vx = -goomba->vx;
 				}
 			}
 			else if (dynamic_cast<CPlant*>(e->obj))					// obj is plant
@@ -188,6 +183,7 @@ void CFlyKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				else if (state == FLYKOOPAS_STATE_WALKING)
 				{
 					vx = -vx;
+					koopas->vx = -koopas->vx;
 				}
 			}
 			else if (dynamic_cast<CFlyKoopas*>(e->obj))	// if e->obj is Flykoopas
@@ -201,6 +197,7 @@ void CFlyKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				else if (state == FLYKOOPAS_STATE_WALKING)
 				{
 					vx = -vx;
+					koopas->vx = -koopas->vx;
 				}
 			}
 			else if (dynamic_cast<CUpsideBrick*>(e->obj))	// if e->obj is UpsideBrick 

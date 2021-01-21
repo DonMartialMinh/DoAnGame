@@ -34,8 +34,7 @@ using namespace std;
 
 #define ONE_SEC 1000
 
-#define MAP_1	2
-#define MAP_2	3
+
 
 #define TIME_BACK_TO_BRICK	10000
 

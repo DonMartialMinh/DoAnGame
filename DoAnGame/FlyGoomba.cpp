@@ -28,12 +28,12 @@ void CFlyGoomba::GetBoundingBox(float& left, float& top, float& right, float& bo
 void CFlyGoomba::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	CGame* game = CGame::GetInstance();
-	float camx;
-	float camy;
-	float scrw = float(game->GetScreenWidth());
-	game->GetCamPos(camx, camy);
-	if (x > camx + scrw)		// out screen width then return
-		return;
+	//float camx;
+	//float camy;
+	//float scrw = float(game->GetScreenWidth());
+	//game->GetCamPos(camx, camy);
+	//if (x > camx + scrw)		// out screen width then return
+	//	return;
 
 
 	if (isFinish && dying)	// if dying and die animation finish then return

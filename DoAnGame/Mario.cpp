@@ -30,9 +30,10 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		if (this->y > (camy + scrh - 40.0f) && this->y < (camy + scrh - 30.0f))	// mario out of map then die
 		{
 			SetState(MARIO_STATE_DIE);
-			CGame::GetInstance()->SwitchScene(1);
 			game->SetTime(0);
 			game->SubLive();
+			game->SetLevel(MARIO_LEVEL_SMALL);
+			CGame::GetInstance()->SwitchScene(1);
 			return;
 		}
 
@@ -695,14 +696,29 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					}
 					else if (e->ny > 0)
 					{
-						if (qbrick->GetState() != BRICK_STATE_EMP)
+						if (qbrick->GetState() != BRICK_STATE_EMP )
 						{
-							qbrick->StartRinging();
-							qbrick->trigger = 1;
-							qbrick->stack--;
-							qbrick->attack = 1;
-							if (qbrick->stack == 0)
-								qbrick->SetState(BRICK_STATE_EMP);
+							if (this->level == MARIO_LEVEL_RACOON && this->nx == 1)
+							{
+								if (abs(this->x + MARIO_RACOON_BBOX_WIDTH - MARIO_BIG_BBOX_WIDTH - qbrick->x) < BRICK_BBOX_WIDTH / 2)
+								{
+									qbrick->StartRinging();
+									qbrick->trigger = 1;
+									qbrick->stack--;
+									qbrick->attack = 1;
+									if (qbrick->stack == 0)
+										qbrick->SetState(BRICK_STATE_EMP);
+								}
+							}
+							else if (abs(this->x - qbrick->x) < BRICK_BBOX_WIDTH / 2)
+							{
+								qbrick->StartRinging();
+								qbrick->trigger = 1;
+								qbrick->stack--;
+								qbrick->attack = 1;
+								if (qbrick->stack == 0)
+									qbrick->SetState(BRICK_STATE_EMP);
+							}
 						}
 					}
 				}
@@ -720,10 +736,20 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						{
 							if (level > MARIO_LEVEL_SMALL)
 							{
-								bbrick->trigger = 1;
-								bbrick->isFinish = 1;
+								if (this->level == MARIO_LEVEL_RACOON && this->nx == 1)
+								{
+									if (abs(this->x + MARIO_RACOON_BBOX_WIDTH - MARIO_BIG_BBOX_WIDTH - bbrick->x) < BRICK_BBOX_WIDTH / 2)
+									{
+										bbrick->trigger = 1;
+										bbrick->isFinish = 1;
+									}
+								}
+								else if (abs(this->x - bbrick->x) < BRICK_BBOX_WIDTH / 2)
+								{
+									bbrick->trigger = 1;
+									bbrick->isFinish = 1;
+								}
 							}
-							else;
 						}
 					}
 					else
@@ -809,22 +835,22 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 
 				}
-				else if (dynamic_cast<CCoin*>(e->obj)) // if e->obj is Coin 
-				{
-					CCoin* coin = dynamic_cast<CCoin*>(e->obj);
-					coin->isFinish = 1;					// Make coin disappear
-					vy = temp;							//Mario went through the coin
-					x -= min_tx * dx + nx * 0.4f;
+				//else if (dynamic_cast<CCoin*>(e->obj)) // if e->obj is Coin 
+				//{
+				//	CCoin* coin = dynamic_cast<CCoin*>(e->obj);
+				//	coin->isFinish = 1;					// Make coin disappear
+				//	vy = temp;							//Mario went through the coin
+				//	x -= min_tx * dx + nx * 0.4f;
 
-					x += dx;
-					if (flying || isInMoveBar)
-					{
-						y -= min_ty * dy + ny * 0.4f;
-						y += dy;
-					}
-					game->AddScore(100);
-					game->AddCoin();
-				}
+				//	x += dx;
+				//	if (flying || isInMoveBar)
+				//	{
+				//		y -= min_ty * dy + ny * 0.4f;
+				//		y += dy;
+				//	}
+				//	game->AddScore(100);
+				//	game->AddCoin();
+				//}
 				else if (dynamic_cast<CEndPointItem*>(e->obj)) // if e->obj is Coin 
 					{
 					CEndPointItem* item = dynamic_cast<CEndPointItem*>(e->obj);
@@ -840,8 +866,17 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				else if (dynamic_cast<CPortal*>(e->obj))
 				{
 					CPortal* p = dynamic_cast<CPortal*>(e->obj);
-					CGame::GetInstance()->SwitchScene(p->GetSceneId());
 					game->SetTime(0);
+					game->SetLevel(this->getLevel());
+					if (game->GetCurrentSceneID() == MAP_11)
+					{
+						game->SetMiniMarioPosition(MAP11_POSITION_X, MAP11_POSITION_Y);
+					}
+					else if (game->GetCurrentSceneID() == MAP_14)
+					{
+						game->SetMiniMarioPosition(MAP14_POSITION_X, MAP14_POSITION_Y);
+					}
+					CGame::GetInstance()->SwitchScene(p->GetSceneId());
 					return;
 				}
 			}
@@ -898,8 +933,9 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		//if (x < camx) x = camx;
 
 
-		//DebugOut(L"\tsliding = %f\n", sliding);
-
+		//DebugOut(L"x = %f\n", this->x);
+		//DebugOut(L"level = %d\n", this->level);
+		//DebugOut(L"nx = %d\n", this->nx);
 	}
 }
 

@@ -21,8 +21,8 @@ using namespace std;
 #define GRID_CELL_WIDTH 83
 #define GRID_CELL_HEIGHT 73
 
-#define GRID_CELL_MAX_ROW 50
-#define GRID_CELL_MAX_COLUMN 100 
+#define GRID_CELL_MAX_ROW 40
+#define GRID_CELL_MAX_COLUMN 40 
 
 #define MAXSCENELINE 1024
 
@@ -36,6 +36,7 @@ public:
 	Grid();
 	~Grid();
 	void SetFile(char* str);
+	void HandleCell(int top, int left, int right, int bottom);
 	void loadGrid(CMario * player, vector<CQBrick*>& qbrick, vector<CBrokenBrick*>& bbrick, vector<CMoveBar*>& bar, vector<CEndPointItem*>& item);
 	void GetListObject(vector<CGameObject*>& ListObj);
 

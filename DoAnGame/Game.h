@@ -6,6 +6,18 @@
 #include <d3d9.h>
 #include <d3dx9.h>
 
+#define MAP_11	2
+#define MAP_14	3
+
+#define START_POSITION_X	65
+#define START_POSITION_Y	63
+
+#define MAP11_POSITION_X	97
+#define MAP11_POSITION_Y	31
+
+#define MAP14_POSITION_X	193
+#define MAP14_POSITION_Y	63
+
 
 #define DIRECTINPUT_VERSION 0x0800
 #include <dinput.h>
@@ -48,6 +60,10 @@ class CGame
 	void _ParseSection_SCENES(string line);
 
 	// Game play
+	float miniMarioPositionX = START_POSITION_X;
+	float miniMarioPositionY = START_POSITION_Y;
+
+	int level = 1;
 	int score = 0;
 	int time = 0;
 	int live = 2;
@@ -66,6 +82,7 @@ public:
 	void Load(LPCWSTR gameFile);
 	LPSCENE GetCurrentScene() { return scenes[current_scene]; }
 	void SwitchScene(int scene_id);
+	int GetCurrentSceneID() { return current_scene; };
 
 	int GetScreenWidth() { return screen_width; }
 	int GetScreenHeight() { return screen_height; }
@@ -89,12 +106,19 @@ public:
 	LPDIRECT3DSURFACE9 GetBackBuffer() { return backBuffer; }
 	LPD3DXSPRITE GetSpriteHandler() { return this->spriteHandler; }
 
+	void SetMiniMarioPosition(float x, float y) { this->miniMarioPositionX = x; this->miniMarioPositionY = y; };
+	float GetMiniMarioPositionX() { return this->miniMarioPositionX; };
+	float GetMiniMarioPositionY() { return this->miniMarioPositionY; };
+
 	void SetCamPos(float x, float y) { cam_x = x; cam_y = y; }
 	void GetCamPos(float &x, float &y) { x = cam_x; y = cam_y; }
 
 	void SetTime(int t) { time = t; }
 	void SubTime() { time -= 1; }
 	int GetTime() { return time; }
+
+	int GetLevel() { return this->level; }
+	void SetLevel(int level) { this->level = level; }
 
 	void SetScore(int t) { score = t; }
 	void AddScore(int t) { score += t; }
