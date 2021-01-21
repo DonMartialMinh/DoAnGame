@@ -60,7 +60,7 @@ public:
 	float xMax = 0;
 	float xMin = 0;
 	int aboutToRespawn = 0;
-	CKoopas(float max, float min, int type);
+	CKoopas( int type);
 	virtual void SetState(int state);
 	void StartRespawn() { respawn_start = DWORD(GetTickCount64()); }
 };

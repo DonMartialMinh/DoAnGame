@@ -92,10 +92,8 @@ void Grid::loadGrid(CMario* player, vector<CQBrick*>& qbrick, vector<CBrokenBric
 			break;
 		case OBJECT_TYPE_KOOPAS:
 		{
-			float setting1 = float(atof(tokens[6].c_str()));
-			float setting2 = float(atof(tokens[7].c_str()));
-			int type = atoi(tokens[8].c_str());
-			obj = new CKoopas(setting1, setting2, type);
+			int type = atoi(tokens[6].c_str());
+			obj = new CKoopas(type);
 			obj->type = OBJECT_TYPE_KOOPAS;
 		}
 		break;

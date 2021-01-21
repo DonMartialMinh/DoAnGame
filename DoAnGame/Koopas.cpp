@@ -3,11 +3,9 @@
 #include "UpsideBrick.h"
 #include "Utils.h"
 
-CKoopas::CKoopas(float max, float min, int type)
+CKoopas::CKoopas(int type)
 {
 	this->type = type;
-	xMax = round(max);
-	xMin = round(min);
 	SetState(KOOPAS_STATE_WALKING);
 
 }
@@ -61,6 +59,12 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	{
 		respawn_start = DWORD(GetTickCount64());
 		aboutToRespawn = 0;
+	}
+
+	if (state == KOOPAS_STATE_WALKING)
+	{
+		if (abs(vx) > KOOPAS_WALKING_SPEED)
+			vx = -KOOPAS_WALKING_SPEED;
 	}
 
 
@@ -245,6 +249,28 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		}
 	}
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
+
+	//DebugOut(L"Vy = %f\n", vy);
+
+	// if red koopas then turn when about to fall
+	if (this->type == 1 && state == KOOPAS_STATE_WALKING)
+	{
+		if (this->vy > 0.04f)
+		{
+			if (vx > 0)
+			{
+				this->y -= 0.8f;
+				this->x -= 2.0f;
+				this->vx = -this->vx;
+			}
+			else 
+			{
+				this->y -= 0.8f;
+				this->x += 2.0f;
+				this->vx = -this->vx;
+			}
+		}
+	}
 
 	//if (state == KOOPAS_STATE_WALKING)
 	//{
