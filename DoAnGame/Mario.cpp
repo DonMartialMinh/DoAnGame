@@ -742,12 +742,14 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 									{
 										bbrick->trigger = 1;
 										bbrick->isFinish = 1;
+										bbrick->attack = 1;
 									}
 								}
 								else if (abs(this->x - bbrick->x) < BRICK_BBOX_WIDTH / 2)
 								{
 									bbrick->trigger = 1;
 									bbrick->isFinish = 1;
+									bbrick->attack = 1;
 								}
 							}
 						}

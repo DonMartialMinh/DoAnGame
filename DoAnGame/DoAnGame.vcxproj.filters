@@ -180,6 +180,9 @@
     <ClCompile Include="Flower.cpp">
       <Filter>Items</Filter>
     </ClCompile>
+    <ClCompile Include="BrickAttack.cpp">
+      <Filter>Bricks</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -316,6 +319,9 @@
     </ClInclude>
     <ClInclude Include="Flower.h">
       <Filter>Items</Filter>
+    </ClInclude>
+    <ClInclude Include="BrickAttack.h">
+      <Filter>Bricks</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

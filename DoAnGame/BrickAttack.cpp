@@ -1,13 +1,13 @@
-#include "Tail.h"
+#include "BrickAttack.h"
 
-CTail::CTail(int nx, float maxX)
+CBrickAttack::CBrickAttack( float maxX)
 {
-	vx = TAIL_SPEED * nx;
-	this->nx = nx;
+	vx = 0;
+	vy = -BRICK_ATTACK_SPEED;
 	this->maxX = maxX;
 }
 
-void CTail::GetBoundingBox(float& l, float& t, float& r, float& b)
+void CBrickAttack::GetBoundingBox(float& l, float& t, float& r, float& b)
 {
 	if (isFinish)	//turn of boundingbox
 		return;
@@ -17,13 +17,11 @@ void CTail::GetBoundingBox(float& l, float& t, float& r, float& b)
 	b = y + TAIL_BBOX_HEIGHT;
 }
 
-void CTail::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
+void CBrickAttack::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	CGame* game = CGame::GetInstance();
 
-	if (this->x >= maxX && nx == 1)
-		isFinish = 1;
-	else if (this->x <= maxX && nx == -1)
+	if (this->y < maxX)
 		isFinish = 1;
 
 	if (isFinish)
@@ -65,19 +63,6 @@ void CTail::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				goomba->vx = 0.05f * this->nx;
 				game->AddScore(100);
 			}
-			else if (dynamic_cast<CPlant*>(e->obj))					// obj is plant
-			{
-				CPlant* plant = dynamic_cast<CPlant*>(e->obj);
-				plant->SetState(PLANT_STATE_DIE);
-				game->AddScore(100);
-			}
-			else if (dynamic_cast<CPiranhaPlant*>(e->obj))			 // obj is PiranhaPlant
-			{
-				CPiranhaPlant* plant = dynamic_cast<CPiranhaPlant*>(e->obj);
-				plant->SetState(PIRANHAPLANT_STATE_DIE);
-				game->AddScore(100);
-
-			}
 			else if (dynamic_cast<CFlyGoomba*>(e->obj))				// object is Flygoomba
 			{
 				CFlyGoomba* goomba = dynamic_cast<CFlyGoomba*>(e->obj);
@@ -103,27 +88,6 @@ void CTail::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				koopas->SetState(FLYKOOPAS_STATE_DIE_DEFLECT);
 				game->AddScore(100);
 			}
-			else if (dynamic_cast<CQBrick*>(e->obj))				// object is Question Brick
-			{
-				CQBrick* brick = dynamic_cast<CQBrick*>(e->obj);
-				if (brick->GetState() != BRICK_STATE_EMP)
-				{
-					brick->trigger = 1;
-					brick->StartRinging();
-					brick->stack--;
-					if (brick->stack == 0)
-						brick->SetState(BRICK_STATE_EMP);
-				}
-			}
-			else if (dynamic_cast<CBrokenBrick*>(e->obj))				// object is Broken Brick
-			{
-				CBrokenBrick* brick = dynamic_cast<CBrokenBrick*>(e->obj);
-				if (brick->GetState() == BROKENBRICK_STATE_BRICK)
-				{
-					brick->trigger = 1;
-					brick->isFinish = 1;
-				}
-			}
 			else if (dynamic_cast<CBoomerangBros*>(e->obj))				// object is Boomerang bros
 			{
 				isFinish = 1;
@@ -136,7 +100,7 @@ void CTail::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
 }
 
-void CTail::Render()
+void CBrickAttack::Render()
 {
 	if (isFinish)
 		return;

@@ -109,6 +109,13 @@ void CGameObject::CalcPotentialCollisions(
 			else
 				delete e;
 		}
+		else if (this->type == OBJECT_TYPE_BRICKATTACK)
+		{
+			if (e->t > 0 && e->t <= 1.0f)
+				coEvents.push_back(e);
+			else
+				delete e;
+		}
 		else if (this->type == OBJECT_TYPE_MUSHROOM || this->type == OBJECT_TYPE_FLYGOOMBA)
 		{
 			if (e->t > 0 && e->t <= 1.0f)

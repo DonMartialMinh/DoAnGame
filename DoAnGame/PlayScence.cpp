@@ -454,7 +454,7 @@ void CPlayScene::Update(DWORD dt)
 	for (int i = 0; i < int(bbrick.size()); i++)
 	{
 		// broken bricks turn into pieces
-		if (bbrick[i]->trigger)						// Draw fragment
+		if (bbrick[i]->trigger)						// Brick fragment
 		{
 			bbrick[i]->trigger -= 1;
 			vector<CGameObject*> temp = bbrick[i]->Broken();
@@ -469,6 +469,12 @@ void CPlayScene::Update(DWORD dt)
 				bbrick[i]->SetState(BROKENBRICK_STATE_BRICK);
 				bbrick[i]->type = OBJECT_TYPE_BROKENBRICK;
 			}
+		}
+
+		if (bbrick[i]->attack)						// Brick Attack
+		{
+			bbrick[i]->attack -= 1;
+			createObjects.push_back(bbrick[i]->Attack());
 		}
 	}
 

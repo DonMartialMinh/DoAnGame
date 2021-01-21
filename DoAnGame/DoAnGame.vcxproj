@@ -152,6 +152,7 @@
     <ClCompile Include="Board.cpp" />
     <ClCompile Include="Boomerang.cpp" />
     <ClCompile Include="BoomerangBros.cpp" />
+    <ClCompile Include="BrickAttack.cpp" />
     <ClCompile Include="BrokenBrick.cpp" />
     <ClCompile Include="Coin.cpp" />
     <ClCompile Include="EndPointItem.cpp" />
@@ -201,6 +202,7 @@
     <ClInclude Include="Board.h" />
     <ClInclude Include="Boomerang.h" />
     <ClInclude Include="BoomerangBros.h" />
+    <ClInclude Include="BrickAttack.h" />
     <ClInclude Include="BrokenBrick.h" />
     <ClInclude Include="Coin.h" />
     <ClInclude Include="EndPointItem.h" />

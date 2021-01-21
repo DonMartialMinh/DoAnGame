@@ -1,5 +1,7 @@
 #include "BrokenBrick.h"
 
+#define OBJECT_TYPE_BRICKATTACK		22
+
 CBrokenBrick::CBrokenBrick()
 {
 	SetState(BROKENBRICK_STATE_BRICK);
@@ -46,4 +48,18 @@ vector<CGameObject*>CBrokenBrick::Broken()
 		VCGameObject.push_back(obj);
 	}
 	return VCGameObject;
+}
+
+CGameObject* CBrokenBrick::Attack()		// create attack function
+{
+	int ani_set_id = MARIO_TAIL_ANI_SET_ID;
+	CAnimationSets* animation_sets = CAnimationSets::GetInstance();
+	CGameObject* obj = NULL;
+	float maxRange = this->y - 1.0f;
+	obj = new CBrickAttack(maxRange);
+	obj->type = OBJECT_TYPE_BRICKATTACK;
+	obj->SetPosition(this->x, this->y + BRICK_BBOX_HEIGHT);
+	LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
+	obj->SetAnimationSet(ani_set);
+	return obj;
 }
