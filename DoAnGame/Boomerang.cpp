@@ -1,8 +1,10 @@
 #include "Boomerang.h"
+#include "Utils.h"
 
 
-CBoomerang::CBoomerang()
+CBoomerang::CBoomerang(float y)
 {
+	originY = y;
 	ny = 1;
 	nx = 1;
 	vx = BOOMERANG_SPIN_SPEED_VX * nx;
@@ -38,7 +40,16 @@ void CBoomerang::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	CGameObject::Update(dt);
 
-	vx += -BOOMERANG_GRAVITY * dt;
+	if (this->y < originY - 30.0f)					// reach max height then fall
+	{
+		vx = 0;
+		vy += BOOMERANG_GRAVITY_Y * dt;
+	}
+	if (this->y > originY + 15.0f && vy > 0)		//	reach min height then back to boomerangbros
+	{
+		vy = 0;
+		vx += -BOOMERANG_GRAVITY_X * dt;
+	}
 
 	x += dx;
 	y += dy;

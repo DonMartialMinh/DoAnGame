@@ -32,7 +32,7 @@ void CBoomerangBros::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	game->GetCamPos(camx, camy);
 	if (y < camy || y > camy + scrh)		// out screen height then delete
 		return;
-	if (x > camx + scrw || x < camx)		// out screen width then return
+	if (x > camx + scrw || x + BROS_BBOX_WIDTH/2 < camx)		// out screen width then return
 		return;
 
 	if (state != BROS_STATE_DIE)
@@ -141,7 +141,7 @@ CGameObject* CBoomerangBros::NewBoomerang()		// create fireball function
 	int ani_set_id = BOOMERANG_ANI_SET_ID;
 	CAnimationSets* animation_sets = CAnimationSets::GetInstance();
 	CGameObject* obj = NULL;
-	obj = new CBoomerang();
+	obj = new CBoomerang(this->y - 8.0f);
 	obj->type = OBJECT_TYPE_BOOMERANG;
 	obj->SetPosition(this->x, this->y - 8.0f);
 	LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
