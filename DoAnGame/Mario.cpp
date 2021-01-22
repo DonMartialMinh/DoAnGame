@@ -97,9 +97,9 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				speedStack = 4;
 			else if (abs(vx) > MARIO_WALKING_SPEED + 0.05f && abs(vx) < MARIO_WALKING_SPEED + 0.06f)
 				speedStack = 4;
-			else if (abs(vx) > MARIO_WALKING_SPEED + 0.06f && abs(vx) < MARIO_WALKING_SPEED + 0.08f)
+			else if (abs(vx) > MARIO_WALKING_SPEED + 0.06f && abs(vx) < MARIO_WALKING_SPEED + 0.07f)
 				speedStack = 5;
-			else if (abs(vx) > MARIO_WALKING_SPEED + 0.08f && abs(vx) < MARIO_WALKING_SPEED + 0.09f)
+			else if (abs(vx) > MARIO_WALKING_SPEED + 0.07f && abs(vx) < MARIO_WALKING_SPEED + 0.08f)
 				speedStack = 6;
 			else if (abs(vx) == MARIO_RUNNING_SPEED)
 				speedStack = 7;
