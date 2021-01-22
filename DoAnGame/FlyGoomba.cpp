@@ -35,7 +35,7 @@ void CFlyGoomba::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	game->GetCamPos(camx, camy);
 
 
-	if ((y <= LINE_OF_DEATH) && !isFinish)		// out screen width then respawn
+	if ((y >= LINE_OF_DEATH) && !isFinish)		// out screen width then respawn
 	{
 		x = this->GetInitialX();
 		y = LINE_OF_DEATH;
