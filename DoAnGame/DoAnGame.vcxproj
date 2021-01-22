@@ -156,6 +156,7 @@
     <ClCompile Include="BrokenBrick.cpp" />
     <ClCompile Include="Coin.cpp" />
     <ClCompile Include="EndPointItem.cpp" />
+    <ClCompile Include="EngGame.cpp" />
     <ClCompile Include="Environment.cpp" />
     <ClCompile Include="FireBall.cpp" />
     <ClCompile Include="Flower.cpp" />
@@ -190,6 +191,7 @@
     <ClCompile Include="SpeedBar.cpp" />
     <ClCompile Include="Sprites.cpp" />
     <ClCompile Include="Switch.cpp" />
+    <ClCompile Include="Tag.cpp" />
     <ClCompile Include="Tail.cpp" />
     <ClCompile Include="Textures.cpp" />
     <ClCompile Include="UpsideBrick.cpp" />
@@ -205,6 +207,7 @@
     <ClInclude Include="BrickAttack.h" />
     <ClInclude Include="BrokenBrick.h" />
     <ClInclude Include="Coin.h" />
+    <ClInclude Include="EndGame.h" />
     <ClInclude Include="EndPointItem.h" />
     <ClInclude Include="Environment.h" />
     <ClInclude Include="FireBall.h" />
@@ -240,6 +243,7 @@
     <ClInclude Include="SpeedBar.h" />
     <ClInclude Include="Sprites.h" />
     <ClInclude Include="Switch.h" />
+    <ClInclude Include="Tag.h" />
     <ClInclude Include="Tail.h" />
     <ClInclude Include="Textures.h" />
     <ClInclude Include="Utils.h" />

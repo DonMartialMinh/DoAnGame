@@ -33,13 +33,16 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			game->SetTime(0);
 			game->SubLive();
 			game->SetLevel(MARIO_LEVEL_SMALL);
-			CGame::GetInstance()->SwitchScene(1);
+			if (game->GetLive() >= 0)
+				CGame::GetInstance()->SwitchScene(1);		// back to world map scene if life >= 0
+			else
+				CGame::GetInstance()->SwitchScene(4);		// go to endgame scene
 			return;
 		}
 
 	AnimationTime();	// Time for all animation of mario
 
-	if (transform || transformRacoon)
+	if (transform || transformRacoon)		// when in transfomr time then skip
 		return;
 
 
@@ -48,17 +51,17 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	CGameObject::Update(dt, coObjects);
 
-	if (isInMoveBar)
+	if (isInMoveBar)					// if in Moving bar then have its gravity
 		vy += BAR_GRAVITY * dt;
 	else
 		vy += MARIO_GRAVITY * dt;
 
-	if (vy > 0.04f) isFlying = 1; // if falling then cant jump
+	if (vy > 0.04f) isFlying = 1;	 // if falling then cant jump
 
-	if (isInMoveBar)
+	if (isInMoveBar)				// if in moving bar then can be in state on air
 		isFlying = 0;
-
-	if (switching)
+				
+	if (switching)					// when go into the pipe
 	{
 		if (switchType == 0)
 			y += 0.5f;
@@ -80,7 +83,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		else if (vx < -MARIO_RUNNING_SPEED)
 			vx = -MARIO_RUNNING_SPEED;
 
-		if (!flying)
+		if (!flying)							// stacking speed
 		{
 			if (abs(vx) <= MARIO_WALKING_SPEED)
 				speedStack = 0;
@@ -215,7 +218,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						}
 					}
 				}
-				if (dynamic_cast<CFlyGoomba*>(e->obj)) // if e->obj is Goomba 
+				if (dynamic_cast<CFlyGoomba*>(e->obj)) // if e->obj is FlyGoomba 
 				{
 					CFlyGoomba* goomba = dynamic_cast<CFlyGoomba*>(e->obj);
 					if (e->ny > 0)
@@ -345,7 +348,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						}
 					}
 				}  // if Koopas
-				else if (dynamic_cast<CFlyKoopas*>(e->obj)) // if e->obj is Koopas 
+				else if (dynamic_cast<CFlyKoopas*>(e->obj)) // if e->obj is FlyKoopas 
 				{
 					CFlyKoopas* koopas = dynamic_cast<CFlyKoopas*>(e->obj);
 					if (e->ny > 0)
@@ -431,7 +434,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						}
 					}
 				}  // if Koopas
-				else if (dynamic_cast<CBoomerangBros*>(e->obj)) // if e->obj is Goomba 
+				else if (dynamic_cast<CBoomerangBros*>(e->obj)) // if e->obj is BoomerangBros 
 				{
 					CBoomerangBros* bros = dynamic_cast<CBoomerangBros*>(e->obj);
 					// jump on top >> kill boomerang bros and deflect a bit 
@@ -470,7 +473,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						}
 					}
 				}
-				else if (dynamic_cast<CPlant*>(e->obj))
+				else if (dynamic_cast<CPlant*>(e->obj))		// if e->obj is Plant 	
 				{
 					CPlant* plant = dynamic_cast<CPlant*>(e->obj);
 					if (untouchable == 0) {
@@ -495,7 +498,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						}
 					}
 				}  // if Plant
-				else if (dynamic_cast<CPlantFireBall*>(e->obj))
+				else if (dynamic_cast<CPlantFireBall*>(e->obj))	// if e->obj is Plant Fireball	
 				{
 					CPlantFireBall* fireball = dynamic_cast<CPlantFireBall*>(e->obj);
 					if (e->ny > 0)
@@ -523,7 +526,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 							SetState(MARIO_STATE_DIE);
 					}
 				}  // if Plant
-				else if (dynamic_cast<CBoomerang*>(e->obj))
+				else if (dynamic_cast<CBoomerang*>(e->obj))	// if e->obj is Boomerang 	
 				{
 					CBoomerang* boomerang = dynamic_cast<CBoomerang*>(e->obj);
 					if (e->ny > 0)
@@ -551,7 +554,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 							SetState(MARIO_STATE_DIE);
 					}
 				}  // if boomerang
-				else if (dynamic_cast<CPiranhaPlant*>(e->obj))
+				else if (dynamic_cast<CPiranhaPlant*>(e->obj))	// if e->obj is PiranhaPlant 	
 				{
 					CPiranhaPlant* plant = dynamic_cast<CPiranhaPlant*>(e->obj);
 					if (untouchable == 0) {
@@ -601,7 +604,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						isInMoveBar = 0;
 
 				}
-				else if (dynamic_cast<CSwitch*>(e->obj))
+				else if (dynamic_cast<CSwitch*>(e->obj))			// object is teleport switch
 				{
 					CSwitch* sw = dynamic_cast<CSwitch*>(e->obj);
 					if (e->ny < 0)
@@ -664,7 +667,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						StartTransform_Racoon();
 						level = MARIO_LEVEL_RACOON;
 					}
-					vy = temp;							//Mario went through the mushroom
+					vy = temp;							//Mario went through the Leaf
 					x -= min_tx * dx + nx * 0.4f;
 					y -= min_ty * dy + ny * 0.4f;
 					game->AddScore(1000);
@@ -784,7 +787,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						}
 					}
 				}
-				else if (dynamic_cast<CUpsideBrick*>(e->obj))
+				else if (dynamic_cast<CUpsideBrick*>(e->obj))			// one side collision brick
 				{
 					CUpsideBrick* Upsidebrick = dynamic_cast<CUpsideBrick*>(e->obj);		// Upside brick
 
@@ -853,7 +856,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				//	game->AddScore(100);
 				//	game->AddCoin();
 				//}
-				else if (dynamic_cast<CEndPointItem*>(e->obj)) // if e->obj is Coin 
+				else if (dynamic_cast<CEndPointItem*>(e->obj)) // if e->obj is Check point item
 					{
 					CEndPointItem* item = dynamic_cast<CEndPointItem*>(e->obj);
 					vy = temp;							//Mario went through the coin
@@ -865,7 +868,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					game->PushItem(item->GetItem());
 					SetState(MARIO_STATE_ENDGAME);
 				}
-				else if (dynamic_cast<CPortal*>(e->obj))
+				else if (dynamic_cast<CPortal*>(e->obj))		// object is portal
 				{
 					CPortal* p = dynamic_cast<CPortal*>(e->obj);
 					game->SetTime(0);
@@ -931,13 +934,6 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		float camx, camy;
 		game->GetCamPos(camx, camy);
 
-		//if (vx > 0 && x > camx + game->GetScreenWidth() && state != MARIO_STATE_ENDGAME) x = camx + game->GetScreenWidth() - 30.0f;
-		//if (x < camx) x = camx;
-
-
-		//DebugOut(L"x = %f\n", this->x);
-		//DebugOut(L"level = %d\n", this->level);
-		//DebugOut(L"nx = %d\n", this->nx);
 	}
 }
 

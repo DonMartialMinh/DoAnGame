@@ -31,13 +31,11 @@ void CFlower::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		return;
 	CGameObject::Update(dt);
 
+	if (this->y > this->max)
+		y += FLOWER_RISING_SPEED;
 
 	if (this->y < this->max)
 		y = max;
-	else
-	{
-		y += FLOWER_RISING_SPEED;
-	}
 }
 
 

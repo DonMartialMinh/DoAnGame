@@ -7,3 +7,5 @@ start	0
 1	worldmapscene.txt
 2	scene1.txt
 3	scene2.txt
+4	endgamescene.txt
+

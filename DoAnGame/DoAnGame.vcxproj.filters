@@ -37,6 +37,9 @@
     <Filter Include="Grid">
       <UniqueIdentifier>{d59686f5-a4b8-4c27-93fa-cc45e3de029f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="EndGame">
+      <UniqueIdentifier>{4efec44b-bc5b-490f-bf0d-2120b13ca6d7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -183,6 +186,12 @@
     <ClCompile Include="BrickAttack.cpp">
       <Filter>Bricks</Filter>
     </ClCompile>
+    <ClCompile Include="EngGame.cpp">
+      <Filter>EndGame</Filter>
+    </ClCompile>
+    <ClCompile Include="Tag.cpp">
+      <Filter>EndGame</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -322,6 +331,12 @@
     </ClInclude>
     <ClInclude Include="BrickAttack.h">
       <Filter>Bricks</Filter>
+    </ClInclude>
+    <ClInclude Include="EndGame.h">
+      <Filter>EndGame</Filter>
+    </ClInclude>
+    <ClInclude Include="Tag.h">
+      <Filter>EndGame</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

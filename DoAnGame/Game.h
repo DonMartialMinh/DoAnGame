@@ -139,6 +139,12 @@ public:
 			SetCoin(0);
 		}
 	}
+
+	void ResetItemList()
+	{
+		for (int i = 0; i < int(ItemList.size()); i++)										// clear items
+			ItemList[i] = 0;
+	}
 	vector<int> GetItemList() { return ItemList; }
 	void PushItem(int item) {
 		for (int i = 0; i < int(ItemList.size()); i++)
