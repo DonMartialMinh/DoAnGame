@@ -18,6 +18,8 @@
 #define MAP14_POSITION_X	193
 #define MAP14_POSITION_Y	63
 
+#define LINE_OF_DEATH		434.0f
+
 
 #define DIRECTINPUT_VERSION 0x0800
 #include <dinput.h>

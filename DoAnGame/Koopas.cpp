@@ -28,12 +28,24 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 
 	CGame* game = CGame::GetInstance();
-	//float camx;
-	//float camy;
-	//float scrw = float(game->GetScreenWidth());
-	//game->GetCamPos(camx, camy);
-	//if (x > camx + scrw)		// out screen width then return
-	//	return;
+	float camx;
+	float camy;
+	float scrw = float(game->GetScreenWidth());
+	float scrh = float(game->GetScreenHeight());
+	game->GetCamPos(camx, camy);
+
+
+
+	if ((y >= LINE_OF_DEATH) && !isFinish)		// out screen width then respawn
+	{
+		x = this->GetInitialX();
+		y = LINE_OF_DEATH;
+		if (this->GetInitialX() < camx || this->GetInitialX() > camx + scrw || this->GetInitialY() < camy || this->GetInitialY() > camy + scrh)
+		{
+			SetState(KOOPAS_STATE_WALKING);
+			SetPosition(this->GetInitialX(), this->GetInitialY());
+		}
+	}
 
 	CGameObject::Update(dt);
 
@@ -271,6 +283,11 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			}
 		}
 	}
+
+	DebugOut(L"camy = %f\n", camy );
+	DebugOut(L"scrh = %f\n", scrh);
+	DebugOut(L"? = %f\n", camy + scrh - 50.0f);
+	//DebugOut(L"y = %f\n", this->GetInitialY());
 
 	//if (state == KOOPAS_STATE_WALKING)
 	//{

@@ -31,13 +31,23 @@ void CFlyKoopas::GetBoundingBox(float& left, float& top, float& right, float& bo
 void CFlyKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	CGame* game = CGame::GetInstance();
-/*	CGame* game = CGame::GetInstance();
 	float camx;
 	float camy;
 	float scrw = float(game->GetScreenWidth());
+	float scrh = float(game->GetScreenHeight());
 	game->GetCamPos(camx, camy);
-	if (x > camx + scrw)*/		// out screen width then return
-		//return;
+
+
+	if ((y >= LINE_OF_DEATH) && !isFinish)		// out screen width then respawn
+	{
+		x = this->GetInitialX();
+		y = LINE_OF_DEATH;
+		if (this->GetInitialX() < camx || this->GetInitialX() > camx + scrw || this->GetInitialY() < camy || this->GetInitialY() > camy + scrh)
+		{
+			SetState(FLYKOOPAS_STATE_FLYING);
+			SetPosition(this->GetInitialX(), this->GetInitialY());
+		}
+	}
 
 	CGameObject::Update(dt);
 

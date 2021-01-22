@@ -88,17 +88,23 @@ void Grid::loadGrid(CMario* player, vector<CQBrick*>& qbrick, vector<CBrokenBric
 		{
 		case OBJECT_TYPE_GOOMBA:
 			obj = new CGoomba();
+			obj->SetInitialX(x);
+			obj->SetInitialY(y);
 			obj->type = OBJECT_TYPE_GOOMBA;
 			break;
 		case OBJECT_TYPE_KOOPAS:
 		{
 			int type = atoi(tokens[6].c_str());
 			obj = new CKoopas(type);
+			obj->SetInitialX(x);
+			obj->SetInitialY(y);
 			obj->type = OBJECT_TYPE_KOOPAS;
 		}
 		break;
 		case OBJECT_TYPE_FLYGOOMBA:
 			obj = new CFlyGoomba();
+			obj->SetInitialX(x);
+			obj->SetInitialY(y);
 			obj->type = OBJECT_TYPE_FLYGOOMBA;
 			break;
 		case OBJECT_TYPE_FLYKOOPAS:
@@ -107,6 +113,8 @@ void Grid::loadGrid(CMario* player, vector<CQBrick*>& qbrick, vector<CBrokenBric
 			float yMax = float(atof(tokens[7].c_str()));
 			int type = atoi(tokens[8].c_str());
 			obj = new CFlyKoopas(yMin, yMax, type);
+			obj->SetInitialX(x);
+			obj->SetInitialY(y);
 			obj->type = OBJECT_TYPE_FLYKOOPAS;
 		}
 		break;

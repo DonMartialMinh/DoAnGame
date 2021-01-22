@@ -48,6 +48,9 @@ public:
 	float x = 0;
 	float y = 0;
 
+	float initialX = 0;
+	float initialY = 0;
+
 	float dx = 0;	// dx = vx*dt
 	float dy = 0;	// dy = vy*dt
 
@@ -91,6 +94,11 @@ public:
 		float& rdy);
 
 	CGameObject();
+
+	float GetInitialX() { return this->initialX; };
+	float GetInitialY() { return this->initialY; };
+	void SetInitialX(float x) { this->initialX = x; };
+	void SetInitialY(float y) { this->initialY = y; };
 
 	float GetVx() { return vx; };
 	float GetVy() { return vy; };

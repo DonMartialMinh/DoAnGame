@@ -23,12 +23,23 @@ void CGoomba::GetBoundingBox(float& left, float& top, float& right, float& botto
 void CGoomba::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	CGame* game = CGame::GetInstance();
-	//float camx;
-	//float camy;
-	//float scrw = float(game->GetScreenWidth());
-	//game->GetCamPos(camx, camy);
-	//if (x > camx + scrw)		// out screen width then return
-	//	return;
+	float camx;
+	float camy;
+	float scrw = float(game->GetScreenWidth());
+	float scrh = float(game->GetScreenHeight());
+	game->GetCamPos(camx, camy);
+
+
+	if ((y >= LINE_OF_DEATH) && !isFinish)		// out screen width then respawn
+	{
+		x = this->GetInitialX();
+		y = LINE_OF_DEATH;
+		if (this->GetInitialX() < camx || this->GetInitialX() > camx + scrw || this->GetInitialY() < camy || this->GetInitialY() > camy + scrh)
+		{
+			SetState(GOOMBA_STATE_WALKING);
+			SetPosition(this->GetInitialX(), this->GetInitialY());
+		}
+	}
 
 
 	if (isFinish && dying)	// if dying and die animation finish then return
