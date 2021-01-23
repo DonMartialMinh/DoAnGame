@@ -47,6 +47,10 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		}
 	}
 
+	if (isFinish && y >= LINE_OF_DEATH)
+		this->y = LINE_OF_DEATH;
+
+
 	CGameObject::Update(dt);
 
 	//
@@ -284,22 +288,10 @@ void CKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		}
 	}
 
-	DebugOut(L"camy = %f\n", camy );
-	DebugOut(L"scrh = %f\n", scrh);
-	DebugOut(L"? = %f\n", camy + scrh - 50.0f);
-	//DebugOut(L"y = %f\n", this->GetInitialY());
 
-	//if (state == KOOPAS_STATE_WALKING)
-	//{
-	//	if (vx < 0 && x < xMax)
-	//	{
-	//		x = xMax; vx = -vx;
-	//	}
-	//	else if (vx > 0 && x > xMin)
-	//	{
-	//		x = xMin; vx = -vx;
-	//	}
-	//}
+
+	//DebugOut(L"x = %f\n", this->x);
+	//DebugOut(L"y = %f\n", this->y);
 
 }
 

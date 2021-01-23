@@ -46,6 +46,8 @@ void CFlyGoomba::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		}
 	}
 
+	if (isFinish && y >= LINE_OF_DEATH)
+		this->y = LINE_OF_DEATH;
 
 	if (isFinish && dying)	// if dying and die animation finish then return
 		return;

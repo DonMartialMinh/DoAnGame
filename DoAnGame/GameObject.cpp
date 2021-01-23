@@ -198,6 +198,7 @@ void CGameObject::FilterCollision(
 		for (UINT i = 0; i < coEvents.size(); i++)
 		{
 			LPCOLLISIONEVENT c = coEvents[i];
+
 			if (c->t < min_tx && c->nx != 0) {
 				min_tx = c->t; nx = c->nx; min_ix = i; rdx = c->dx;
 			}

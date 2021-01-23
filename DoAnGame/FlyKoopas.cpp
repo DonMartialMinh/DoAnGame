@@ -49,6 +49,9 @@ void CFlyKoopas::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		}
 	}
 
+	if (isFinish && y >= LINE_OF_DEATH)
+		this->y = LINE_OF_DEATH;
+
 	CGameObject::Update(dt);
 
 	//
